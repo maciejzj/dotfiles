@@ -65,6 +65,7 @@ ZSH_HIGHLIGHT_STYLES[path_prefix]=none
 # Aliases
 # Exa, installed with: brew install exa 
 alias l='exa'
+alias la='exa -a'
 alias ll='exa --long --group --git'
 alias lla='exa --long --group --git -a'
 # Aliases for ls
