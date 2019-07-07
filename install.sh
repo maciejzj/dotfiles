@@ -36,6 +36,9 @@ linux-gnu)
 	exit 1
 esac
 
+# Install Bigger
+curl https://github.com/MaciejZj/Bigger/blob/master/bigger.py > \usr\local\bin\bigger.py
 # Install Vundle vim plugin manager
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+vim +PluginInstall 
 
