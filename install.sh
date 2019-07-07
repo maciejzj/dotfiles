@@ -1,3 +1,4 @@
+#!/bin/sh
 # Note that currently this config uses only dotfiles that are defaultly
 # stored in home dir, if in the future there are any that should be stored
 # in .config folder this requires modification.
