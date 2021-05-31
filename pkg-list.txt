@@ -8,6 +8,7 @@ man-pages
 mlocate
 moreutils
 ripgrep
+rsync
 texlab
 tio
 tmux
