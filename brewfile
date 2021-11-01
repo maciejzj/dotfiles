@@ -14,6 +14,7 @@ brew "tree"
 brew "watch"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
+brew "zsh-syntax-completions"
 
 brew "cmake"
 brew "doxygen"
