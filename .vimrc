@@ -175,8 +175,7 @@ function! s:on_lsp_buffer_enabled() abort
     nnoremap <Leader>lrr :LspRename<CR>
 endfunction
 " Fzf bindings
-nnoremap <leader>ff :Files<CR>
-nnoremap <leader>fg :GFiles<CR>
+nnoremap <leader>ff :GFiles<CR>
 nnoremap <leader>fb :Buffers<CR>
 nnoremap <leader>fl :BLines<CR>
 nnoremap <leader>fc :Commands<CR>
