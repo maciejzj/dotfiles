@@ -98,7 +98,7 @@ let g:netrw_cursor=0
 
 " Syntax highlighting
 " Don't show syntax errors for markdown
-highlight markdownError guifg=NONE guibg=NONE
+highlight link markdownError Normal
 
 " External plugins
 
@@ -134,6 +134,8 @@ augroup lsp_install
 augroup END
 " Disable gutter signs for LSP diagnostics
 let g:lsp_diagnostics_signs_enabled=0
+" Enable floating LSP diagnostic windows
+let g:lsp_diagnostics_float_cursor = 1
 " Make LSP reference highlight work as underline
 highlight lspReference cterm=underline
 
