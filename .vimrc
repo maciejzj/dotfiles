@@ -97,8 +97,9 @@ let g:netrw_list_hide='\(^\|\s\s\)\zs\.\S\+'
 let g:netrw_cursor=0
 
 " Syntax highlighting
-" Don't show syntax errors for markdown
-highlight link markdownError Normal
+" Modify markdown error pattern on file entry so underscores are not
+" highlighted
+autocmd BufNewFile,BufRead,BufEnter * :syn match markdownError "\w\@<=\w\@="
 
 " External plugins
 
