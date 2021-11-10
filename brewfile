@@ -1,4 +1,5 @@
 brew "aria2"
+brew "bat"
 brew "colordiff"
 brew "entr"
 brew "ffmpeg"
