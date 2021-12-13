@@ -44,6 +44,7 @@ darwin*)
 	source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 	source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 	source /usr/local/opt/fzf/shell/completion.zsh
+	eval $(minikube docker-env)
 	;;
 linux-gnu)
 	source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
