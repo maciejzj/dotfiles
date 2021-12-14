@@ -1,6 +1,7 @@
 brew "aria2"
 brew "bat"
 brew "docker"
+brew "docker-compose"
 brew "entr"
 brew "ffmpeg"
 brew "fzf"
