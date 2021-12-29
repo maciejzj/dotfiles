@@ -15,6 +15,7 @@ plotly
 pycodestyle
 pydocstyle
 pyflakes
+pylint
 pytest
 pytest-mock
 python-lsp-server
