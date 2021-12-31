@@ -3,6 +3,7 @@ compiledb
 dash
 dvc
 flask
+ipdb
 ipython
 jupyterlab
 matplotlib
