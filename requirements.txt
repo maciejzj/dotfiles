@@ -1,7 +1,9 @@
 autopep8
+black
 compiledb
 dash
 dvc
+flake8
 flask
 ipdb
 ipython
@@ -15,11 +17,11 @@ pipreqs
 plotly
 pycodestyle
 pydocstyle
-pyflakes
 pylint
 pytest
 pytest-mock
 python-lsp-server
+rentry
 rope
 scikit-image
 scikit-learn
