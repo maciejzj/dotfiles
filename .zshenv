@@ -8,6 +8,7 @@ HISTFILE=~/.zhistory
 HISTSIZE=SAVEHIST=100000
 setopt sharehistory
 setopt extendedhistory
+setopt histignorespace
 
 # Enable colors for man pages
 export LESS_TERMCAP_mb=$'\e[1;32m'
