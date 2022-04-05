@@ -1,6 +1,5 @@
 autopep8
 black
-compiledb
 dash
 dvc
 flake8

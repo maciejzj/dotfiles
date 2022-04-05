@@ -25,15 +25,23 @@ zle -N edit-command-line
 bindkey '^x^e' edit-command-line
 
 # Autocompletion
-# Enble colors in zsh completion
+# This is normally lazy loaded on completion, but here we load it early to able
+# to bind shift-tab keymap
+zmodload zsh/complist
+# Enable colors in zsh completion
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 # Enable menu box in zsh completion
 zstyle ':completion:*' menu yes select
+# Bind shift-tab to previous completion item
+bindkey -M menuselect '^[[Z' reverse-menu-complete
 # Enable completion
 autoload -Uz compinit
 compinit
-# When completion is loading show dots
-COMPLETION_WAITING_DOTS="true"
+
+# Enable pyenv
+eval "$(pyenv init -)"
+# Reconcile homebrew and pyenv
+alias brew="env PATH=${PATH//$(pyenv root)\/shims:/} brew"
 
 # Plugins
 fpath+=$HOME/.zsh/pure
@@ -41,9 +49,9 @@ autoload -U promptinit; promptinit
 prompt pure
 case $OSTYPE in
 darwin*)
-	source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-	source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-	source /usr/local/opt/fzf/shell/completion.zsh
+	source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+	source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+	source /opt/homebrew/opt/fzf/shell/completion.zsh
 	;;
 linux-gnu)
 	source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

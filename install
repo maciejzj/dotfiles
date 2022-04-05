@@ -10,6 +10,16 @@ NOCOLOR='\033[0m'
 
 # Grab all dotfiles in this folder
 echo -e "${BLUE}==> Deploying dotfiles${NOCOLOR}"
+
+# Link files in .config dir
+NVIM_INIT_DIR="${HOME}/.config/nvim"
+mkdir -p "${NVIM_INIT_DIR}"
+ln -s ${PWD}/init.lua ${NVIM_INIT_DIR}/init.lua
+
+TMUX_CONF_DIR="${HOME}/.config/tmux"
+mkdir -p "${TMUX_CONF_DIR}"
+ln -s ${PWD}/tmux.conf ${TMUX_CONF_DIR}/tmux.conf
+
 dotfiles=`git ls-tree --name-only master | grep -E "^\.\w+" | grep -v .git`
 
 # Link dotfiles to home dir
@@ -28,6 +38,7 @@ darwin*)
 		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 		if [ $? -ne 0 ]; then
 			echo -e "${RED}Failed to install homebrew, config install abandoned${NOCOLOR}"
+			exit 1
 		fi
 	else
 		echo "Homebrew installed already, skipping"
@@ -78,30 +89,32 @@ if [ $? -ne 0 ]; then
 	echo -e "${RED}Failed to install pure prompt, config will proceed${NOCOLOR}"
 fi
 
-# Install Plug vim plugin manager
-echo -e "${BLUE}==> Installing plug{NOCOLOR}"
-if ! [ -d ~/.vim/plugged ]; then
-	curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-		https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+# Install packer nvim plugin manager
+echo -e "${BLUE}==> Installing packer{NOCOLOR}"
+PACKER_INSTALL_DIR="${HOME}/.local/share/nvim/site/pack/packer/start"
+if ! [ -f "$PACKER_INSTALL_DIR/packer.nvim" ]; then
+	mkdir -p "${PACKER_INSTALL_DIR}"
+	git clone --depth 1 https://github.com/wbthomason/packer.nvim\
+		"${PACKER_INSTALL_DIR}/packer.nvim"
 	if [ $? -ne 0 ]; then
-		echo -e "${RED}Failed to install plug, config install abandoned${NOCOLOR}"
+		echo -e "${RED}Failed to install packer, config install abandoned${NOCOLOR}"
 		exit 1
 	fi
-	echo -e "${GREEN}Plug installed successfully${NOCOLOR}"
+	echo -e "${GREEN}Packer installed successfully${NOCOLOR}"
 else
-	echo "Plug already installed, skipping"
+	echo "Packer already installed, skipping"
 fi
 
 # Install vim packages
 echo -e "${BLUE}==> Installing vim plugins${NOCOLOR}"
-vim +PlugInstall +qall
+vim +PackerInstall +qall
 
 # Install tmux
 echo -e "${BLUE}==> Installing tmux-themepack${NOCOLOR}"
-if ! [ -d ~/.tmux-themepack ]; then
-	git clone https://github.com/jimeh/tmux-themepack.git ~/.tmux-themepack
+if ! [ -d "${TMUX_CONF_DIR}/tmux-themepack" ]; then
+	git clone https://github.com/jimeh/tmux-themepack.git "${TMUX_CONF_DIR}/tmux-themepack"
 	if [ $? -ne 0 ]; then
-		echo -e "${RED}Failed to install vundle, config will proceed${NOCOLOR}"
+		echo -e "${RED}Failed to install tmux-themepack, config will proceed${NOCOLOR}"
 	fi
 	echo -e "${GREEN}Tmux-themepack installed successfully${NOCOLOR}"
 else

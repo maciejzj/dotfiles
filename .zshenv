@@ -3,6 +3,11 @@
 # Language
 export LANG=en_US.UTF-8
 
+# Text editor
+export EDITOR=nvim
+# Disable vi mode in shell
+bindkey -e
+
 # Set history length
 HISTFILE=~/.zhistory
 HISTSIZE=SAVEHIST=100000
@@ -19,8 +24,6 @@ export LESS_TERMCAP_ue=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;4;31m'
 # Make fzf follow 16 ANSI terminal colors
 export FZF_DEFAULT_OPTS='--color=16'
-# Make bat follow 16 ANSI terminal colors
-export BAT_THEME='ansi'
 
 # Disable less history
 export LESSHISTFILE=/dev/null
@@ -44,15 +47,15 @@ alias dh='dirs -v'
 # Make sure python is python3
 alias python='python3'
 alias pip='pip3'
+# Use nvim
+alias vim='nvim'
+alias vimdiff='nvim -d'
+alias view='nvim -R'
 
 case ${OSTYPE} in
 darwin*)
-	# Add local sbin to PATH as brew requests
-	export PATH="/usr/local/sbin:$PATH"
-	# Add user's Python modules to PATH
-	export PATH="$PATH:/Users/$USER/Library/Python/3.9/bin"
-	# Add brew llvm to PATH
-	export PATH="$PATH:/usr/local/opt/llvm/bin"
+	# Add user local binaries to PATH
+	export PATH="${PATH}:${HOME}/.local/bin"
 	# Disable MacOS shell state restoration which is annoying with tmux
 	export SHELL_SESSIONS_DISABLE=1
 
@@ -63,12 +66,6 @@ darwin*)
 	alias lla='ls -ahl'
 	# Colors for BSD programs
 	export CLICOLOR=1
-
-	# Aliases for Bigger, installed from: https://github.com/maciejzj/bigger
-	alias sc='bigger.py c'
-	alias ss='bigger.py s'
-	alias sm='bigger.py m'
-	alias sb='bigger.py b'
 	;;
 linux-gnu)
 	# Add user's Python modules to PATH
