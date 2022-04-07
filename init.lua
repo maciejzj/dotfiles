@@ -52,6 +52,7 @@ require("packer").startup(
     function()
         use "wbthomason/packer.nvim"
         use "nvim-treesitter/nvim-treesitter"
+        use "lewis6991/spellsitter.nvim"
         use "neovim/nvim-lspconfig"
         use "hrsh7th/nvim-cmp"
         use "hrsh7th/cmp-buffer"
@@ -61,10 +62,8 @@ require("packer").startup(
         use "lewis6991/gitsigns.nvim"
         use "lukas-reineke/indent-blankline.nvim"
         use {"nvim-telescope/telescope.nvim", requires = {"nvim-lua/plenary.nvim"}}
-        use "lewis6991/spellsitter.nvim"
         use {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
         use 'joshdick/onedark.vim'
-        use 'jgvw/xcode-colors.nvim'
     end
 )
 
@@ -90,6 +89,24 @@ local lspconfig = require("lspconfig")
 local servers = {"clangd", "pylsp"}
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup {
+        on_attach = function(client, bufnr)
+            local opts = {noremap = true, silent = true}
+            -- See `:help vim.lsp.*` for documentation on any of the below functions
+            vim.api.nvim_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+            vim.api.nvim_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+            vim.api.nvim_set_keymap('n', '<C-]>', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+            vim.api.nvim_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+            vim.api.nvim_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+            vim.api.nvim_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+            vim.api.nvim_set_keymap('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+            vim.api.nvim_set_keymap('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+            vim.api.nvim_set_keymap('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+            vim.api.nvim_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+            vim.api.nvim_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+            vim.api.nvim_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+            vim.api.nvim_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+            vim.api.nvim_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+        end,
         capabilities = capabilities
     }
 end
@@ -126,7 +143,7 @@ require("telescope").load_extension("fzf")
 
 -- Git signs gutter and hunk navigation
 require("gitsigns").setup {
-    on_attach = function(bufnr)
+    on_attach = function(client, bufnr)
         -- Navigation
         vim.api.nvim_set_keymap("n", "]c", "&diff ? ']c' : '<cmd>Gitsigns next_hunk<CR>'", {expr = true})
         vim.api.nvim_set_keymap("n", "[c", "&diff ? '[c' : '<cmd>Gitsigns prev_hunk<CR>'", {expr = true})
@@ -158,24 +175,6 @@ vim.g.mapleader = " "
 local opts = {noremap = true, silent = true}
 -- Netrw
 vim.api.nvim_set_keymap("n", "<leader>j", ":Explore<CR>", opts)
--- LSP mappings
-vim.api.nvim_set_keymap("n", "<space>e", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
-vim.api.nvim_set_keymap("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<CR>", opts)
-vim.api.nvim_set_keymap("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<CR>", opts)
-vim.api.nvim_set_keymap("n", "<space>q", "<cmd>lua vim.diagnostic.setloclist()<CR>", opts)
-vim.api.nvim_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-vim.api.nvim_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-vim.api.nvim_set_keymap("n", "<C-]>", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-vim.api.nvim_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-vim.api.nvim_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-vim.api.nvim_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-vim.api.nvim_set_keymap("n", "<space>wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
-vim.api.nvim_set_keymap("n", "<space>wl", "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", opts)
-vim.api.nvim_set_keymap("n", "<space>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
-vim.api.nvim_set_keymap("n", "<space>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-vim.api.nvim_set_keymap("n", "<space>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-vim.api.nvim_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-vim.api.nvim_set_keymap("n", "<space>fm", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 --- Telescope
 vim.api.nvim_set_keymap("n", "<leader>ff", ':lua require"telescope.builtin".find_files()<CR>', opts)
 vim.api.nvim_set_keymap("n", "<leader>fg", ':lua require"telescope.builtin".live_grep()<CR>', opts)
