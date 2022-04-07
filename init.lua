@@ -56,6 +56,8 @@ require("packer").startup(
         use "neovim/nvim-lspconfig"
         use "hrsh7th/nvim-cmp"
         use "hrsh7th/cmp-buffer"
+        use "hrsh7th/cmp-path"
+        use "hrsh7th/cmp-cmdline"
         use "hrsh7th/cmp-nvim-lsp"
         use "NMAC427/guess-indent.nvim"
         use "terrortylor/nvim-comment"
@@ -63,7 +65,7 @@ require("packer").startup(
         use "lukas-reineke/indent-blankline.nvim"
         use {"nvim-telescope/telescope.nvim", requires = {"nvim-lua/plenary.nvim"}}
         use {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
-        use 'joshdick/onedark.vim'
+        use "joshdick/onedark.vim"
     end
 )
 
@@ -92,20 +94,25 @@ for _, lsp in ipairs(servers) do
         on_attach = function(client, bufnr)
             local opts = {noremap = true, silent = true}
             -- See `:help vim.lsp.*` for documentation on any of the below functions
-            vim.api.nvim_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-            vim.api.nvim_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-            vim.api.nvim_set_keymap('n', '<C-]>', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-            vim.api.nvim_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-            vim.api.nvim_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-            vim.api.nvim_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-            vim.api.nvim_set_keymap('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-            vim.api.nvim_set_keymap('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-            vim.api.nvim_set_keymap('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-            vim.api.nvim_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-            vim.api.nvim_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-            vim.api.nvim_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-            vim.api.nvim_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-            vim.api.nvim_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+            vim.api.nvim_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
+            vim.api.nvim_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+            vim.api.nvim_set_keymap("n", "<C-]>", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+            vim.api.nvim_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+            vim.api.nvim_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+            vim.api.nvim_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
+            vim.api.nvim_set_keymap("n", "<leader>wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
+            vim.api.nvim_set_keymap("n", "<leader>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
+            vim.api.nvim_set_keymap(
+                "n",
+                "<leader>wl",
+                "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>",
+                opts
+            )
+            vim.api.nvim_set_keymap("n", "<leader>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
+            vim.api.nvim_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
+            vim.api.nvim_set_keymap("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+            vim.api.nvim_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+            vim.api.nvim_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
         end,
         capabilities = capabilities
     }
@@ -113,14 +120,16 @@ end
 
 -- Completion
 
+-- Use LSP and buffer for text completion
 local cmp = require "cmp"
 cmp.setup {
     sources = cmp.config.sources(
         {
             {name = "nvim_lsp"},
+            {name = "path"}
         },
         {
-            {name = "buffer"},
+            {name = "buffer"}
         }
     ),
     mapping = {
@@ -128,9 +137,34 @@ cmp.setup {
         ["<S-Tab>"] = cmp.mapping.select_prev_item(),
         ["<C-d>"] = cmp.mapping.scroll_docs(-1),
         ["<C-f>"] = cmp.mapping.scroll_docs(1),
-        ["<C-Space>"] = cmp.mapping.complete(),
+        ["<C-Space>"] = cmp.mapping.complete()
     }
 }
+
+-- Use buffer source for command line completion
+cmp.setup.cmdline(
+    "/",
+    {
+        sources = {
+            {name = "buffer"}
+        }
+    }
+)
+
+-- Use cmdline and path sources for command line completion
+cmp.setup.cmdline(
+    ":",
+    {
+        sources = cmp.config.sources(
+            {
+                {name = "path"}
+            },
+            {
+                {name = "cmdline"}
+            }
+        )
+    }
+)
 
 -- Automatic indentation (if indent is detected will override the defaults)
 require("guess-indent").setup()
