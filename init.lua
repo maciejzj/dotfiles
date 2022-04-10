@@ -204,12 +204,14 @@ vim.g.mapleader = " "
 local opts = {noremap = true, silent = true}
 -- Netrw
 vim.api.nvim_set_keymap("n", "<leader>j", ":Explore<CR>", opts)
---- Telescope
+-- Telescope
 vim.api.nvim_set_keymap("n", "<leader>ff", ':lua require"telescope.builtin".find_files()<CR>', opts)
 vim.api.nvim_set_keymap("n", "<leader>fg", ':lua require"telescope.builtin".live_grep()<CR>', opts)
 vim.api.nvim_set_keymap("n", "<leader>fs", ':lua require"telescope.builtin".grep_string()<CR>', opts)
 vim.api.nvim_set_keymap("n", "<leader>fh", ':lua require"telescope.builtin".help_tags()<CR>', opts)
 vim.api.nvim_set_keymap("n", "<leader>fb", ':lua require"telescope.builtin".buffers()<CR>', opts)
+-- Exit insert mode interminal with Escape the key
+vim.api.nvim_set_keymap("t", "<esc>", "<C-\\><C-n>", opts)
 
 -- Colorschem
 
