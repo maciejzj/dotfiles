@@ -40,6 +40,7 @@ compinit
 
 # Enable pyenv
 eval "$(pyenv init -)"
+eval "$(pyenv init - virtualenv)"
 # Reconcile homebrew and pyenv
 alias brew="env PATH=${PATH//$(pyenv root)\/shims:/} brew"
 
