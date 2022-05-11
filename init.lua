@@ -42,38 +42,44 @@ else
     vim.opt.clipboard = "unnamedplus"
 end
 
--- If running embedded in VS Code then exit early
+-- Plugins
+require("packer").startup(
+function()
+    use "wbthomason/packer.nvim"
+    use "nvim-treesitter/nvim-treesitter"
+    use "lewis6991/spellsitter.nvim"
+    use "neovim/nvim-lspconfig"
+    use "hrsh7th/nvim-cmp"
+    use "hrsh7th/cmp-buffer"
+    use "hrsh7th/cmp-path"
+    use "hrsh7th/cmp-cmdline"
+    use "hrsh7th/cmp-nvim-lsp"
+    use "NMAC427/guess-indent.nvim"
+    use "terrortylor/nvim-comment"
+    use "lewis6991/gitsigns.nvim"
+    use "lukas-reineke/indent-blankline.nvim"
+    use {"nvim-telescope/telescope.nvim", requires = {"nvim-lua/plenary.nvim"}}
+    use {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
+    use "joshdick/onedark.vim"
+end
+)
+
+-- Automatic indentation (if indent is detected will override the defaults)
+require("guess-indent").setup()
+
+-- Code commenting
+require("nvim_comment").setup()
+
+-- If using vscode exit early and don't load the rest of the plugins
 if vim.g.vscode then
     return
 end
-
--- Plugins
-require("packer").startup(
-    function()
-        use "wbthomason/packer.nvim"
-        use "nvim-treesitter/nvim-treesitter"
-        use "lewis6991/spellsitter.nvim"
-        use "neovim/nvim-lspconfig"
-        use "hrsh7th/nvim-cmp"
-        use "hrsh7th/cmp-buffer"
-        use "hrsh7th/cmp-path"
-        use "hrsh7th/cmp-cmdline"
-        use "hrsh7th/cmp-nvim-lsp"
-        use "NMAC427/guess-indent.nvim"
-        use "terrortylor/nvim-comment"
-        use "lewis6991/gitsigns.nvim"
-        use "lukas-reineke/indent-blankline.nvim"
-        use {"nvim-telescope/telescope.nvim", requires = {"nvim-lua/plenary.nvim"}}
-        use {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
-        use "joshdick/onedark.vim"
-    end
-)
 
 -- Treesitter
 
 local treesitter = require "nvim-treesitter.configs"
 treesitter.setup {
-    ensure_installed = "maintained",
+    ensure_installed = "all",
     highlight = {
         enable = true
     }
@@ -127,53 +133,33 @@ end
 local cmp = require "cmp"
 cmp.setup {
     sources = cmp.config.sources(
-        {
-            {name = "nvim_lsp"},
-            {name = "path"}
-        },
-        {
-            {name = "buffer"}
-        }
+    {
+        {name = "nvim_lsp"},
+        {name = "path"}
+    },
+    {
+        {name = "buffer"}
+    }
     ),
-    mapping = {
+    mapping = cmp.mapping.preset.insert({
+        ["<C-Space>"] = cmp.mapping.complete(),
         ["<Tab>"] = cmp.mapping.select_next_item(),
         ["<S-Tab>"] = cmp.mapping.select_prev_item(),
-        ["<C-d>"] = cmp.mapping.scroll_docs(-1),
         ["<C-f>"] = cmp.mapping.scroll_docs(1),
-        ["<C-Space>"] = cmp.mapping.complete()
-    }
+        ["<C-b>"] = cmp.mapping.scroll_docs(-1)
+    })
 }
 
 -- Use buffer source for command line completion
 cmp.setup.cmdline(
-    "/",
-    {
-        sources = {
-            {name = "buffer"}
-        }
-    }
+"/",
+{
+    sources = {
+        {name = "buffer"}
+    },
+    mapping = cmp.mapping.preset.cmdline()
+}
 )
-
--- Use cmdline and path sources for command line completion
-cmp.setup.cmdline(
-    ":",
-    {
-        sources = cmp.config.sources(
-            {
-                {name = "path"}
-            },
-            {
-                {name = "cmdline"}
-            }
-        )
-    }
-)
-
--- Automatic indentation (if indent is detected will override the defaults)
-require("guess-indent").setup()
-
--- Code commenting
-require("nvim_comment").setup()
 
 -- Telescope file finder
 require("telescope").load_extension("fzf")
@@ -218,16 +204,13 @@ vim.api.nvim_set_keymap("n", "<leader>fg", ':lua require"telescope.builtin".live
 vim.api.nvim_set_keymap("n", "<leader>fs", ':lua require"telescope.builtin".grep_string()<CR>', opts)
 vim.api.nvim_set_keymap("n", "<leader>fh", ':lua require"telescope.builtin".help_tags()<CR>', opts)
 vim.api.nvim_set_keymap("n", "<leader>fb", ':lua require"telescope.builtin".buffers()<CR>', opts)
--- Exit insert mode interminal with Escape the key
+-- Exit insert mode interminal with the Escape key
 vim.api.nvim_set_keymap("t", "<esc>", "<C-\\><C-n>", opts)
 
--- Colorschem
-
+-- Colorscheme
 vim.cmd([[colorscheme onedark]])
 
 --- Fixes and workarounds
 
 -- Disable error highlighting for markdown
 vim.api.nvim_exec([[ highlight link markdownError None ]], false)
--- Force indent guessing on buffer open
-vim.api.nvim_exec([[ autocmd BufReadPost * :silent GuessIndent ]], false)
