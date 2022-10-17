@@ -146,7 +146,8 @@ cmp.setup {
         ["<Tab>"] = cmp.mapping.select_next_item(),
         ["<S-Tab>"] = cmp.mapping.select_prev_item(),
         ["<C-f>"] = cmp.mapping.scroll_docs(1),
-        ["<C-b>"] = cmp.mapping.scroll_docs(-1)
+        ["<C-b>"] = cmp.mapping.scroll_docs(-1),
+        ["<CR>"] = cmp.mapping.confirm({ select = true }),
     })
 }
 
@@ -160,6 +161,15 @@ cmp.setup.cmdline(
     mapping = cmp.mapping.preset.cmdline()
 }
 )
+
+cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+        { name = 'path' }
+    }, {
+        { name = 'cmdline' }
+    })
+})
 
 -- Telescope file finder
 require("telescope").load_extension("fzf")
