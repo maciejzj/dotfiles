@@ -55,14 +55,26 @@ darwin*)
 	source /opt/homebrew/opt/fzf/shell/completion.zsh
 	;;
 linux-gnu)
-	source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-	source /usr/share/fzf/completion.zsh
+	# Debian-based
+	if [ -f /etc/lsb-release ]; then
+		zsh_syntax_highlighting="/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+		zsh_completion="/usr/share/doc/fzf/examples/completion.zsh"
+		zsh_autosuggestions="/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+	# Arch
+	elif [ -f /etc/arch-release ]; then
+		zsh_syntax_highlighting="/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+		zsh_completion="/usr/share/fzf/completion.zsh"
+		zsh_autosuggestions="/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+	fi
+
+	source "$zsh_syntax_highlighting"
+	source "$zsh_completion"
 	if [ $TERM = linux ]; then
 		# Enabled only in bare tty
 		PURE_PROMPT_SYMBOL=">"
 	else
 		# Enabled only in terminal emulators
-		source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+		source "$zsh_autosuggestions"
 	fi
 	;;
 esac
