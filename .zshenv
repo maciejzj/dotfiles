@@ -24,6 +24,8 @@ export LESS_TERMCAP_ue=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;4;31m'
 # Make fzf follow 16 ANSI terminal colors
 export FZF_DEFAULT_OPTS='--color=16'
+# Make bat follow 16 ANSI terminal colors
+export BAT_THEME='ansi'
 
 # Disable less history
 export LESSHISTFILE=/dev/null

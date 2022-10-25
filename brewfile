@@ -1,4 +1,5 @@
 brew "aria2"
+brew "bat"
 brew "bear"
 brew "colima"
 brew "docker"
