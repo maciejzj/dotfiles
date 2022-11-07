@@ -41,6 +41,8 @@ if vim.fn.has("macunix") then
 else
     vim.opt.clipboard = "unnamedplus"
 end
+-- Auto reload changed files from disk
+vim.opt.autoread = true
 
 -- Plugins
 require("packer").startup(
