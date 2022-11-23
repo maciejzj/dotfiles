@@ -72,6 +72,8 @@ darwin*)
 linux-gnu)
 	# Add user's Python modules to PATH
 	export PATH="$PATH:/home/$USER/.local/bin"
+	# Add pyenv to PATH
+	export PATH="$PATH:/home/$USER/.pyenv/bin"
 
 	# Aliases for ls
 	alias ls='ls --color=auto'
