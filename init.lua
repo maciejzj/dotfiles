@@ -217,6 +217,10 @@ vim.api.nvim_set_keymap("n", "<leader>fs", ':lua require"telescope.builtin".grep
 vim.api.nvim_set_keymap("n", "<leader>fc", ':lua require"telescope.builtin".commands()<CR>', opts)
 vim.api.nvim_set_keymap("n", "<leader>fh", ':lua require"telescope.builtin".help_tags()<CR>', opts)
 vim.api.nvim_set_keymap("n", "<leader>fb", ':lua require"telescope.builtin".buffers()<CR>', opts)
+vim.api.nvim_set_keymap("n", "<leader>gc", ':lua require"telescope.builtin".find_files()<CR>', opts)
+vim.api.nvim_set_keymap("n", "<leader>gb", ':lua require"telescope.builtin".git_commits()<CR>', opts)
+vim.api.nvim_set_keymap("n", "<leader>gf", ':lua require"telescope.builtin".git_bcommits()<CR>', opts)
+vim.api.nvim_set_keymap("n", "<leader>gs", ':lua require"telescope.builtin".git_status()<CR>', opts)
 -- Exit insert mode interminal with the Escape key
 vim.api.nvim_set_keymap("t", "<esc>", "<C-\\><C-n>", opts)
 
