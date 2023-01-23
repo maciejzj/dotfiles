@@ -43,6 +43,8 @@ else
 end
 -- Auto reload changed files from disk
 vim.opt.autoread = true
+-- Disable mouse
+vim.opt.mouse = nil
 
 -- Plugins
 require("packer").startup(
