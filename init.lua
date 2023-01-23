@@ -225,6 +225,18 @@ vim.api.nvim_set_keymap("n", "<leader>gf", ':lua require"telescope.builtin".git_
 vim.api.nvim_set_keymap("n", "<leader>gs", ':lua require"telescope.builtin".git_status()<CR>', opts)
 -- Exit insert mode interminal with the Escape key
 vim.api.nvim_set_keymap("t", "<esc>", "<C-\\><C-n>", opts)
+-- Show/hide Diagnostics
+vim.g.diagnostics_visible = true
+function _G.toggle_diagnostics()
+    if vim.g.diagnostics_visible then
+        vim.g.diagnostics_visible = false
+        vim.diagnostic.disable()
+    else
+        vim.g.diagnostics_visible = true
+        vim.diagnostic.enable()
+    end
+end
+vim.api.nvim_set_keymap("n", "<Leader>d", ":call v:lua.toggle_diagnostics()<CR>", opts)
 
 -- Colorscheme
 vim.cmd([[colorscheme onedark]])
