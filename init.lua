@@ -106,7 +106,7 @@ vim.api.nvim_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', op
 vim.api.nvim_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
 
 -- Register servers
-local servers = {"clangd", "pylsp"}
+local servers = {"clangd", "pylsp", "texlab"}
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup {
         on_attach = function(client, bufnr)
