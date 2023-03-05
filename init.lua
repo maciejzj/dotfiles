@@ -71,6 +71,9 @@ end
 -- Automatic indentation (if indent is detected will override the defaults)
 require("guess-indent").setup()
 
+-- Indent guides
+require("indent_blankline").setup()
+
 -- Code commenting
 require("nvim_comment").setup()
 
