@@ -138,7 +138,9 @@ end
 -- Completion
 
 -- LSP based signatures when passing arguments
-require("lsp_signature").setup()
+require("lsp_signature").setup {
+    hint_enable = false,
+}
 
 -- Use LSP and buffer for text completion
 local cmp = require "cmp"
