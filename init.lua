@@ -66,6 +66,7 @@ function()
     use "wbthomason/packer.nvim"
     use "kylechui/nvim-surround"
     use "nvim-treesitter/nvim-treesitter-textobjects"
+    use "rrethy/nvim-treesitter-textsubjects"
     use {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
     use {"nvim-telescope/telescope.nvim", requires = {"nvim-lua/plenary.nvim"}}
 end
@@ -107,7 +108,13 @@ treesitter.setup {
                 ["ic"] = "@class.inner"
             }
         }
-    }
+    },
+    textsubjects = {
+        enable = true,
+        keymaps = {
+            ['.'] = 'textsubjects-smart',
+        }
+    },
 }
 
 -- Reconcile treesitter and spellchecking
