@@ -49,22 +49,23 @@ vim.opt.mouse = nil
 -- Plugins
 require("packer").startup(
 function()
-    use "wbthomason/packer.nvim"
-    use "nvim-treesitter/nvim-treesitter"
-    use "lewis6991/spellsitter.nvim"
-    use "neovim/nvim-lspconfig"
-    use "hrsh7th/nvim-cmp"
+    use "NMAC427/guess-indent.nvim"
     use "hrsh7th/cmp-buffer"
-    use "hrsh7th/cmp-path"
     use "hrsh7th/cmp-cmdline"
     use "hrsh7th/cmp-nvim-lsp"
-    use "NMAC427/guess-indent.nvim"
-    use "terrortylor/nvim-comment"
-    use "lewis6991/gitsigns.nvim"
-    use "lukas-reineke/indent-blankline.nvim"
-    use {"nvim-telescope/telescope.nvim", requires = {"nvim-lua/plenary.nvim"}}
-    use {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
+    use "hrsh7th/cmp-path"
+    use "hrsh7th/nvim-cmp"
     use "joshdick/onedark.vim"
+    use "lewis6991/gitsigns.nvim"
+    use "lewis6991/spellsitter.nvim"
+    use "lukas-reineke/indent-blankline.nvim"
+    use "neovim/nvim-lspconfig"
+    use "nvim-treesitter/nvim-treesitter"
+    use "ray-x/lsp_signature.nvim"
+    use "terrortylor/nvim-comment"
+    use "wbthomason/packer.nvim"
+    use {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
+    use {"nvim-telescope/telescope.nvim", requires = {"nvim-lua/plenary.nvim"}}
 end
 )
 
@@ -135,6 +136,9 @@ for _, lsp in ipairs(servers) do
 end
 
 -- Completion
+
+-- LSP based signatures when passing arguments
+require("lsp_signature").setup()
 
 -- Use LSP and buffer for text completion
 local cmp = require "cmp"
