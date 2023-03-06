@@ -65,6 +65,7 @@ function()
     use "terrortylor/nvim-comment"
     use "wbthomason/packer.nvim"
     use "kylechui/nvim-surround"
+    use "nvim-treesitter/nvim-treesitter-textobjects"
     use {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
     use {"nvim-telescope/telescope.nvim", requires = {"nvim-lua/plenary.nvim"}}
 end
@@ -94,6 +95,38 @@ treesitter.setup {
     ensure_installed = "all",
     highlight = {
         enable = true
+    },
+    textobjects = {
+        select = {
+            enable = true,
+            lookahead = true,
+            keymaps = {
+                ["af"] = "@function.outer",
+                ["if"] = "@function.inner",
+                ["ac"] = "@class.outer",
+                ["ic"] = "@class.inner"
+            }
+        },
+        move = {
+            enable = true,
+            set_jumps = true,
+            goto_next_start = {
+                ["]m"] = "@function.outer",
+                ["]]"] = "@class.outer"
+            },
+            goto_next_end = {
+                ["]M"] = "@function.outer",
+                ["]["] = "@class.outer"
+            },
+            goto_previous_start = {
+                ["[m"] = "@function.outer",
+                ["[["] = "@class.outer"
+            },
+            goto_previous_end = {
+                ["[M"] = "@function.outer",
+                ["[]"] = "@class.outer"
+            }
+        },
     }
 }
 
