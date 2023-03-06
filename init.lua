@@ -64,6 +64,7 @@ function()
     use "ray-x/lsp_signature.nvim"
     use "terrortylor/nvim-comment"
     use "wbthomason/packer.nvim"
+    use "kylechui/nvim-surround"
     use {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
     use {"nvim-telescope/telescope.nvim", requires = {"nvim-lua/plenary.nvim"}}
 end
@@ -77,6 +78,9 @@ require("indent_blankline").setup()
 
 -- Code commenting
 require("nvim_comment").setup()
+
+-- Surround motions
+require("nvim-surround").setup()
 
 -- If using vscode exit early and don't load the rest of the plugins
 if vim.g.vscode then
