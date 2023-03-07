@@ -8,6 +8,25 @@ export EDITOR=nvim
 # Disable vi mode in shell
 bindkey -e
 
+# Setup XDG directories
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+
+export ANSIBLE_HOME="$XDG_CONFIG_HOME/ansible"
+export ANSIBLE_CONFIG="$XDG_CONFIG_HOME/ansible.cfg"
+export ANSIBLE_GALAXY_CACHE_DIR="$XDG_CACHE_HOME/ansible/galaxy_cache"
+
+export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
+
+export IPYTHONDIR="$XDG_CONFIG_HOME/ipython"
+export JUPYTER_CONFIG_DIR="$XDG_CONFIG_HOME/jupyter"
+
+export MYPY_CACHE_DIR="$XDG_CACHE_HOME"/mypy
+
+export MPLCONFIGDIR="$XDG_CONFIG_HOME/matplotlib"
+
 # Set history length
 HISTFILE=~/.zhistory
 HISTSIZE=SAVEHIST=100000
