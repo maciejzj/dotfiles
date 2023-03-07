@@ -49,7 +49,7 @@ vim.opt.mouse = nil
 -- Plugins
 require("packer").startup(
 function()
-    use "NMAC427/guess-indent.nvim"
+    use "nmac427/guess-indent.nvim"
     use "hrsh7th/cmp-buffer"
     use "hrsh7th/cmp-cmdline"
     use "hrsh7th/cmp-nvim-lsp"
