@@ -46,6 +46,9 @@ vim.opt.autoread = true
 -- Disable mouse
 vim.opt.mouse = nil
 
+-- Set leader to space
+vim.g.mapleader = " "
+
 -- Helper function to define mapping with default options and a description
 function defopts(desc)
   return {noremap = true, silent = true, desc = desc}
@@ -97,6 +100,34 @@ require("nvim-surround").setup()
 if vim.g.vscode then
   return
 end
+
+-- Telescope file finder
+local telescope = require("telescope")
+telescope.setup {
+  defaults = {
+    mappings = {
+      i = {
+        -- Show picker actions help with which-key
+        ["<C-h>"] = "which_key"
+      }
+    }
+  }
+}
+telescope.load_extension("fzf")
+
+local tb = require("telescope.builtin")
+vim.keymap.set("n", "<leader>ff", tb.find_files, defopts("Find file"))
+vim.keymap.set("n", "<leader>fg", tb.current_buffer_fuzzy_find, defopts("Grep in buffer"))
+vim.keymap.set("n", "<leader>fG", tb.live_grep, defopts("Grep in workspace"))
+vim.keymap.set("n", "<leader>fs", tb.grep_string, defopts("Find string (at cursor)"))
+vim.keymap.set("n", "<leader>fc", tb.commands, defopts("Find command"))
+vim.keymap.set("n", "<leader>fh", tb.help_tags, defopts("Search help"))
+vim.keymap.set("n", "<leader>fr", tb.command_history, defopts("Search command history"))
+vim.keymap.set("n", "<leader>fb", tb.buffers, defopts("Find buffer"))
+vim.keymap.set("n", "<leader>gc", tb.git_bcommits, defopts("Browse buffer commits"))
+vim.keymap.set("n", "<leader>gC", tb.git_commits, defopts("Browse commits"))
+vim.keymap.set("n", "<leader>gb", tb.git_branches, defopts("Browse branches"))
+vim.keymap.set("n", "<leader>gs", tb.git_status, defopts("Browse git status"))
 
 -- Treesitter
 
@@ -159,6 +190,27 @@ for _, lsp in ipairs(servers) do
       vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, defopts("Next diagnostics"))
       vim.keymap.set("n", "]d", vim.diagnostic.goto_next, defopts("Previous diagnostics"))
       vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist, defopts("Diagnostics list"))
+
+      -- Telescope-LSP bindings
+      local tb = require("telescope.builtin")
+      vim.keymap.set("n", "<leader>ls", tb.lsp_document_symbols, defopts("Browse buffer symbols"))
+      vim.keymap.set("n", "<leader>lS", tb.lsp_workspace_symbols, defopts("Browse workspace symbols"))
+      vim.keymap.set("n", "<leader>lr", tb.lsp_references, defopts("Browse symbol references"))
+      vim.keymap.set("n", "<leader>Q", tb.diagnostics, defopts("Browse workspace diagnostics"))
+      -- Exit insert mode interminal with the Escape key
+      vim.keymap.set("t", "<esc>", "<C-\\><C-n>", opts)
+-- Show/hide Diagnostics
+vim.g.diagnostics_visible = true
+function _G.toggle_diagnostics()
+  if vim.g.diagnostics_visible then
+    vim.g.diagnostics_visible = false
+    vim.diagnostic.disable()
+  else
+    vim.g.diagnostics_visible = true
+    vim.diagnostic.enable()
+  end
+end
+vim.keymap.set("n", "<leader>tq", toggle_diagnostics, defopts("Toogle diagnostics"))
     end,
     capabilities = capabilities
   }
@@ -221,20 +273,6 @@ cmp.setup.cmdline(
   }
 )
 
--- Telescope file finder
-telescope = require("telescope")
-telescope.setup {
-  defaults = {
-    mappings = {
-      i = {
-        -- Show picker actions help with which-key
-        ["<C-h>"] = "which_key"
-      }
-    }
-  }
-}
-telescope.load_extension("fzf")
-
 -- Git signs gutter and hunk navigation
 require("gitsigns").setup {
   on_attach = function(client, bufnr)
@@ -272,48 +310,10 @@ local wk = require("which-key")
 wk.register{
   ["<leader>f"] = {name = "find"},
   ["<leader>g"] = {name = "git"},
-  ["<leader>h"] = {name = "hunk"},
+  ["<leader>h"] = {name = "git hunk"},
   ["<leader>t"] = {name = "toggle"},
-  ["<leader>l"] = {name = "lsp symbol"}
+  ["<leader>l"] = {name = "lsp symbols"}
 }
-
--- Other key mappings
-
--- Set leader to space
-vim.g.mapleader = " "
--- Telescope
-local tb = require("telescope.builtin")
-vim.keymap.set("n", "<leader>ff", tb.find_files, defopts("Find file"))
-vim.keymap.set("n", "<leader>fg", tb.current_buffer_fuzzy_find, defopts("Grep in buffer"))
-vim.keymap.set("n", "<leader>fG", tb.live_grep, defopts("Grep in workspace"))
-vim.keymap.set("n", "<leader>fs", tb.grep_string, defopts("Find string (at cursor)"))
-vim.keymap.set("n", "<leader>fc", tb.commands, defopts("Find command"))
-vim.keymap.set("n", "<leader>fh", tb.help_tags, defopts("Search help"))
-vim.keymap.set("n", "<leader>fr", tb.command_history, defopts("Search command history"))
-vim.keymap.set("n", "<leader>fb", tb.buffers, defopts("Find buffer"))
-vim.keymap.set("n", "<leader>gc", tb.git_bcommits, defopts("Browse buffer commits"))
-vim.keymap.set("n", "<leader>gC", tb.git_commits, defopts("Browse commits"))
-vim.keymap.set("n", "<leader>gb", tb.git_branches, defopts("Browse branches"))
-vim.keymap.set("n", "<leader>gs", tb.git_status, defopts("Browse git status"))
--- Telescope-LSP bindings
-vim.keymap.set("n", "<leader>ls", tb.lsp_document_symbols, defopts("Browse buffer symbols"))
-vim.keymap.set("n", "<leader>lS", tb.lsp_workspace_symbols, defopts("Browse workspace symbols"))
-vim.keymap.set("n", "<leader>lr", tb.lsp_references, defopts("Browse symbol references"))
-vim.keymap.set("n", "<leader>Q", tb.diagnostics, defopts("Browse workspace diagnostics"))
--- Exit insert mode interminal with the Escape key
-vim.keymap.set("t", "<esc>", "<C-\\><C-n>", opts)
--- Show/hide Diagnostics
-vim.g.diagnostics_visible = true
-function _G.toggle_diagnostics()
-  if vim.g.diagnostics_visible then
-    vim.g.diagnostics_visible = false
-    vim.diagnostic.disable()
-  else
-    vim.g.diagnostics_visible = true
-    vim.diagnostic.enable()
-  end
-end
-vim.keymap.set("n", "<leader>tq", toggle_diagnostics, defopts("Toogle diagnostics"))
 
 -- Colorscheme
 vim.cmd([[colorscheme onedark]])
