@@ -84,6 +84,13 @@ require("packer").startup(
 
 -- Plugins setup
 
+-- Whick key keymappings
+local wk = require("which-key")
+wk.register{
+  ["<leader>f"] = {name = "find"},
+  ["<leader>t"] = {name = "toggle"},
+}
+
 -- Automatic indentation (if indent is detected will override the defaults)
 require("guess-indent").setup()
 
@@ -124,10 +131,17 @@ vim.keymap.set("n", "<leader>fc", tb.commands, defopts("Find command"))
 vim.keymap.set("n", "<leader>fh", tb.help_tags, defopts("Search help"))
 vim.keymap.set("n", "<leader>fr", tb.command_history, defopts("Search command history"))
 vim.keymap.set("n", "<leader>fb", tb.buffers, defopts("Find buffer"))
-vim.keymap.set("n", "<leader>gc", tb.git_commits, defopts("Browse commits"))
-vim.keymap.set("n", "<leader>gC", tb.git_bcommits, defopts("Browse buffer commits"))
-vim.keymap.set("n", "<leader>gb", tb.git_branches, defopts("Browse branches"))
-vim.keymap.set("n", "<leader>gs", tb.git_status, defopts("Browse git status"))
+
+local is_repo = vim.fn.system("git rev-parse --is-inside-work-tree")
+if vim.v.shell_error == 0 then
+  wk.register{
+    ["<leader>g"] = {name = "git"},
+  }
+  vim.keymap.set("n", "<leader>gc", tb.git_commits, defopts("Browse commits"))
+  vim.keymap.set("n", "<leader>gC", tb.git_bcommits, defopts("Browse buffer commits"))
+  vim.keymap.set("n", "<leader>gb", tb.git_branches, defopts("Browse branches"))
+  vim.keymap.set("n", "<leader>gs", tb.git_status, defopts("Browse git status"))
+end
 
 -- Treesitter
 
@@ -172,6 +186,10 @@ local servers = {"clangd", "pylsp", "texlab"}
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = function(client, bufnr)
+      wk.register{
+        ["<leader>l"] = {name = "lsp symbols"},
+      }
+
       -- Lsp bindings
       vim.keymap.set("n", "gd", vim.lsp.buf.definition, defopts("Definition"))
       vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, defopts("Definition"))
@@ -180,8 +198,8 @@ for _, lsp in ipairs(servers) do
       vim.keymap.set("n", "K", vim.lsp.buf.hover, defopts("Hover"))
       vim.keymap.set("n", "gi", vim.lsp.buf.implementation, defopts("Implementation"))
       vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, defopts("Show signature"))
-      vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, defopts("Rename symbol"))
-      vim.keymap.set("n", "<leader>c", vim.lsp.buf.code_action, defopts("Code action"))
+      vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, defopts("Rename symbol"))
+      vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, defopts("Code action"))
       vim.keymap.set("n", "gr", vim.lsp.buf.references, defopts("References"))
       vim.keymap.set("n", "<leader>m", vim.lsp.buf.format, defopts("Format"))
 
@@ -199,22 +217,23 @@ for _, lsp in ipairs(servers) do
       vim.keymap.set("n", "<leader>Q", tb.diagnostics, defopts("Browse workspace diagnostics"))
       -- Exit insert mode interminal with the Escape key
       vim.keymap.set("t", "<esc>", "<C-\\><C-n>", opts)
--- Show/hide Diagnostics
-vim.g.diagnostics_visible = true
-function _G.toggle_diagnostics()
-  if vim.g.diagnostics_visible then
-    vim.g.diagnostics_visible = false
-    vim.diagnostic.disable()
-  else
-    vim.g.diagnostics_visible = true
-    vim.diagnostic.enable()
-  end
-end
-vim.keymap.set("n", "<leader>tq", toggle_diagnostics, defopts("Toogle diagnostics"))
-    end,
-    capabilities = capabilities
-  }
-end
+
+      -- Show/hide Diagnostics
+      vim.g.diagnostics_visible = true
+      function _G.toggle_diagnostics()
+        if vim.g.diagnostics_visible then
+          vim.g.diagnostics_visible = false
+          vim.diagnostic.disable()
+        else
+          vim.g.diagnostics_visible = true
+          vim.diagnostic.enable()
+        end
+      end
+      vim.keymap.set("n", "<leader>tq", toggle_diagnostics, defopts("Toogle diagnostics"))
+          end,
+          capabilities = capabilities
+        }
+      end
 
 -- LSP based signatures when passing arguments
 require("lsp_signature").setup {
@@ -291,6 +310,10 @@ require("gitsigns").setup {
       return '<Ignore>'
     end, {expr = true, desc = "Previous hunk"})
 
+    wk.register{
+      ["<leader>h"] = {name = "git hunk"},
+    }
+
     -- Actions
     vim.keymap.set("n", "<leader>hs", gs.stage_hunk, defopts("Stage hunk"))
     vim.keymap.set("n", "<leader>hr", gs.reset_hunk, defopts("Restore hunk"))
@@ -304,15 +327,6 @@ require("gitsigns").setup {
     vim.keymap.set("n", "<leader>hD", function() gs.diffthis("~") end, defopts("Diff buffer (with staged)"))
     vim.keymap.set("n", "<leader>td", gs.toggle_deleted, defopts("Toogle show deleted"))
   end
-}
-
-local wk = require("which-key")
-wk.register{
-  ["<leader>f"] = {name = "find"},
-  ["<leader>g"] = {name = "git"},
-  ["<leader>h"] = {name = "git hunk"},
-  ["<leader>t"] = {name = "toggle"},
-  ["<leader>l"] = {name = "lsp symbols"}
 }
 
 -- Colorscheme
