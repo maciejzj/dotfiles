@@ -37,45 +37,46 @@ vim.g.netrw_list_hide = [[\(^\|\s\s\)\zs\.\S\+]]
 vim.opt.updatetime = 100
 -- Use system clipboard
 if vim.fn.has("macunix") then
-    vim.opt.clipboard = "unnamed"
+  vim.opt.clipboard = "unnamed"
 else
-    vim.opt.clipboard = "unnamedplus"
+  vim.opt.clipboard = "unnamedplus"
 end
 -- Auto reload changed files from disk
 vim.opt.autoread = true
 -- Disable mouse
 vim.opt.mouse = nil
 
+-- Helper function to define mapping with default options and a description
 function defopts(desc)
-    return { noremap = true, silent = true, desc = desc }
+  return {noremap = true, silent = true, desc = desc}
 end
 
 -- Plugins
 require("packer").startup(
-    function()
-        use "folke/which-key.nvim"
-        use "hrsh7th/cmp-buffer"
-        use "hrsh7th/cmp-cmdline"
-        use "hrsh7th/cmp-nvim-lsp"
-        use "hrsh7th/cmp-path"
-        use "hrsh7th/nvim-cmp"
-        use "joshdick/onedark.vim"
-        use "kylechui/nvim-surround"
-        use "lewis6991/gitsigns.nvim"
-        use "lewis6991/spellsitter.nvim"
-        use "lukas-reineke/indent-blankline.nvim"
-        use "neovim/nvim-lspconfig"
-        use "nmac427/guess-indent.nvim"
-        use "nvim-treesitter/nvim-treesitter"
-        use "nvim-treesitter/nvim-treesitter-textobjects"
-        use "ray-x/lsp_signature.nvim"
-        use "rrethy/nvim-treesitter-textsubjects"
-        use "terrortylor/nvim-comment"
-        use "wbthomason/packer.nvim"
-        use {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
-        use {"nvim-telescope/telescope.nvim", requires = {"nvim-lua/plenary.nvim"}}
-        use {"sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim"}
-    end
+  function()
+    use "folke/which-key.nvim"
+    use "hrsh7th/cmp-buffer"
+    use "hrsh7th/cmp-cmdline"
+    use "hrsh7th/cmp-nvim-lsp"
+    use "hrsh7th/cmp-path"
+    use "hrsh7th/nvim-cmp"
+    use "joshdick/onedark.vim"
+    use "kylechui/nvim-surround"
+    use "lewis6991/gitsigns.nvim"
+    use "lewis6991/spellsitter.nvim"
+    use "lukas-reineke/indent-blankline.nvim"
+    use "neovim/nvim-lspconfig"
+    use "nmac427/guess-indent.nvim"
+    use "nvim-treesitter/nvim-treesitter"
+    use "nvim-treesitter/nvim-treesitter-textobjects"
+    use "ray-x/lsp_signature.nvim"
+    use "rrethy/nvim-treesitter-textsubjects"
+    use "terrortylor/nvim-comment"
+    use "wbthomason/packer.nvim"
+    use {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
+    use {"nvim-telescope/telescope.nvim", requires = {"nvim-lua/plenary.nvim"}}
+    use {"sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim"}
+  end
 )
 
 -- Plugins setup
@@ -94,35 +95,35 @@ require("nvim-surround").setup()
 
 -- If using vscode exit early and don't load the rest of the plugins
 if vim.g.vscode then
-    return
+  return
 end
 
 -- Treesitter
 
 local treesitter = require "nvim-treesitter.configs"
 treesitter.setup {
-    ensure_installed = "all",
-    highlight = {
-        enable = true
-    },
-    textobjects = {
-        select = {
-            enable = true,
-            lookahead = true,
-            keymaps = {
-                ["af"] = "@function.outer",
-                ["if"] = "@function.inner",
-                ["aC"] = "@class.outer",
-                ["iC"] = "@class.inner"
-            }
-        }
-    },
-    textsubjects = {
-        enable = true,
-        keymaps = {
-            ["."] = "textsubjects-smart"
-        }
+  ensure_installed = "all",
+  highlight = {
+    enable = true
+  },
+  textobjects = {
+    select = {
+      enable = true,
+      lookahead = true,
+      keymaps = {
+        ["af"] = "@function.outer",
+        ["if"] = "@function.inner",
+        ["aC"] = "@class.outer",
+        ["iC"] = "@class.inner"
+      }
     }
+  },
+  textsubjects = {
+    enable = true,
+    keymaps = {
+      ["."] = "textsubjects-smart"
+    }
+  }
 }
 
 -- Reconcile treesitter and spellchecking
@@ -138,145 +139,143 @@ capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
 local servers = {"clangd", "pylsp", "texlab"}
 for _, lsp in ipairs(servers) do
-    lspconfig[lsp].setup {
-        on_attach = function(client, bufnr)
-            -- Lsp bindings
-            vim.keymap.set("n", "gd", vim.lsp.buf.definition, defopts("Definition"))
-            vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, defopts("Definition"))
-            vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, defopts("Type definition"))
-            vim.keymap.set("n", "gD", vim.lsp.buf.declaration, defopts("Declaration"))
-            vim.keymap.set("n", "K", vim.lsp.buf.hover, defopts("Hover"))
-            vim.keymap.set("n", "gi", vim.lsp.buf.implementation, defopts("Implementation"))
-            vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, defopts("Show signature"))
-            vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, defopts("Rename symbol"))
-            vim.keymap.set("n", "<leader>c", vim.lsp.buf.code_action, defopts("Code action"))
-            vim.keymap.set("n", "gr", vim.lsp.buf.references, defopts("References"))
-            vim.keymap.set("n", "<leader>m", vim.lsp.buf.format, defopts("Format"))
+  lspconfig[lsp].setup {
+    on_attach = function(client, bufnr)
+      -- Lsp bindings
+      vim.keymap.set("n", "gd", vim.lsp.buf.definition, defopts("Definition"))
+      vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, defopts("Definition"))
+      vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, defopts("Type definition"))
+      vim.keymap.set("n", "gD", vim.lsp.buf.declaration, defopts("Declaration"))
+      vim.keymap.set("n", "K", vim.lsp.buf.hover, defopts("Hover"))
+      vim.keymap.set("n", "gi", vim.lsp.buf.implementation, defopts("Implementation"))
+      vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, defopts("Show signature"))
+      vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, defopts("Rename symbol"))
+      vim.keymap.set("n", "<leader>c", vim.lsp.buf.code_action, defopts("Code action"))
+      vim.keymap.set("n", "gr", vim.lsp.buf.references, defopts("References"))
+      vim.keymap.set("n", "<leader>m", vim.lsp.buf.format, defopts("Format"))
 
-            -- Diagnostics bindings
-            vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, defopts("Show diagnostics"))
-            vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, defopts("Next diagnostics"))
-            vim.keymap.set("n", "]d", vim.diagnostic.goto_next, defopts("Previous diagnostics"))
-            vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist, defopts("Diagnostics list"))
-        end,
-        capabilities = capabilities
-    }
+      -- Diagnostics bindings
+      vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, defopts("Show diagnostics"))
+      vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, defopts("Next diagnostics"))
+      vim.keymap.set("n", "]d", vim.diagnostic.goto_next, defopts("Previous diagnostics"))
+      vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist, defopts("Diagnostics list"))
+    end,
+    capabilities = capabilities
+  }
 end
 
 -- LSP based signatures when passing arguments
 require("lsp_signature").setup {
-    hint_enable = false,
-    toggle_key = "<C-s>"
+  hint_enable = false,
+  toggle_key = "<C-s>"
 }
 
 -- Use LSP and buffer for text completion
 local cmp = require "cmp"
 cmp.setup {
-    sources = cmp.config.sources(
-        {
-            {name = "nvim_lsp"},
-            {name = "path"}
-        },
-        {
-            {name = "buffer"}
-        }
-    ),
-    mapping = cmp.mapping.preset.insert(
-        {
-            ["<C-Space>"] = cmp.mapping.complete(),
-            ["<Tab>"] = cmp.mapping.select_next_item(),
-            ["<S-Tab>"] = cmp.mapping.select_prev_item(),
-            ["<C-f>"] = cmp.mapping.scroll_docs(1),
-            ["<C-b>"] = cmp.mapping.scroll_docs(-1),
-            ["<CR>"] = cmp.mapping.confirm({select = true}),
-            ["<C-e>"] = cmp.mapping.confirm({select = true})
-        }
-    )
+  sources = cmp.config.sources(
+    {
+      {name = "nvim_lsp"},
+      {name = "path"}
+    },
+    {
+      {name = "buffer"}
+    }
+  ),
+  mapping = cmp.mapping.preset.insert(
+    {
+      ["<C-Space>"] = cmp.mapping.complete(),
+      ["<Tab>"] = cmp.mapping.select_next_item(),
+      ["<S-Tab>"] = cmp.mapping.select_prev_item(),
+      ["<C-f>"] = cmp.mapping.scroll_docs(1),
+      ["<C-b>"] = cmp.mapping.scroll_docs(-1),
+      ["<CR>"] = cmp.mapping.confirm({select = true}),
+      ["<C-e>"] = cmp.mapping.confirm({select = true})
+    }
+  )
 }
 
 -- Use buffer source for command line completion
 cmp.setup.cmdline(
-    "/",
-    {
-        sources = {
-            {name = "buffer"}
-        },
-        mapping = cmp.mapping.preset.cmdline()
-    }
+  "/",
+  {
+    sources = {
+      {name = "buffer"}
+    },
+    mapping = cmp.mapping.preset.cmdline()
+  }
 )
 
 cmp.setup.cmdline(
-    ":",
-    {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources(
-            {
-                {name = "path"}
-            },
-            {
-                {name = "cmdline"}
-            }
-        )
-    }
+  ":",
+  {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources(
+      {
+        {name = "path"}
+      },
+      {
+        {name = "cmdline"}
+      }
+    )
+  }
 )
 
 -- Telescope file finder
 telescope = require("telescope")
-telescope.setup{
-defaults = {
- mappings = {
+telescope.setup {
+  defaults = {
+    mappings = {
       i = {
         -- Show picker actions help with which-key
         ["<C-h>"] = "which_key"
       }
     }
-}
+  }
 }
 telescope.load_extension("fzf")
 
 -- Git signs gutter and hunk navigation
 require("gitsigns").setup {
-    on_attach = function(client, bufnr)
-        local gs = package.loaded.gitsigns
+  on_attach = function(client, bufnr)
+    local gs = package.loaded.gitsigns
 
-        -- Navigation
-        vim.keymap.set('n', ']c', function()
-            if vim.wo.diff then return ']c' end
-            vim.schedule(function() gs.next_hunk() end)
-            return '<Ignore>'
-        end, {expr = true, desc = "Next hunk"})
+    -- Hunk navigation
+    vim.keymap.set('n', ']c', function()
+      if vim.wo.diff then return ']c' end
+      vim.schedule(function() gs.next_hunk() end)
+      return '<Ignore>'
+    end, {expr = true, desc = "Next hunk"})
 
-        vim.keymap.set('n', '[c', function()
-            if vim.wo.diff then return '[c' end
-            vim.schedule(function() gs.prev_hunk() end)
-            return '<Ignore>'
-        end, {expr = true, desc = "Previous hunk"})
+    vim.keymap.set('n', '[c', function()
+      if vim.wo.diff then return '[c' end
+      vim.schedule(function() gs.prev_hunk() end)
+      return '<Ignore>'
+    end, {expr = true, desc = "Previous hunk"})
 
-        -- Actions
-        vim.keymap.set("n", "<leader>hs", gs.stage_hunk, defopts("Stage hunk"))
-        vim.keymap.set("n", "<leader>hr", gs.reset_hunk, defopts("Restore hunk"))
-        vim.keymap.set("n", "<leader>hS", gs.stage_buffer, defopts("Stage buffer"))
-        vim.keymap.set('n', '<leader>hu', gs.undo_stage_hunk, defopts('Unstage hunk'))
-        vim.keymap.set("n", "<leader>hR", gs.reset_buffer, defopts("Restore buffer"))
-        vim.keymap.set("n", "<leader>hp", gs.preview_hunk, defopts("Preview hunk"))
-        vim.keymap.set("n", "<leader>hb", gs.blame_line, defopts("Blame line"))
-        vim.keymap.set("n", "<leader>tb", gs.toggle_current_line_blame, defopts("Toogle current line blame"))
-        vim.keymap.set("n", "<leader>hd", gs.diffthis, defopts("Diff buffer"))
-        vim.keymap.set("n", "<leader>hD", function() gs.diffthis('~') end, defopts("Diff buffer (with staged)"))
-        vim.keymap.set("n", "<leader>td", gs.toggle_deleted, defopts("Toogle show deleted"))
-    end
+    -- Actions
+    vim.keymap.set("n", "<leader>hs", gs.stage_hunk, defopts("Stage hunk"))
+    vim.keymap.set("n", "<leader>hr", gs.reset_hunk, defopts("Restore hunk"))
+    vim.keymap.set("n", "<leader>hS", gs.stage_buffer, defopts("Stage buffer"))
+    vim.keymap.set("n", "<leader>hu", gs.undo_stage_hunk, defopts("Unstage hunk"))
+    vim.keymap.set("n", "<leader>hR", gs.reset_buffer, defopts("Restore buffer"))
+    vim.keymap.set("n", "<leader>hp", gs.preview_hunk, defopts("Preview hunk"))
+    vim.keymap.set("n", "<leader>hb", gs.blame_line, defopts("Blame line"))
+    vim.keymap.set("n", "<leader>tb", gs.toggle_current_line_blame, defopts("Toogle current line blame"))
+    vim.keymap.set("n", "<leader>hd", gs.diffthis, defopts("Diff buffer"))
+    vim.keymap.set("n", "<leader>hD", function() gs.diffthis("~") end, defopts("Diff buffer (with staged)"))
+    vim.keymap.set("n", "<leader>td", gs.toggle_deleted, defopts("Toogle show deleted"))
+  end
 }
 
 local wk = require("which-key")
-wk.register(
-    {
-        ["<leader>f"] = {name = "find"},
-        ["<leader>g"] = {name = "git"},
-        ["<leader>h"] = {name = "hunk"},
-        ["<leader>t"] = {name = "toggle"},
-        ["<leader>l"] = {name = "lsp symbol"}
-    }
-)
+wk.register{
+  ["<leader>f"] = {name = "find"},
+  ["<leader>g"] = {name = "git"},
+  ["<leader>h"] = {name = "hunk"},
+  ["<leader>t"] = {name = "toggle"},
+  ["<leader>l"] = {name = "lsp symbol"}
+}
 
 -- Other key mappings
 
@@ -306,13 +305,13 @@ vim.keymap.set("t", "<esc>", "<C-\\><C-n>", opts)
 -- Show/hide Diagnostics
 vim.g.diagnostics_visible = true
 function _G.toggle_diagnostics()
-    if vim.g.diagnostics_visible then
-        vim.g.diagnostics_visible = false
-        vim.diagnostic.disable()
-    else
-        vim.g.diagnostics_visible = true
-        vim.diagnostic.enable()
-    end
+  if vim.g.diagnostics_visible then
+    vim.g.diagnostics_visible = false
+    vim.diagnostic.disable()
+  else
+    vim.g.diagnostics_visible = true
+    vim.diagnostic.enable()
+  end
 end
 vim.keymap.set("n", "<leader>tq", toggle_diagnostics, defopts("Toogle diagnostics"))
 
