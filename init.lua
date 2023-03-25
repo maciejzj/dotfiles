@@ -46,31 +46,39 @@ vim.opt.autoread = true
 -- Disable mouse
 vim.opt.mouse = nil
 
+function defopts(desc)
+    return { noremap = true, silent = true, desc = desc }
+end
+
 -- Plugins
 require("packer").startup(
-function()
-    use "nmac427/guess-indent.nvim"
-    use "hrsh7th/cmp-buffer"
-    use "hrsh7th/cmp-cmdline"
-    use "hrsh7th/cmp-nvim-lsp"
-    use "hrsh7th/cmp-path"
-    use "hrsh7th/nvim-cmp"
-    use "joshdick/onedark.vim"
-    use "lewis6991/gitsigns.nvim"
-    use "lewis6991/spellsitter.nvim"
-    use "lukas-reineke/indent-blankline.nvim"
-    use "neovim/nvim-lspconfig"
-    use "nvim-treesitter/nvim-treesitter"
-    use "ray-x/lsp_signature.nvim"
-    use "terrortylor/nvim-comment"
-    use "wbthomason/packer.nvim"
-    use "kylechui/nvim-surround"
-    use "nvim-treesitter/nvim-treesitter-textobjects"
-    use "rrethy/nvim-treesitter-textsubjects"
-    use {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
-    use {"nvim-telescope/telescope.nvim", requires = {"nvim-lua/plenary.nvim"}}
-end
+    function()
+        use "folke/which-key.nvim"
+        use "hrsh7th/cmp-buffer"
+        use "hrsh7th/cmp-cmdline"
+        use "hrsh7th/cmp-nvim-lsp"
+        use "hrsh7th/cmp-path"
+        use "hrsh7th/nvim-cmp"
+        use "joshdick/onedark.vim"
+        use "kylechui/nvim-surround"
+        use "lewis6991/gitsigns.nvim"
+        use "lewis6991/spellsitter.nvim"
+        use "lukas-reineke/indent-blankline.nvim"
+        use "neovim/nvim-lspconfig"
+        use "nmac427/guess-indent.nvim"
+        use "nvim-treesitter/nvim-treesitter"
+        use "nvim-treesitter/nvim-treesitter-textobjects"
+        use "ray-x/lsp_signature.nvim"
+        use "rrethy/nvim-treesitter-textsubjects"
+        use "terrortylor/nvim-comment"
+        use "wbthomason/packer.nvim"
+        use {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
+        use {"nvim-telescope/telescope.nvim", requires = {"nvim-lua/plenary.nvim"}}
+        use {"sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim"}
+    end
 )
+
+-- Plugins setup
 
 -- Automatic indentation (if indent is detected will override the defaults)
 require("guess-indent").setup()
@@ -104,160 +112,197 @@ treesitter.setup {
             keymaps = {
                 ["af"] = "@function.outer",
                 ["if"] = "@function.inner",
-                ["ac"] = "@class.outer",
-                ["ic"] = "@class.inner"
+                ["aC"] = "@class.outer",
+                ["iC"] = "@class.inner"
             }
         }
     },
     textsubjects = {
         enable = true,
         keymaps = {
-            ['.'] = 'textsubjects-smart',
+            ["."] = "textsubjects-smart"
         }
-    },
+    }
 }
 
 -- Reconcile treesitter and spellchecking
 require("spellsitter").setup()
 
 -- LSP
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
 local lspconfig = require("lspconfig")
 
--- Diagnostics bindings
-local opts = { noremap=true, silent=true }
-vim.api.nvim_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-vim.api.nvim_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-vim.api.nvim_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-vim.api.nvim_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
-
 -- Register servers
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+
 local servers = {"clangd", "pylsp", "texlab"}
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup {
         on_attach = function(client, bufnr)
-            local opts = {noremap = true, silent = true}
-            -- See `:help vim.lsp.*` for documentation on any of the below functions
-            vim.api.nvim_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-            vim.api.nvim_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-            vim.api.nvim_set_keymap("n", "<C-]>", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-            vim.api.nvim_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-            vim.api.nvim_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-            vim.api.nvim_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-            vim.api.nvim_set_keymap("n", "<leader>wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
-            vim.api.nvim_set_keymap("n", "<leader>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
-            vim.api.nvim_set_keymap("n", "<leader>wl", "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", opts)
-            vim.api.nvim_set_keymap("n", "<leader>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
-            vim.api.nvim_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-            vim.api.nvim_set_keymap("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-            vim.api.nvim_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-            vim.api.nvim_set_keymap("n", "<leader>fm", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+            -- Lsp bindings
+            vim.keymap.set("n", "gd", vim.lsp.buf.definition, defopts("Definition"))
+            vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, defopts("Definition"))
+            vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, defopts("Type definition"))
+            vim.keymap.set("n", "gD", vim.lsp.buf.declaration, defopts("Declaration"))
+            vim.keymap.set("n", "K", vim.lsp.buf.hover, defopts("Hover"))
+            vim.keymap.set("n", "gi", vim.lsp.buf.implementation, defopts("Implementation"))
+            vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, defopts("Show signature"))
+            vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, defopts("Rename symbol"))
+            vim.keymap.set("n", "<leader>c", vim.lsp.buf.code_action, defopts("Code action"))
+            vim.keymap.set("n", "gr", vim.lsp.buf.references, defopts("References"))
+            vim.keymap.set("n", "<leader>m", vim.lsp.buf.format, defopts("Format"))
+
+            -- Diagnostics bindings
+            vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, defopts("Show diagnostics"))
+            vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, defopts("Next diagnostics"))
+            vim.keymap.set("n", "]d", vim.diagnostic.goto_next, defopts("Previous diagnostics"))
+            vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist, defopts("Diagnostics list"))
         end,
         capabilities = capabilities
     }
 end
 
--- Completion
-
 -- LSP based signatures when passing arguments
 require("lsp_signature").setup {
     hint_enable = false,
+    toggle_key = "<C-s>"
 }
 
 -- Use LSP and buffer for text completion
 local cmp = require "cmp"
 cmp.setup {
     sources = cmp.config.sources(
-    {
-        {name = "nvim_lsp"},
-        {name = "path"}
-    },
-    {
-        {name = "buffer"}
-    }
+        {
+            {name = "nvim_lsp"},
+            {name = "path"}
+        },
+        {
+            {name = "buffer"}
+        }
     ),
-    mapping = cmp.mapping.preset.insert({
-        ["<C-Space>"] = cmp.mapping.complete(),
-        ["<Tab>"] = cmp.mapping.select_next_item(),
-        ["<S-Tab>"] = cmp.mapping.select_prev_item(),
-        ["<C-f>"] = cmp.mapping.scroll_docs(1),
-        ["<C-b>"] = cmp.mapping.scroll_docs(-1),
-        ["<CR>"] = cmp.mapping.confirm({ select = true }),
-    })
+    mapping = cmp.mapping.preset.insert(
+        {
+            ["<C-Space>"] = cmp.mapping.complete(),
+            ["<Tab>"] = cmp.mapping.select_next_item(),
+            ["<S-Tab>"] = cmp.mapping.select_prev_item(),
+            ["<C-f>"] = cmp.mapping.scroll_docs(1),
+            ["<C-b>"] = cmp.mapping.scroll_docs(-1),
+            ["<CR>"] = cmp.mapping.confirm({select = true}),
+            ["<C-e>"] = cmp.mapping.confirm({select = true})
+        }
+    )
 }
 
 -- Use buffer source for command line completion
 cmp.setup.cmdline(
-"/",
-{
-    sources = {
-        {name = "buffer"}
-    },
-    mapping = cmp.mapping.preset.cmdline()
-}
+    "/",
+    {
+        sources = {
+            {name = "buffer"}
+        },
+        mapping = cmp.mapping.preset.cmdline()
+    }
 )
 
-cmp.setup.cmdline(':', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources({
-        { name = 'path' }
-    }, {
-        { name = 'cmdline' }
-    })
-})
+cmp.setup.cmdline(
+    ":",
+    {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources(
+            {
+                {name = "path"}
+            },
+            {
+                {name = "cmdline"}
+            }
+        )
+    }
+)
 
 -- Telescope file finder
-require("telescope").load_extension("fzf")
+telescope = require("telescope")
+telescope.setup{
+defaults = {
+ mappings = {
+      i = {
+        -- Show picker actions help with which-key
+        ["<C-h>"] = "which_key"
+      }
+    }
+}
+}
+telescope.load_extension("fzf")
 
 -- Git signs gutter and hunk navigation
 require("gitsigns").setup {
     on_attach = function(client, bufnr)
-        -- Navigation
-        vim.api.nvim_set_keymap("n", "]c", "&diff ? ']c' : '<cmd>Gitsigns next_hunk<CR>'", {expr = true})
-        vim.api.nvim_set_keymap("n", "[c", "&diff ? '[c' : '<cmd>Gitsigns prev_hunk<CR>'", {expr = true})
+        local gs = package.loaded.gitsigns
 
-        local opts = {noremap = true, silent = true}
+        -- Navigation
+        vim.keymap.set('n', ']c', function()
+            if vim.wo.diff then return ']c' end
+            vim.schedule(function() gs.next_hunk() end)
+            return '<Ignore>'
+        end, {expr = true, desc = "Next hunk"})
+
+        vim.keymap.set('n', '[c', function()
+            if vim.wo.diff then return '[c' end
+            vim.schedule(function() gs.prev_hunk() end)
+            return '<Ignore>'
+        end, {expr = true, desc = "Previous hunk"})
+
         -- Actions
-        vim.api.nvim_set_keymap("n", "<leader>hs", ":Gitsigns stage_hunk<CR>", opts)
-        vim.api.nvim_set_keymap("v", "<leader>hs", ":Gitsigns stage_hunk<CR>", opts)
-        vim.api.nvim_set_keymap("n", "<leader>hr", ":Gitsigns reset_hunk<CR>", opts)
-        vim.api.nvim_set_keymap("v", "<leader>hr", ":Gitsigns reset_hunk<CR>", opts)
-        vim.api.nvim_set_keymap("n", "<leader>hS", "<cmd>Gitsigns stage_buffer<CR>", opts)
-        vim.api.nvim_set_keymap("n", "<leader>hu", "<cmd>Gitsigns undo_stage_hunk<CR>", opts)
-        vim.api.nvim_set_keymap("n", "<leader>hR", "<cmd>Gitsigns reset_buffer<CR>", opts)
-        vim.api.nvim_set_keymap("n", "<leader>hp", "<cmd>Gitsigns preview_hunk<CR>", opts)
-        vim.api.nvim_set_keymap("n", "<leader>hb", '<cmd>lua require"gitsigns".blame_line{full=true}<CR>', opts)
-        vim.api.nvim_set_keymap("n", "<leader>tb", "<cmd>Gitsigns toggle_current_line_blame<CR>", opts)
-        vim.api.nvim_set_keymap("n", "<leader>hd", "<cmd>Gitsigns diffthis<CR>", opts)
-        -- Diff with staged changes shown
-        vim.api.nvim_set_keymap("n", "<leader>hD", '<cmd>lua require"gitsigns".diffthis("~")<CR>', opts)
-        vim.api.nvim_set_keymap("n", "<leader>td", "<cmd>Gitsigns toggle_deleted<CR>", opts)
+        vim.keymap.set("n", "<leader>hs", gs.stage_hunk, defopts("Stage hunk"))
+        vim.keymap.set("n", "<leader>hr", gs.reset_hunk, defopts("Restore hunk"))
+        vim.keymap.set("n", "<leader>hS", gs.stage_buffer, defopts("Stage buffer"))
+        vim.keymap.set('n', '<leader>hu', gs.undo_stage_hunk, defopts('Unstage hunk'))
+        vim.keymap.set("n", "<leader>hR", gs.reset_buffer, defopts("Restore buffer"))
+        vim.keymap.set("n", "<leader>hp", gs.preview_hunk, defopts("Preview hunk"))
+        vim.keymap.set("n", "<leader>hb", gs.blame_line, defopts("Blame line"))
+        vim.keymap.set("n", "<leader>tb", gs.toggle_current_line_blame, defopts("Toogle current line blame"))
+        vim.keymap.set("n", "<leader>hd", gs.diffthis, defopts("Diff buffer"))
+        vim.keymap.set("n", "<leader>hD", function() gs.diffthis('~') end, defopts("Diff buffer (with staged)"))
+        vim.keymap.set("n", "<leader>td", gs.toggle_deleted, defopts("Toogle show deleted"))
     end
 }
+
+local wk = require("which-key")
+wk.register(
+    {
+        ["<leader>f"] = {name = "find"},
+        ["<leader>g"] = {name = "git"},
+        ["<leader>h"] = {name = "hunk"},
+        ["<leader>t"] = {name = "toggle"},
+        ["<leader>l"] = {name = "lsp symbol"}
+    }
+)
 
 -- Other key mappings
 
 -- Set leader to space
 vim.g.mapleader = " "
--- Default opts (nonrecursive)
-local opts = {noremap = true, silent = true}
--- Netrw
-vim.api.nvim_set_keymap("n", "<leader>j", ":Explore<CR>", opts)
 -- Telescope
-vim.api.nvim_set_keymap("n", "<leader>ff", ':lua require"telescope.builtin".find_files()<CR>', opts)
-vim.api.nvim_set_keymap("n", "<leader>fg", ':lua require"telescope.builtin".live_grep()<CR>', opts)
-vim.api.nvim_set_keymap("n", "<leader>fs", ':lua require"telescope.builtin".grep_string()<CR>', opts)
-vim.api.nvim_set_keymap("n", "<leader>fc", ':lua require"telescope.builtin".commands()<CR>', opts)
-vim.api.nvim_set_keymap("n", "<leader>fh", ':lua require"telescope.builtin".help_tags()<CR>', opts)
-vim.api.nvim_set_keymap("n", "<leader>fb", ':lua require"telescope.builtin".buffers()<CR>', opts)
-vim.api.nvim_set_keymap("n", "<leader>gc", ':lua require"telescope.builtin".find_files()<CR>', opts)
-vim.api.nvim_set_keymap("n", "<leader>gb", ':lua require"telescope.builtin".git_commits()<CR>', opts)
-vim.api.nvim_set_keymap("n", "<leader>gf", ':lua require"telescope.builtin".git_bcommits()<CR>', opts)
-vim.api.nvim_set_keymap("n", "<leader>gs", ':lua require"telescope.builtin".git_status()<CR>', opts)
+local tb = require("telescope.builtin")
+vim.keymap.set("n", "<leader>ff", tb.find_files, defopts("Find file"))
+vim.keymap.set("n", "<leader>fg", tb.current_buffer_fuzzy_find, defopts("Grep in buffer"))
+vim.keymap.set("n", "<leader>fG", tb.live_grep, defopts("Grep in workspace"))
+vim.keymap.set("n", "<leader>fs", tb.grep_string, defopts("Find string (at cursor)"))
+vim.keymap.set("n", "<leader>fc", tb.commands, defopts("Find command"))
+vim.keymap.set("n", "<leader>fh", tb.help_tags, defopts("Search help"))
+vim.keymap.set("n", "<leader>fr", tb.command_history, defopts("Search command history"))
+vim.keymap.set("n", "<leader>fb", tb.buffers, defopts("Find buffer"))
+vim.keymap.set("n", "<leader>gc", tb.git_bcommits, defopts("Browse buffer commits"))
+vim.keymap.set("n", "<leader>gC", tb.git_commits, defopts("Browse commits"))
+vim.keymap.set("n", "<leader>gb", tb.git_branches, defopts("Browse branches"))
+vim.keymap.set("n", "<leader>gs", tb.git_status, defopts("Browse git status"))
+-- Telescope-LSP bindings
+vim.keymap.set("n", "<leader>ls", tb.lsp_document_symbols, defopts("Browse buffer symbols"))
+vim.keymap.set("n", "<leader>lS", tb.lsp_workspace_symbols, defopts("Browse workspace symbols"))
+vim.keymap.set("n", "<leader>lr", tb.lsp_references, defopts("Browse symbol references"))
+vim.keymap.set("n", "<leader>Q", tb.diagnostics, defopts("Browse workspace diagnostics"))
 -- Exit insert mode interminal with the Escape key
-vim.api.nvim_set_keymap("t", "<esc>", "<C-\\><C-n>", opts)
+vim.keymap.set("t", "<esc>", "<C-\\><C-n>", opts)
 -- Show/hide Diagnostics
 vim.g.diagnostics_visible = true
 function _G.toggle_diagnostics()
@@ -269,7 +314,7 @@ function _G.toggle_diagnostics()
         vim.diagnostic.enable()
     end
 end
-vim.api.nvim_set_keymap("n", "<Leader>d", ":call v:lua.toggle_diagnostics()<CR>", opts)
+vim.keymap.set("n", "<leader>tq", toggle_diagnostics, defopts("Toogle diagnostics"))
 
 -- Colorscheme
 vim.cmd([[colorscheme onedark]])
