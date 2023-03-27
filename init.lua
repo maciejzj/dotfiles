@@ -3,6 +3,9 @@
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 
+-- Textwidth
+vim.opt.textwidth = 80
+
 -- Folding
 -- Use folding based on text indentation
 vim.opt.foldmethod = "indent"
