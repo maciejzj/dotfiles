@@ -5,6 +5,7 @@ vim.opt.shiftwidth = 4
 
 -- Textwidth
 vim.opt.textwidth = 80
+vim.opt.formatoptions:remove{"t"}
 
 -- Folding
 -- Use folding based on text indentation
@@ -58,8 +59,10 @@ function defopts(desc)
 end
 
 -- Plugins
-require("packer").startup(
+require("packer").startup{
   function()
+    use "wbthomason/packer.nvim"
+
     use "folke/which-key.nvim"
     use "hrsh7th/cmp-buffer"
     use "hrsh7th/cmp-cmdline"
@@ -78,12 +81,20 @@ require("packer").startup(
     use "ray-x/lsp_signature.nvim"
     use "rrethy/nvim-treesitter-textsubjects"
     use "terrortylor/nvim-comment"
-    use "wbthomason/packer.nvim"
     use {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
     use {"nvim-telescope/telescope.nvim", requires = {"nvim-lua/plenary.nvim"}}
     use {"sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim"}
-  end
-)
+  end,
+
+  config = {
+    display = {
+      open_fn = function()
+        return require('packer.util').float{border = 'single'}
+      end
+    }
+  }
+}
+ 
 
 -- Plugins setup
 
@@ -92,7 +103,19 @@ local wk = require("which-key")
 wk.register{
   ["<leader>f"] = {name = "find"},
   ["<leader>t"] = {name = "toggle"},
+  ["<leader>c"] = {name = "config"},
+  ["<leader>p"] = {name = "plugins"}
 }
+
+vim.keymap.set("n", "<leader>e", ":Explore<CR>", defopts("File explorer"))
+vim.keymap.set("n", "<leader>ce", ":edit ~/.config/nvim/init.lua<CR>", defopts("Edit editor config"))
+vim.keymap.set("n", "<leader>cr", ":source ~/.config/nvim/init.lua<CR>", defopts("Reload editor config"))
+vim.keymap.set("n", "<leader>n", ":nohlsearch<CR>", defopts("Disable search highlight"))
+
+vim.keymap.set("n", "<leader>ps", ":PackerStatus<CR>", defopts("Plugins status"))
+vim.keymap.set("n", "<leader>pu", ":PackerUpdate<CR>", defopts("Update plugins"))
+vim.keymap.set("n", "<leader>pi", ":PackerInstall<CR>", defopts("Install plugins"))
+
 
 -- Automatic indentation (if indent is detected will override the defaults)
 require("guess-indent").setup()
@@ -201,10 +224,9 @@ for _, lsp in ipairs(servers) do
       vim.keymap.set("n", "K", vim.lsp.buf.hover, defopts("Hover"))
       vim.keymap.set("n", "gi", vim.lsp.buf.implementation, defopts("Implementation"))
       vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, defopts("Show signature"))
-      vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, defopts("Rename symbol"))
-      vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, defopts("Code action"))
+      vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, defopts("Rename symbol"))
+      vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, defopts("Code action"))
       vim.keymap.set("n", "gr", vim.lsp.buf.references, defopts("References"))
-      vim.keymap.set("n", "<leader>m", vim.lsp.buf.format, defopts("Format"))
 
       -- Diagnostics bindings
       vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, defopts("Show diagnostics"))
@@ -301,16 +323,16 @@ require("gitsigns").setup {
     local gs = package.loaded.gitsigns
 
     -- Hunk navigation
-    vim.keymap.set('n', ']c', function()
-      if vim.wo.diff then return ']c' end
+    vim.keymap.set("n", "]c", function()
+      if vim.wo.diff then return "]c" end
       vim.schedule(function() gs.next_hunk() end)
-      return '<Ignore>'
+      return "<Ignore>"
     end, {expr = true, desc = "Next hunk"})
 
-    vim.keymap.set('n', '[c', function()
-      if vim.wo.diff then return '[c' end
+    vim.keymap.set("n", "[c", function()
+      if vim.wo.diff then return "[c" end
       vim.schedule(function() gs.prev_hunk() end)
-      return '<Ignore>'
+      return "<Ignore>"
     end, {expr = true, desc = "Previous hunk"})
 
     wk.register{
