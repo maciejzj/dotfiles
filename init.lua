@@ -193,7 +193,7 @@ for _, lsp in ipairs(servers) do
       -- Lsp bindings
       vim.keymap.set("n", "gd", vim.lsp.buf.definition, defopts("Definition"))
       vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, defopts("Definition"))
-      vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, defopts("Type definition"))
+      vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, defopts("Type definition"))
       vim.keymap.set("n", "gD", vim.lsp.buf.declaration, defopts("Declaration"))
       vim.keymap.set("n", "K", vim.lsp.buf.hover, defopts("Hover"))
       vim.keymap.set("n", "gi", vim.lsp.buf.implementation, defopts("Implementation"))
@@ -261,7 +261,7 @@ cmp.setup {
       ["<C-f>"] = cmp.mapping.scroll_docs(1),
       ["<C-b>"] = cmp.mapping.scroll_docs(-1),
       ["<CR>"] = cmp.mapping.confirm({select = true}),
-      ["<C-e>"] = cmp.mapping.confirm({select = true})
+      ["<C-e>"] = cmp.mapping.abort()
     }
   )
 }
