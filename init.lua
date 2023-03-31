@@ -21,6 +21,8 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
 -- User interface
+-- Show cursorline
+vim.opt.cursorline = true
 -- Show statusline only if splits are open
 vim.opt.laststatus = 1
 -- Show relative line numbers
@@ -348,8 +350,8 @@ require("gitsigns").setup {
     vim.keymap.set("n", "<leader>hp", gs.preview_hunk, defopts("Preview hunk"))
     vim.keymap.set("n", "<leader>hb", gs.blame_line, defopts("Blame line"))
     vim.keymap.set("n", "<leader>tb", gs.toggle_current_line_blame, defopts("Toogle current line blame"))
-    vim.keymap.set("n", "<leader>hd", gs.diffthis, defopts("Diff buffer"))
-    vim.keymap.set("n", "<leader>hD", function() gs.diffthis("~") end, defopts("Diff buffer (with staged)"))
+    vim.keymap.set("n", "<leader>gd", gs.diffthis, defopts("Diff buffer"))
+    vim.keymap.set("n", "<leader>gD", function() gs.diffthis("~") end, defopts("Diff buffer (with staged)"))
     vim.keymap.set("n", "<leader>td", gs.toggle_deleted, defopts("Toogle show deleted"))
   end
 }
