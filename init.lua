@@ -83,6 +83,7 @@ require("packer").startup{
     use "ray-x/lsp_signature.nvim"
     use "rrethy/nvim-treesitter-textsubjects"
     use "terrortylor/nvim-comment"
+    use "kiyoon/treesitter-indent-object.nvim"
     use {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
     use {"nvim-telescope/telescope.nvim", requires = {"nvim-lua/plenary.nvim"}}
     use {"sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim"}
@@ -96,7 +97,6 @@ require("packer").startup{
     }
   }
 }
- 
 
 -- Plugins setup
 
@@ -123,7 +123,22 @@ vim.keymap.set("n", "<leader>pi", ":PackerInstall<CR>", defopts("Install plugins
 require("guess-indent").setup()
 
 -- Indent guides
-require("indent_blankline").setup()
+vim.opt.list = true
+vim.opt.listchars:append "space:⋅"
+vim.opt.listchars:append "eol:↴"
+
+require("indent_blankline").setup {
+  show_current_context = true
+}
+
+-- Indent text object
+require("treesitter_indent_object").setup()
+
+indentobj = require("treesitter_indent_object.textobj")
+vim.keymap.set({"x", "o"}, "ai", indentobj.select_indent_outer, defopts("Select outer indent"))
+vim.keymap.set({"x", "o"}, "aI", function() indentobj.select_indent_outer(true) end, defopts("Select outer indent line-wise"))
+vim.keymap.set({"x", "o"}, "ii", indentobj.select_indent_inner, defopts("Select inner indent"))
+vim.keymap.set({"x", "o"}, "iI", function() indentobj.select_indent_inner(true) end, defopts("Select inner indent line-wise"))
 
 -- Code commenting
 require("nvim_comment").setup()
@@ -162,7 +177,7 @@ vim.keymap.set("n", "<leader>fb", tb.buffers, defopts("Find buffer"))
 
 local is_repo = vim.fn.system("git rev-parse --is-inside-work-tree")
 if vim.v.shell_error == 0 then
-  wk.register{
+  wk.register {
     ["<leader>g"] = {name = "git"},
   }
   vim.keymap.set("n", "<leader>gc", tb.git_commits, defopts("Browse commits"))
@@ -257,10 +272,10 @@ for _, lsp in ipairs(servers) do
         end
       end
       vim.keymap.set("n", "<leader>tq", toggle_diagnostics, defopts("Toogle diagnostics"))
-          end,
-          capabilities = capabilities
-        }
-      end
+    end,
+    capabilities = capabilities
+  }
+end
 
 -- LSP based signatures when passing arguments
 require("lsp_signature").setup {
@@ -272,30 +287,30 @@ require("lsp_signature").setup {
 local cmp = require "cmp"
 cmp.setup {
   sources = cmp.config.sources(
-    {
-      {name = "nvim_lsp"},
-      {name = "path"}
-    },
-    {
-      {name = "buffer"}
-    }
+  {
+    {name = "nvim_lsp"},
+    {name = "path"}
+  },
+  {
+    {name = "buffer"}
+  }
   ),
   mapping = cmp.mapping.preset.insert(
-    {
-      ["<C-Space>"] = cmp.mapping.complete(),
-      ["<Tab>"] = cmp.mapping.select_next_item(),
-      ["<S-Tab>"] = cmp.mapping.select_prev_item(),
-      ["<C-f>"] = cmp.mapping.scroll_docs(1),
-      ["<C-b>"] = cmp.mapping.scroll_docs(-1),
-      ["<CR>"] = cmp.mapping.confirm({select = true}),
-      ["<C-e>"] = cmp.mapping.abort()
-    }
+  {
+    ["<C-Space>"] = cmp.mapping.complete(),
+    ["<Tab>"] = cmp.mapping.select_next_item(),
+    ["<S-Tab>"] = cmp.mapping.select_prev_item(),
+    ["<C-f>"] = cmp.mapping.scroll_docs(1),
+    ["<C-b>"] = cmp.mapping.scroll_docs(-1),
+    ["<CR>"] = cmp.mapping.confirm({select = true}),
+    ["<C-e>"] = cmp.mapping.abort()
+  }
   )
 }
 
 -- Use buffer source for command line completion
 cmp.setup.cmdline(
-  "/",
+  { "/", "?" },
   {
     sources = {
       {name = "buffer"}
