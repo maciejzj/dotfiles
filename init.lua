@@ -81,7 +81,6 @@ require("packer").startup{
     use "nvim-treesitter/nvim-treesitter"
     use "nvim-treesitter/nvim-treesitter-textobjects"
     use "ray-x/lsp_signature.nvim"
-    use "rrethy/nvim-treesitter-textsubjects"
     use "terrortylor/nvim-comment"
     use "kiyoon/treesitter-indent-object.nvim"
     use {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
@@ -102,6 +101,7 @@ require("packer").startup{
 
 -- Whick key keymappings
 local wk = require("which-key")
+wk.setup()
 wk.register{
   ["<leader>f"] = {name = "find"},
   ["<leader>t"] = {name = "toggle"},
@@ -114,8 +114,9 @@ wk.register{
 vim.keymap.set("n", "<leader>e", ":Explore<CR>", defopts("File explorer"))
 vim.keymap.set("n", "<leader>ce", ":edit ~/.config/nvim/init.lua<CR>", defopts("Edit editor config"))
 vim.keymap.set("n", "<leader>cr", ":source ~/.config/nvim/init.lua<CR>", defopts("Reload editor config"))
-vim.keymap.set("n", "<leader>n", ":set hlsearch!<CR>", defopts("Toggle search highlight"))
+vim.keymap.set("n", "<leader>n", ":nohlsearch<CR>", defopts("Hide search highlight"))
 vim.keymap.set("n", "<leader>ts", ":set spell!<CR>", defopts("Toggle spellchecking"))
+vim.keymap.set("n", "<leader>tw", ":set list!<CR>", defopts("Toggle visible whitespace characters"))
 
 -- Plugin management keymaps
 
@@ -139,10 +140,10 @@ require("indent_blankline").setup {
 require("treesitter_indent_object").setup()
 
 indentobj = require("treesitter_indent_object.textobj")
-vim.keymap.set({"x", "o"}, "ai", indentobj.select_indent_outer, defopts("Select outer indent"))
-vim.keymap.set({"x", "o"}, "aI", function() indentobj.select_indent_outer(true) end, defopts("Select outer indent line-wise"))
-vim.keymap.set({"x", "o"}, "ii", indentobj.select_indent_inner, defopts("Select inner indent"))
-vim.keymap.set({"x", "o"}, "iI", function() indentobj.select_indent_inner(true) end, defopts("Select inner indent line-wise"))
+vim.keymap.set({"x", "o"}, "ai", indentobj.select_indent_outer, defopts("outer indent (context-aware)"))
+vim.keymap.set({"x", "o"}, "aI", function() indentobj.select_indent_outer(true) end, defopts("outer indent line-wise (context-aware)"))
+vim.keymap.set({"x", "o"}, "ii", indentobj.select_indent_inner, defopts("inner indent (context-aware)"))
+vim.keymap.set({"x", "o"}, "iI", function() indentobj.select_indent_inner(true) end, defopts("inner indent line-wise (context-aware)"))
 
 -- Code commenting
 require("nvim_comment").setup()
@@ -204,19 +205,21 @@ treesitter.setup {
       enable = true,
       lookahead = true,
       keymaps = {
-        ["af"] = "@function.outer",
-        ["if"] = "@function.inner",
-        ["aC"] = "@class.outer",
-        ["iC"] = "@class.inner"
+        ["af"] = { query = "@function.outer", desc = "outer function"},
+        ["if"] = { query = "@function.inner", desc = "inner function"},
+        ["aC"] = { query = "@class.outer", desc = "outer class"},
+        ["iC"] = { query = "@class.inner", desc = "inner class"},
       }
     }
   },
-  textsubjects = {
+  incremental_selection = {
     enable = true,
     keymaps = {
-      ["."] = "textsubjects-smart"
-    }
-  }
+      init_selection = "<leader>i",
+      node_incremental = "<C-n>",
+      node_decremental = "<C-p>",
+    },
+  },
 }
 
 -- Reconcile treesitter and spellchecking
@@ -315,28 +318,28 @@ cmp.setup {
 
 -- Use buffer source for command line completion
 cmp.setup.cmdline(
-  { "/", "?" },
-  {
-    sources = {
-      {name = "buffer"}
-    },
-    mapping = cmp.mapping.preset.cmdline()
-  }
+{ "/", "?" },
+{
+  sources = {
+    {name = "buffer"}
+  },
+  mapping = cmp.mapping.preset.cmdline()
+}
 )
 
 cmp.setup.cmdline(
-  ":",
+":",
+{
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources(
   {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources(
-      {
-        {name = "path"}
-      },
-      {
-        {name = "cmdline"}
-      }
-    )
+    {name = "path"}
+  },
+  {
+    {name = "cmdline"}
   }
+  )
+}
 )
 
 -- Git signs gutter and hunk navigation
