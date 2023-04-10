@@ -2,6 +2,7 @@ autopep8
 black
 dash
 dvc
+einops
 flake8
 flask
 ipdb
