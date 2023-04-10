@@ -215,7 +215,7 @@ treesitter.setup {
   incremental_selection = {
     enable = true,
     keymaps = {
-      init_selection = "<leader>i",
+      init_selection = "<leader>v",
       node_incremental = "<C-n>",
       node_decremental = "<C-p>",
     },
@@ -233,7 +233,7 @@ local lspconfig = require("lspconfig")
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
-local servers = {"clangd", "pylsp", "texlab"}
+local servers = {"clangd", "pylsp", "bashls", "marksman", "texlab"}
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = function(client, bufnr)
