@@ -381,6 +381,10 @@ require("gitsigns").setup {
 
 -- Colorscheme
 vim.cmd([[colorscheme onedark]])
+vim.api.nvim_set_hl(0, "IndentBlanklineContextChar", { ctermfg = "lightgray" })
+-- Don't underline changed lines in diff
+vim.api.nvim_set_hl(0, "DiffChange", { cterm = nil })
+vim.opt.fillchars = {diff = '⋅'}
 
 -- Fixes and workarounds
 
