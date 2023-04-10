@@ -53,22 +53,26 @@ darwin*)
 	source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 	source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 	source /opt/homebrew/opt/fzf/shell/completion.zsh
+	source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
 	;;
 linux-gnu)
 	# Debian-based
 	if [ -f /etc/lsb-release ]; then
 		zsh_syntax_highlighting="/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-		zsh_completion="/usr/share/doc/fzf/examples/completion.zsh"
 		zsh_autosuggestions="/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+		zsh_fzf_completion="/usr/share/doc/fzf/examples/completion.zsh"
+		zsh_fzf_bindings="/usr/share/doc/fzf/examples/key-bindings.zsh"
 	# Arch
 	elif [ -f /etc/arch-release ]; then
 		zsh_syntax_highlighting="/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-		zsh_completion="/usr/share/fzf/completion.zsh"
 		zsh_autosuggestions="/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+		zsh_fzf_completion="/usr/share/fzf/completion.zsh"
+	    zsh_fzf_bindings="/usr/share/fzf/key-bindings.zsh"
 	fi
 
 	source "$zsh_syntax_highlighting"
-	source "$zsh_completion"
+	source "$zsh_fzf_completion"
+	source "$zsh_fzf_bindings"
 	if [ $TERM = linux ]; then
 		# Enabled only in bare tty
 		PURE_PROMPT_SYMBOL=">"

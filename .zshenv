@@ -43,6 +43,10 @@ export LESS_TERMCAP_ue=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;4;31m'
 # Make fzf follow 16 ANSI terminal colors
 export FZF_DEFAULT_OPTS='--color=16'
+# Use fd for fzf
+export FZF_DEFAULT_COMMAND="fd . $HOME"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fd -t d . $HOME"
 # Make bat follow 16 ANSI terminal colors
 export BAT_THEME='ansi'
 
