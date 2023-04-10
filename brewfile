@@ -30,6 +30,7 @@ brew "yq"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-completions"
 brew "zsh-syntax-highlighting"
+brew "hdf5"
 
 brew "cmake"
 brew "git"
