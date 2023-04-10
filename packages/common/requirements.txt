@@ -26,7 +26,6 @@ rentry
 rope
 scikit-image
 scikit-learn
-tensorflow
 torch
 torchvision
 virtualenv
