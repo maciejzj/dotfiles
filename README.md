@@ -24,8 +24,3 @@ Run: `./install` to deploy the dotfiles.
 
 On Linux it is best to use the dotfiles with my 
 [suckless builds](https://github.com/maciejzj/suckless-builds).
-
-## Fine-tuning
-
-Some config pieces may require minimal fixing, e.g. readjust some lines in
-`config.tmux` to make it work with `xclip`.

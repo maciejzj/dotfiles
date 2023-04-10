@@ -48,7 +48,7 @@ eval "$(pyenv init - virtualenv)"
 alias brew="env PATH=${PATH//$(pyenv root)\/shims:/} brew"
 
 # Plugins
-fpath+="$XDG_CONFIG_HOME/zsh/pure"
+fpath+="$XDG_DATA_HOME/zsh/pure"
 autoload -U promptinit; promptinit
 prompt pure
 case $OSTYPE in

@@ -34,6 +34,8 @@ alias wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"
 
 export HISTFILE="$XDG_STATE_HOME/zsh/history"
 
+export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc.py"
+
 # Set history length
 export HISTSIZE=SAVEHIST=100000
 # General history settings

@@ -1,0 +1,6 @@
+configs/nvim_init.lua "${HOME}/.config/nvim/init.lua"
+configs/tmux.conf "${HOME}/.config/tmux/tmux.conf"
+configs/fd_ignore "${HOME}/.config/fd/ignore"
+configs/pythonrc.py "${HOME}/.config/python/pythonrc.py"
+configs/zshrc "${HOME}/.zshrc"
+configs/zshenv "${HOME}/.zshenv"
