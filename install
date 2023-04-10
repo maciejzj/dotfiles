@@ -1,4 +1,7 @@
 #!/bin/bash
+# WARNING: This script is not up to date with dotfiles layout and needs to be
+# updated.
+#
 # Note that currently this config uses only dotfiles that are defaultly
 # stored in home dir, if in the future there are any that should be stored
 # in .config folder this requires modification.

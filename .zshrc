@@ -4,9 +4,9 @@ setopt auto_cd
 # Enable command autocorrection
 setopt correct
 
-# History of visited directoties
+# History of visited directories
 # Extend dir stack size
-DIRSTACKSIZE=8
+DIRSTACKSIZE=10
 # Make cd automatically push to stack
 setopt autopushd 
 # Swap minus and plus  
@@ -15,6 +15,8 @@ setopt pushdminus
 setopt pushdsilent
 # Push without arguments pushes current dir instead of swapping order
 setopt pushdtohome
+# Follow XDG directories layout (this is repeated to prevent overwrites)
+export HISTFILE="$XDG_STATE_HOME/zsh/history"
 
 # Make ctrl+u work like in other shells (delete from cursor to beginning
 # of the line, instead of deleting the whole line)
@@ -36,16 +38,17 @@ zstyle ':completion:*' menu yes select
 bindkey -M menuselect '^[[Z' reverse-menu-complete
 # Enable completion
 autoload -Uz compinit
-compinit
+compinit -d $XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION
 
-# Enable pyenv
+# Setup pyenv
 eval "$(pyenv init -)"
 eval "$(pyenv init - virtualenv)"
+
 # Reconcile homebrew and pyenv
 alias brew="env PATH=${PATH//$(pyenv root)\/shims:/} brew"
 
 # Plugins
-fpath+=$HOME/.zsh/pure
+fpath+="$XDG_CONFIG_HOME/zsh/pure"
 autoload -U promptinit; promptinit
 prompt pure
 case $OSTYPE in

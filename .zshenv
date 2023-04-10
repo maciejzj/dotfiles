@@ -20,6 +20,8 @@ export ANSIBLE_GALAXY_CACHE_DIR="$XDG_CACHE_HOME/ansible/galaxy_cache"
 
 export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
 
+export PYENV_ROOT=$XDG_DATA_HOME/pyenv
+
 export IPYTHONDIR="$XDG_CONFIG_HOME/ipython"
 export JUPYTER_CONFIG_DIR="$XDG_CONFIG_HOME/jupyter"
 
@@ -27,11 +29,18 @@ export MYPY_CACHE_DIR="$XDG_CACHE_HOME"/mypy
 
 export MPLCONFIGDIR="$XDG_CONFIG_HOME/matplotlib"
 
+export WGETRC="$XDG_CONFIG_HOME/wgetrc"
+alias wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"
+
+export HISTFILE="$XDG_STATE_HOME/zsh/history"
+
 # Set history length
-HISTFILE=~/.zhistory
-HISTSIZE=SAVEHIST=100000
+export HISTSIZE=SAVEHIST=100000
+# General history settings
+setopt pushdtohome
 setopt sharehistory
 setopt extendedhistory
+# Disable history for space prefixed commands
 setopt histignorespace
 
 # Enable colors for man pages
