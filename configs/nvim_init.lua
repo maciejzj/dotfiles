@@ -74,7 +74,6 @@ require("packer").startup{
     use "joshdick/onedark.vim"
     use "kylechui/nvim-surround"
     use "lewis6991/gitsigns.nvim"
-    use "lewis6991/spellsitter.nvim"
     use "lukas-reineke/indent-blankline.nvim"
     use "neovim/nvim-lspconfig"
     use "nmac427/guess-indent.nvim"
@@ -221,9 +220,6 @@ treesitter.setup {
     },
   },
 }
-
--- Reconcile treesitter and spellchecking
-require("spellsitter").setup()
 
 -- LSP
 
