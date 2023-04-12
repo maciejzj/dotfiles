@@ -197,7 +197,8 @@ local treesitter = require "nvim-treesitter.configs"
 treesitter.setup {
   ensure_installed = "all",
   highlight = {
-    enable = true
+    enable = true,
+    additional_vim_regex_highlighting = false,
   },
   textobjects = {
     select = {
