@@ -83,6 +83,7 @@ alias dh='dirs -v'
 # Make sure python is python3
 alias python='python3'
 alias pip='pip3'
+alias ipdb='ipdb3'
 # Use nvim
 alias vim='nvim'
 alias vimdiff='nvim -d'
