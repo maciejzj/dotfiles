@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/bin/env bash
+
+# This script is intended to be pseudo-idempotent.
 
 set -euo pipefail
 
@@ -17,13 +19,14 @@ while read -r map; do
 	src=$(cut -d " " -f 1 <<< "$(eval echo "$map")")
 	dest=$(cut -d " " -f 2 <<< "$(eval echo "$map")")
 
-	if [ -e "${dest}" ]; then
+	# This will not overwrite files unless they are symlinks
+	if [ -e "${dest}" ] && [ ! -h "${dest}" ]; then
 		echo -e "${YELLOW}Config file: ${dest} will be skipped because it already exists, remove it and rerun this script to install new config${NOCOLOR}"
 		continue
 	fi
 
 	mkdir -p "$(dirname "$dest")"
-	ln -s "$(realpath "$src")" "$dest"
+	ln -f -s "$(realpath "$src")" "$dest"
 done < mappings
 
 # System-specific actions
@@ -58,13 +61,20 @@ linux-gnu)
 	# Arch-based with pacman
 	if [ -x "$(command -v pacman)" ]; then 
 		echo -e "${BLUE}Installing pacman packages${NOCOLOR}"
-		echo -e "${RED}Pacman packages not yet implemented{NOCOLOR}"
+		echo -e "${RED}Pacman packages not yet implemented${NOCOLOR}"
 		exit 1
 	# Debian based with apt
 	elif [ -x "$(command -v apt)" ]; then
 		echo -e "${BLUE}Installing apt packages${NOCOLOR}"
-		echo -e "${RED}Apt packages not yet implemented{NOCOLOR}"
-		exit 1
+
+		sudo xargs apt install -y < packages/debian/pkglist
+		
+		if [ ! -x "$(command -v pyenv)" ]; then
+
+			curl 'https://pyenv.run' | bash
+			PYENV_VIRTENV_REPO_URL="https://github.com/pyenv/pyenv-virtualenv.git"
+			git clone --quiet "${PYENV_VIRTENV_REPO_URL}" "$(pyenv root)/plugins/pyenv-virtualenv"
+		fi
 	else
 		echo -e "${RED}Did not detect supported Linux package manager, config install abandoned${NOCOLOR}"
 		exit 1
@@ -83,7 +93,7 @@ mkdir -p "${XDG_DATA_HOME}/zsh"
 
 if [ -d "${XDG_DATA_HOME}/zsh/pure" ]; then
 	echo -e "${GREEN}Pure prompt already installed, skipping${NOCOLOR}"
-elif ! git clone https://github.com/sindresorhus/pure.git "${XDG_DATA_HOME}/zsh/pure"; then
+elif ! git clone --quiet https://github.com/sindresorhus/pure.git "${XDG_DATA_HOME}/zsh/pure"; then
 	echo -e "${RED}Failed to install pure prompt, config will proceed${NOCOLOR}"
 fi
 
@@ -96,7 +106,7 @@ PACKER_INSTALL_DIR="${HOME}/.local/share/nvim/site/pack/packer/start"
 if ! [ -d "${PACKER_INSTALL_DIR}/packer.nvim" ]; then
 	PACKER_GIT_REPO_URL="https://github.com/wbthomason/packer.nvim"
 	mkdir -p "${PACKER_INSTALL_DIR}"
-	if ! git clone --depth 1 "${PACKER_GIT_REPO_URL}" "${PACKER_INSTALL_DIR}/packer.nvim"; then
+	if ! git clone --quiet --depth 1 "${PACKER_GIT_REPO_URL}" "${PACKER_INSTALL_DIR}/packer.nvim"; then
 		echo -e "${RED}Failed to install packer, config install abandoned${NOCOLOR}"
 		exit 1
 	fi
@@ -114,7 +124,7 @@ echo -e "${BLUE}==> Installing tmux-themepack${NOCOLOR}"
 TMUX_CONF_DIR="${XDG_CONFIG_HOME}/tmux"
 if ! [ -d "${TMUX_CONF_DIR}/tmux-themepack" ]; then
 	TMUX_GIT_REPO_URL="https://github.com/jimeh/tmux-themepack.git"
-	if ! git clone "${TMUX_GIT_REPO_URL}" "${TMUX_CONF_DIR}/tmux-themepack"; then
+	if ! git clone --quiet "${TMUX_GIT_REPO_URL}" "${TMUX_CONF_DIR}/tmux-themepack"; then
 		echo -e "${RED}Failed to install tmux-themepack, config will proceed${NOCOLOR}"
 	fi
 	echo -e "${GREEN}Tmux-themepack installed successfully${NOCOLOR}"
