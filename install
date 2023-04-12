@@ -8,9 +8,9 @@ YELLOW="\033[1;33m"
 RED='\033[1;31m'
 NOCOLOR='\033[0m'
 
-# Grab all dotfiles in this folder
 echo -e "${BLUE}==> Deploying dotfiles${NOCOLOR}"
 
+# Deploy config files as symlinks based on the mappings file
 while read -r map; do
 	# The $(eval echo ...) expression is needed to expand environmental
 	# variables inside mappings file
