@@ -68,7 +68,7 @@ linux-gnu)
 		echo -e "${BLUE}Installing apt packages${NOCOLOR}"
 
 		sudo xargs apt install -y < packages/debian/pkglist
-		
+
 		if [ ! -x "$(command -v pyenv)" ]; then
 
 			curl 'https://pyenv.run' | bash
