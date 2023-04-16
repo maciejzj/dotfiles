@@ -70,7 +70,6 @@ linux-gnu)
 		sudo xargs apt install -y < packages/debian/pkglist
 
 		if [ ! -x "$(command -v pyenv)" ]; then
-
 			curl 'https://pyenv.run' | bash
 			PYENV_VIRTENV_REPO_URL="https://github.com/pyenv/pyenv-virtualenv.git"
 			git clone --quiet "${PYENV_VIRTENV_REPO_URL}" "$(pyenv root)/plugins/pyenv-virtualenv"
