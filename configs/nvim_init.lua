@@ -234,10 +234,10 @@ treesitter.setup {
     swap = {
       enable = true,
       swap_next = {
-        ["<leader>a"] = { query = "@parameter.inner", desc = "Swap with next parameter" },
+        ["<leader>la"] = { query = "@parameter.inner", desc = "Swap with next parameter" },
       },
       swap_previous = {
-        ["<leader>A"] = { query = "@parameter.inner", desc = "Swap with previous parameter" },
+        ["<leader>lA"] = { query = "@parameter.inner", desc = "Swap with previous parameter" },
       },
     },
   },
