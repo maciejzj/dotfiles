@@ -80,7 +80,7 @@ require("packer").startup{
     use "nvim-treesitter/nvim-treesitter"
     use "nvim-treesitter/nvim-treesitter-textobjects"
     use "ray-x/lsp_signature.nvim"
-    use "terrortylor/nvim-comment"
+    use "numtostr/comment.nvim"
     use "kiyoon/treesitter-indent-object.nvim"
     use {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
     use {"nvim-telescope/telescope.nvim", requires = {"nvim-lua/plenary.nvim"}}
@@ -145,7 +145,7 @@ vim.keymap.set({"x", "o"}, "ii", indentobj.select_indent_inner, defopts("inner i
 vim.keymap.set({"x", "o"}, "iI", function() indentobj.select_indent_inner(true) end, defopts("inner indent line-wise (context-aware)"))
 
 -- Code commenting
-require("nvim_comment").setup()
+require("comment").setup()
 
 -- Surround motions
 require("nvim-surround").setup()
