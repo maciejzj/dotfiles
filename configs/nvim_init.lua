@@ -201,16 +201,45 @@ treesitter.setup {
     additional_vim_regex_highlighting = false,
   },
   textobjects = {
+    move = {
+      enable = true,
+      set_jumps = true,
+      goto_next_start = {
+        ["]m"] = "@function.outer",
+        ["]]"] = { query = "@class.outer", desc = "Next class start" },
+      },
+      goto_next_end = {
+        ["]M"] = "@function.outer",
+        ["]["] = { query = "@class.outer", desc = "Next class end" },
+      },
+      goto_previous_start = {
+        ["[m"] = "@function.outer",
+        ["[["] = { query = "@class.outer", desc = "Previous class start" },
+      },
+      goto_previous_end = {
+        ["[M"] = "@function.outer",
+        ["[]"] = { query = "@class.outer", desc = "Previous class end" },
+      },
+    },
     select = {
       enable = true,
       lookahead = true,
       keymaps = {
         ["af"] = { query = "@function.outer", desc = "outer function"},
         ["if"] = { query = "@function.inner", desc = "inner function"},
-        ["aC"] = { query = "@class.outer", desc = "outer class"},
-        ["iC"] = { query = "@class.inner", desc = "inner class"},
+        ["ac"] = { query = "@class.outer", desc = "outer class"},
+        ["ic"] = { query = "@class.inner", desc = "inner class"},
       }
-    }
+    },
+    swap = {
+      enable = true,
+      swap_next = {
+        ["<leader>a"] = { query = "@parameter.inner", desc = "Swap with next parameter" },
+      },
+      swap_previous = {
+        ["<leader>A"] = { query = "@parameter.inner", desc = "Swap with previous parameter" },
+      },
+    },
   },
   incremental_selection = {
     enable = true,
