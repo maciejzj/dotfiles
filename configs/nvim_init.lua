@@ -255,6 +255,15 @@ treesitter.setup {
 
 local lspconfig = require("lspconfig")
 
+-- LSP & related floating windows styling
+vim.diagnostic.config {
+    float = { border = "rounded" },
+}
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+  vim.lsp.handlers.hover,
+  { style = "minimal", border = "rounded" }
+)
+
 -- Register servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
