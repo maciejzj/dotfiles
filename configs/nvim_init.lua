@@ -309,13 +309,32 @@ for _, lsp in ipairs(servers) do
         if vim.g.diagnostics_visible then
           vim.g.diagnostics_visible = false
           vim.diagnostic.disable()
+          print("Diagnostics off")
         else
           vim.g.diagnostics_visible = true
           vim.diagnostic.enable()
+          print("Diagnostics on")
         end
       end
       vim.keymap.set("n", "<leader>tq", toggle_diagnostics, defopts("Toggle diagnostics"))
+
+      -- Highlight symbol under cursor
+      vim.api.nvim_create_autocmd("CursorHold", {
+        pattern = "*",
+        callback = function()
+          vim.lsp.buf.document_highlight()
+        end,
+        group = group,
+      })
+      vim.api.nvim_create_autocmd("CursorMoved", {
+        pattern = "*",
+        callback = function()
+          vim.lsp.buf.clear_references()
+        end,
+        group = group,
+      })
     end,
+
     capabilities = capabilities
   }
 end
@@ -419,6 +438,10 @@ vim.cmd([[colorscheme onedark]])
 -- Don't underline changed lines in diff
 vim.api.nvim_set_hl(0, "DiffChange", { cterm = nil })
 vim.opt.fillchars = {diff = '⋅'}
+
+vim.api.nvim_set_hl(0, 'LspReferenceText', { underline = true })
+vim.api.nvim_set_hl(0, 'LspReferenceRead', { underline = true })
+vim.api.nvim_set_hl(0, 'LspReferenceWrite', { underline = true })
 
 -- Fixes and workarounds
 
