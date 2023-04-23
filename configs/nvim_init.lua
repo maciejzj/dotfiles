@@ -447,3 +447,10 @@ vim.api.nvim_set_hl(0, 'LspReferenceWrite', { underline = true })
 
 -- Disable error highlighting for markdown
 vim.api.nvim_set_hl(0, "markdownError", { link = nil })
+
+-- Redraw indent guides after folding operations
+for _, keymap in pairs {
+    "zo", "zO", "zc", "zC", "za", "zA", "zv", "zx", "zX", "zm", "zM", "zr", "zR",
+} do
+    vim.api.nvim_set_keymap("n", keymap,  keymap .. "<CMD>IndentBlanklineRefresh<CR>", { noremap=true, silent=true })
+end
