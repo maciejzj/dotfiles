@@ -145,7 +145,7 @@ vim.keymap.set({"x", "o"}, "ii", indentobj.select_indent_inner, defopts("inner i
 vim.keymap.set({"x", "o"}, "iI", function() indentobj.select_indent_inner(true) end, defopts("inner indent line-wise (context-aware)"))
 
 -- Code commenting
-require("comment").setup()
+require("Comment").setup()
 
 -- Surround motions
 require("nvim-surround").setup()
