@@ -116,6 +116,7 @@ vim.keymap.set("n", "<leader>cr", ":source ~/.config/nvim/init.lua<CR>", defopts
 vim.keymap.set("n", "<leader>n", ":nohlsearch<CR>", defopts("Hide search highlight"))
 vim.keymap.set("n", "<leader>ts", ":set spell!<CR>", defopts("Toggle spellchecking"))
 vim.keymap.set("n", "<leader>tw", ":set list!<CR>", defopts("Toggle visible whitespace characters"))
+vim.keymap.set("n", "<leader>L", ":copen<CR>", defopts("Open quickfix list"))
 
 -- Plugin management keymaps
 
