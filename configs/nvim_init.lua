@@ -435,7 +435,7 @@ require("gitsigns").setup {
 }
 
 -- Colorscheme
-vim.cmd([[colorscheme onedark]])
+vim.cmd.colorscheme("onedark")
 -- Don't underline changed lines in diff
 vim.api.nvim_set_hl(0, "DiffChange", { cterm = nil })
 vim.opt.fillchars = {diff = '⋅'}
