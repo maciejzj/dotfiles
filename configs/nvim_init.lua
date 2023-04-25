@@ -165,7 +165,8 @@ telescope.setup {
         -- Show picker actions help with which-key
         ["<C-h>"] = "which_key"
       }
-    }
+    },
+    vimgrep_arguments = { "rg", "--vimgrep", "--smart-case", "--type-not", "jupyter", },
   }
 }
 telescope.load_extension("fzf")
