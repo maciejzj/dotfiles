@@ -123,6 +123,7 @@ vim.keymap.set("n", "<leader>L", ":copen<CR>", defopts("Open quickfix list"))
 vim.keymap.set("n", "<leader>ps", ":PackerStatus<CR>", defopts("Plugins status"))
 vim.keymap.set("n", "<leader>pu", ":PackerUpdate<CR>", defopts("Update plugins"))
 vim.keymap.set("n", "<leader>pi", ":PackerInstall<CR>", defopts("Install plugins"))
+vim.keymap.set("n", "<leader>pc", ":PackerClean<CR>", defopts("Cleanup unused plugins"))
 
 -- Automatic indentation (if indent is detected will override the defaults)
 require("guess-indent").setup()
@@ -246,7 +247,6 @@ treesitter.setup {
   incremental_selection = {
     enable = true,
     keymaps = {
-      init_selection = "<leader>v",
       node_incremental = "<C-n>",
       node_decremental = "<C-p>",
     },
