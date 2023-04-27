@@ -113,7 +113,7 @@ wk.register{
 
 vim.keymap.set("n", "<leader>E", ":Explore<CR>", defopts("File explorer"))
 vim.keymap.set("n", "<leader>ce", ":edit ~/.config/nvim/init.lua<CR>", defopts("Edit editor config"))
-vim.keymap.set("n", "<leader>cr", ":source ~/.config/nvim/init.lua<CR>", defopts("Reload editor config"))
+vim.keymap.set("n", "<leader>cr", ":source ~/.config/nvim/init.lua<CR>:GuessIndent<CR>", defopts("Reload editor config"))
 vim.keymap.set("n", "<leader>n", ":nohlsearch<CR>", defopts("Hide search highlight"))
 vim.keymap.set("n", "<leader>ts", ":set spell!<CR>", defopts("Toggle spellchecking"))
 vim.keymap.set("n", "<leader>tw", ":set list!<CR>", defopts("Toggle visible whitespace characters"))
@@ -322,20 +322,22 @@ for _, lsp in ipairs(servers) do
       vim.keymap.set("n", "<leader>tq", toggle_diagnostics, defopts("Toggle diagnostics"))
 
       -- Highlight symbol under cursor
-      vim.api.nvim_create_autocmd("CursorHold", {
-        pattern = "*",
-        callback = function()
-          vim.lsp.buf.document_highlight()
-        end,
-        group = group,
-      })
-      vim.api.nvim_create_autocmd("CursorMoved", {
-        pattern = "*",
-        callback = function()
-          vim.lsp.buf.clear_references()
-        end,
-        group = group,
-      })
+      if client.server_capabilities.documentHighlightProvider then
+        vim.api.nvim_create_autocmd("CursorHold", {
+          pattern = "*",
+          callback = function()
+            vim.lsp.buf.document_highlight()
+          end,
+          group = group,
+        })
+        vim.api.nvim_create_autocmd("CursorMoved", {
+          pattern = "*",
+          callback = function()
+            vim.lsp.buf.clear_references()
+          end,
+          group = group,
+        })
+      end
     end,
 
     capabilities = capabilities
