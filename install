@@ -118,17 +118,17 @@ fi
 echo -e "${BLUE}==> Installing vim plugins${NOCOLOR}"
 nvim +PackerInstall +qall
 
-# Install tmux
+# Install tmux plugin manager
 echo -e "${BLUE}==> Installing tmux-themepack${NOCOLOR}"
 TMUX_CONF_DIR="${XDG_CONFIG_HOME}/tmux"
-if ! [ -d "${TMUX_CONF_DIR}/tmux-themepack" ]; then
-	TMUX_GIT_REPO_URL="https://github.com/jimeh/tmux-themepack.git"
-	if ! git clone --quiet "${TMUX_GIT_REPO_URL}" "${TMUX_CONF_DIR}/tmux-themepack"; then
+if ! [ -d "${TMUX_CONF_DIR}/plugins/tpm" ]; then
+	TPM_GIT_REPO_URL="https://github.com/tmux-plugins/tpm"
+	if ! git clone --quiet "${TPM_GIT_REPO_URL}" "${TMUX_CONF_DIR}/plugins/tpm"; then
 		echo -e "${RED}Failed to install tmux-themepack, config will proceed${NOCOLOR}"
 	fi
-	echo -e "${GREEN}Tmux-themepack installed successfully${NOCOLOR}"
+	echo -e "${GREEN}Tmux plugin manager installed successfully${NOCOLOR}"
 else
-	echo -e "${GREEN}Tmux-themepack already installed, skipping${NOCOLOR}"
+	echo -e "${GREEN}Tmux plugin manager already installed, skipping${NOCOLOR}"
 fi
 
 echo -e "${BLUE}==> You use pyenv to install Python and obtain packages from packages/common/requirements.txt with pip${NOCOLOR}"
