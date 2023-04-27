@@ -445,9 +445,7 @@ vim.cmd.colorscheme("onedark")
 vim.api.nvim_set_hl(0, "DiffChange", { cterm = nil })
 
 -- Highlight LSP symbol under cursor using underline
-vim.api.nvim_set_hl(0, 'LspReferenceText', { underline = true })
 vim.api.nvim_set_hl(0, 'LspReferenceRead', { underline = true })
-vim.api.nvim_set_hl(0, 'LspReferenceWrite', { underline = true })
 
 -- Fixes and workarounds
 
