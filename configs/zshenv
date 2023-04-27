@@ -20,7 +20,7 @@ export ANSIBLE_GALAXY_CACHE_DIR="$XDG_CACHE_HOME/ansible/galaxy_cache"
 
 export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
 
-export PYENV_ROOT=$XDG_DATA_HOME/pyenv
+export PYENV_ROOT="$XDG_DATA_HOME/pyenv"
 
 export IPYTHONDIR="$XDG_CONFIG_HOME/ipython"
 export JUPYTER_CONFIG_DIR="$XDG_CONFIG_HOME/jupyter"
@@ -29,12 +29,13 @@ export MYPY_CACHE_DIR="$XDG_CACHE_HOME"/mypy
 
 export MPLCONFIGDIR="$XDG_CONFIG_HOME/matplotlib"
 
+export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc.py"
+export PYTHONBREAKPOINT="ipdb.set_trace"
+
 export WGETRC="$XDG_CONFIG_HOME/wgetrc"
 alias wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"
 
 export HISTFILE="$XDG_STATE_HOME/zsh/history"
-
-export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc.py"
 
 # Set history length
 export HISTSIZE=SAVEHIST=100000
