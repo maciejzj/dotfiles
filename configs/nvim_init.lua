@@ -5,7 +5,6 @@ vim.opt.shiftwidth = 4
 
 -- Textwidth
 vim.opt.textwidth = 80
-vim.opt.formatoptions:remove{"t"}
 
 -- Folding
 -- Use folding based on text indentation
@@ -31,6 +30,8 @@ vim.opt.relativenumber = true
 -- Default split direction
 vim.opt.splitbelow = true
 vim.opt.splitright = true
+-- Fill empty spaces with dot char
+vim.opt.fillchars = {diff = '⋅'}
 -- Netrw
 -- Disable top banner
 vim.g.netrw_banner = 0
@@ -110,7 +111,7 @@ wk.register{
 
 -- General nvim functionalities keymaps
 
-vim.keymap.set("n", "<leader>e", ":Explore<CR>", defopts("File explorer"))
+vim.keymap.set("n", "<leader>E", ":Explore<CR>", defopts("File explorer"))
 vim.keymap.set("n", "<leader>ce", ":edit ~/.config/nvim/init.lua<CR>", defopts("Edit editor config"))
 vim.keymap.set("n", "<leader>cr", ":source ~/.config/nvim/init.lua<CR>", defopts("Reload editor config"))
 vim.keymap.set("n", "<leader>n", ":nohlsearch<CR>", defopts("Hide search highlight"))
@@ -437,10 +438,11 @@ require("gitsigns").setup {
 
 -- Colorscheme
 vim.cmd.colorscheme("onedark")
+
 -- Don't underline changed lines in diff
 vim.api.nvim_set_hl(0, "DiffChange", { cterm = nil })
-vim.opt.fillchars = {diff = '⋅'}
 
+-- Highlight LSP symbol under cursor using underline
 vim.api.nvim_set_hl(0, 'LspReferenceText', { underline = true })
 vim.api.nvim_set_hl(0, 'LspReferenceRead', { underline = true })
 vim.api.nvim_set_hl(0, 'LspReferenceWrite', { underline = true })
