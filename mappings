@@ -1,4 +1,5 @@
 configs/nvim_init.lua "${HOME}/.config/nvim/init.lua"
+configs/nvim_compiler_python.vim "${HOME}/.config/nvim/compiler/python.vim"
 configs/tmux.conf "${HOME}/.config/tmux/tmux.conf"
 configs/fd_ignore "${HOME}/.config/fd/ignore"
 configs/pythonrc.py "${HOME}/.config/python/pythonrc.py"
