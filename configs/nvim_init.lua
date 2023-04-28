@@ -5,6 +5,7 @@ vim.opt.shiftwidth = 4
 
 -- Textwidth
 vim.opt.textwidth = 80
+vim.opt.formatoptions:remove{"t"}
 
 -- Folding
 -- Use folding based on text indentation
