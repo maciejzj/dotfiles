@@ -5,6 +5,7 @@ dvc
 einops
 flake8
 flask
+h5py
 ipdb
 ipython
 isort
@@ -28,4 +29,5 @@ scikit-image
 scikit-learn
 torch
 torchvision
+tqdm
 virtualenv
