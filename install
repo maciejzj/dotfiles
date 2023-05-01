@@ -124,7 +124,10 @@ TMUX_CONF_DIR="${XDG_CONFIG_HOME}/tmux"
 if ! [ -d "${TMUX_CONF_DIR}/plugins/tpm" ]; then
 	TPM_GIT_REPO_URL="https://github.com/tmux-plugins/tpm"
 	if ! git clone --quiet "${TPM_GIT_REPO_URL}" "${TMUX_CONF_DIR}/plugins/tpm"; then
-		echo -e "${RED}Failed to install tmux-themepack, config will proceed${NOCOLOR}"
+		echo -e "${RED}Failed to install tmux plugin manager, config will proceed${NOCOLOR}"
+	fi
+	if ! tmux new-session -d "${TMUX_CONF_DIR}/plugins/tpm/scripts/install_plugins.sh"; then
+		echo -e "${RED}Failed to install tmux plugins, config will proceed${NOCOLOR}"
 	fi
 	echo -e "${GREEN}Tmux plugin manager installed successfully${NOCOLOR}"
 else
