@@ -116,9 +116,9 @@ vim.keymap.set("n", "<leader>E", ":Explore<CR>", defopts("File explorer"))
 vim.keymap.set("n", "<leader>ce", ":edit ~/.config/nvim/init.lua<CR>", defopts("Edit editor config"))
 vim.keymap.set("n", "<leader>cr", ":source ~/.config/nvim/init.lua<CR>:GuessIndent<CR>", defopts("Reload editor config"))
 vim.keymap.set("n", "<leader>n", ":nohlsearch<CR>", defopts("Hide search highlight"))
+vim.keymap.set("n", "<leader>q", ":copen<CR>", defopts("Open quickfix list"))
 vim.keymap.set("n", "<leader>ts", ":set spell!<CR>", defopts("Toggle spellchecking"))
 vim.keymap.set("n", "<leader>tw", ":set list!<CR>", defopts("Toggle visible whitespace characters"))
-vim.keymap.set("n", "<leader>L", ":copen<CR>", defopts("Open quickfix list"))
 
 -- Plugin management keymaps
 
@@ -296,14 +296,14 @@ for _, lsp in ipairs(servers) do
       vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, defopts("Show diagnostics"))
       vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, defopts("Next diagnostics"))
       vim.keymap.set("n", "]d", vim.diagnostic.goto_next, defopts("Previous diagnostics"))
-      vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist, defopts("Diagnostics list"))
+      vim.keymap.set("n", "<space>d", vim.diagnostic.setloclist, defopts("Diagnostics list"))
 
       -- Telescope-LSP bindings
       local tb = require("telescope.builtin")
       vim.keymap.set("n", "<leader>ls", tb.lsp_document_symbols, defopts("Browse buffer symbols"))
       vim.keymap.set("n", "<leader>lS", tb.lsp_workspace_symbols, defopts("Browse workspace symbols"))
       vim.keymap.set("n", "<leader>lr", tb.lsp_references, defopts("Browse symbol references"))
-      vim.keymap.set("n", "<leader>Q", tb.diagnostics, defopts("Browse workspace diagnostics"))
+      vim.keymap.set("n", "<leader>D", tb.diagnostics, defopts("Browse workspace diagnostics"))
       -- Exit insert mode interminal with the Escape key
       vim.keymap.set("t", "<esc>", "<C-\\><C-n>", opts)
 
