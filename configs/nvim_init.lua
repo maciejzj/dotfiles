@@ -184,6 +184,7 @@ vim.keymap.set("n", "<leader>fh", tb.help_tags, defopts("Search help"))
 vim.keymap.set("n", "<leader>fr", tb.command_history, defopts("Search command history"))
 vim.keymap.set("n", "<leader>fb", tb.buffers, defopts("Find buffer"))
 vim.keymap.set("n", "<leader>fk", tb.keymaps, defopts("Find keymap"))
+vim.keymap.set("n", "<leader>fm", tb.marks, defopts("Find mark"))
 
 local is_repo = vim.fn.system("git rev-parse --is-inside-work-tree")
 if vim.v.shell_error == 0 then
