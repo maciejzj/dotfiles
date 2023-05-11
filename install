@@ -101,7 +101,7 @@ mkdir -p "${XDG_STATE_HOME}/zsh"
 
 # Install packer nvim plugin manager
 echo -e "${BLUE}==> Installing packer${NOCOLOR}"
-PACKER_INSTALL_DIR="${HOME}/.local/share/nvim/site/pack/packer/start"
+PACKER_INSTALL_DIR="${XDG_DATA_HOME}/nvim/site/pack/packer/start"
 if ! [ -d "${PACKER_INSTALL_DIR}/packer.nvim" ]; then
 	PACKER_GIT_REPO_URL="https://github.com/wbthomason/packer.nvim"
 	mkdir -p "${PACKER_INSTALL_DIR}"

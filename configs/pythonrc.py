@@ -23,9 +23,3 @@ except FileNotFoundError:
     pass
 
 atexit.register(readline.write_history_file, histfile)
-
-# Often used packages
-from pathlib import Path
-from matplotlib import pyplot as plt
-import numpy as np
-import pandas as pd
