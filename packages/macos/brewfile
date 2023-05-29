@@ -33,6 +33,7 @@ brew "hdf5"
 
 brew "cmake"
 brew "git"
+brew "git-lfs"
 brew "llvm"
 
 cask "coderunner"

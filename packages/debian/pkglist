@@ -23,4 +23,5 @@ hdf5-tools
 
 cmake
 git
+git-lfs
 llvm
