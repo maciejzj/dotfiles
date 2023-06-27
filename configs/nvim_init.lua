@@ -119,6 +119,8 @@ vim.keymap.set("n", "<leader>n", ":nohlsearch<CR>", defopts("Hide search highlig
 vim.keymap.set("n", "<leader>q", ":copen<CR>", defopts("Open quickfix list"))
 vim.keymap.set("n", "<leader>ts", ":set spell!<CR>", defopts("Toggle spellchecking"))
 vim.keymap.set("n", "<leader>tw", ":set list!<CR>", defopts("Toggle visible whitespace characters"))
+vim.keymap.set("n", "<leader>o", '"cyiW:!open <C-R>c<CR>', defopts("Open WORD with an external program"))
+vim.keymap.set("v", "<leader>o", '"cy::silent !open <C-R>c<CR>', defopts("Open selection with an external program"))
 
 -- Plugin management keymaps
 
