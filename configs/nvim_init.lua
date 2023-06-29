@@ -351,7 +351,8 @@ end
 -- LSP based signatures when passing arguments
 require("lsp_signature").setup {
   hint_enable = false,
-  toggle_key = "<C-s>"
+  toggle_key = "<C-s>",
+  toggle_key_flip_floatwin_setting = true,
 }
 
 -- Use LSP and buffer for text completion
