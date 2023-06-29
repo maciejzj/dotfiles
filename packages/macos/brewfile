@@ -1,4 +1,5 @@
 brew "aria2"
+brew "awscli"
 brew "bash-language-server"
 brew "bat"
 brew "bear"
