@@ -8,9 +8,11 @@ entr
 fd-find
 ffmpeg
 fzf
+hdf5-tools
 imagemagick
 jq
 neovim
+pandoc
 ripgrep
 rsync
 shellcheck
@@ -20,7 +22,6 @@ tree
 watch
 zsh-autosuggestions
 zsh-syntax-highlighting
-hdf5-tools
 
 cmake
 git
