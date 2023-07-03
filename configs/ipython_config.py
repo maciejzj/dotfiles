@@ -1,3 +1,6 @@
+from pathlib import Path
+
+
 c.TerminalIPythonApp.display_banner = False
 
 c.TerminalInteractiveShell.shortcuts = [
@@ -8,12 +11,5 @@ c.InteractiveShellApp.extensions = ['autoreload']
 
 c.InteractiveShellApp.exec_lines = ['%autoreload 2']
 
-c.InteractiveShellApp.exec_lines = [
-    'from pathlib import Path',
-
-    'import numpy as np',
-    'import pandas as pd',
-    'import skimage',
-    'from matplotlib import pyplot as plt',
-    'from plotly import express as ex',
-]
+import_script_path = Path(__file__).parent / 'ipython_imports.py'
+c.InteractiveShellApp.exec_files = [str(import_script_path)]
