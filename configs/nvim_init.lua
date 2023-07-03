@@ -119,6 +119,7 @@ vim.keymap.set("n", "<leader>n", ":nohlsearch<CR>", defopts("Hide search highlig
 vim.keymap.set("n", "<leader>q", ":copen<CR>", defopts("Open quickfix list"))
 vim.keymap.set("n", "<leader>ts", ":set spell!<CR>", defopts("Toggle spellchecking"))
 vim.keymap.set("n", "<leader>tw", ":set list!<CR>", defopts("Toggle visible whitespace characters"))
+vim.keymap.set("n", "<leader>s", "/\\s\\+$<CR>", defopts("Search trailing whitespaces"))
 local open_cmd = (vim.fn.has("macunix")) and "open" or "xdg-open"
 vim.keymap.set("n", "<leader>o", '"cyiW:!' .. open_cmd .. " <C-R>c<CR>", defopts("Open WORD with an external program"))
 vim.keymap.set("v", "<leader>o", '"cy::silent !' .. open_cmd .. " <C-R>c<CR>", defopts("Open selection with an external program"))
