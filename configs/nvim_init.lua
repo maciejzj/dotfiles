@@ -325,7 +325,7 @@ for _, lsp in ipairs(servers) do
           print("Diagnostics on")
         end
       end
-      vim.keymap.set("n", "<leader>tq", toggle_diagnostics, defopts("Toggle diagnostics"))
+      vim.keymap.set("n", "<leader>td", toggle_diagnostics, defopts("Toggle diagnostics"))
 
       -- Highlight symbol under cursor
       if client.server_capabilities.documentHighlightProvider then
