@@ -120,10 +120,6 @@ vim.keymap.set("n", "<leader>q", ":copen<CR>", defopts("Open quickfix list"))
 vim.keymap.set("n", "<leader>ts", ":set spell!<CR>", defopts("Toggle spellchecking"))
 vim.keymap.set("n", "<leader>tw", ":set list!<CR>", defopts("Toggle visible whitespace characters"))
 vim.keymap.set("n", "<leader>s", "/\\s\\+$<CR>", defopts("Search trailing whitespaces"))
-local open_cmd = (vim.fn.has("macunix")) and "open" or "xdg-open"
-vim.keymap.set("n", "<leader>o", '"cyiW:!' .. open_cmd .. " <C-R>c<CR>", defopts("Open WORD with an external program"))
-vim.keymap.set("v", "<leader>o", '"cy::silent !' .. open_cmd .. " <C-R>c<CR>", defopts("Open selection with an external program"))
-
 -- Plugin management keymaps
 
 vim.keymap.set("n", "<leader>ps", ":PackerStatus<CR>", defopts("Plugins status"))
@@ -237,8 +233,12 @@ treesitter.setup {
       keymaps = {
         ["af"] = { query = "@function.outer", desc = "outer function"},
         ["if"] = { query = "@function.inner", desc = "inner function"},
-        ["ac"] = { query = "@class.outer", desc = "outer class"},
-        ["ic"] = { query = "@class.inner", desc = "inner class"},
+        ["aC"] = { query = "@class.outer", desc = "outer class"},
+        ["iC"] = { query = "@class.inner", desc = "inner class"},
+        ["ac"] = { query = "@comment.outer", desc = "outer comment"},
+        ["ic"] = { query = "@comment.inner", desc = "inner comment"},
+        ["ab"] = { query = "@block.outer", desc = "outer comment"},
+        ["ib"] = { query = "@block.inner", desc = "inner comment"},
       }
     },
     swap = {
