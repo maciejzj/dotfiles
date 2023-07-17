@@ -19,9 +19,12 @@ pipreqs
 plotly
 pycodestyle
 pydocstyle
+pyflakes
 pylint
+pylsp-rope
 pytest
 pytest-mock
+python-lsp-black
 python-lsp-server
 rentry
 rope
