@@ -441,7 +441,7 @@ require("gitsigns").setup {
     vim.keymap.set("n", "<leader>tb", gs.toggle_current_line_blame, defopts("Toggle current line blame"))
     vim.keymap.set("n", "<leader>gd", gs.diffthis, defopts("Diff buffer"))
     vim.keymap.set("n", "<leader>gD", function() gs.diffthis("~") end, defopts("Diff buffer (with staged)"))
-    vim.keymap.set("n", "<leader>td", gs.toggle_deleted, defopts("Toggle show deleted"))
+    vim.keymap.set("n", "<leader>tD", gs.toggle_deleted, defopts("Toggle show deleted"))
   end
 }
 
