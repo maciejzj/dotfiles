@@ -7,4 +7,3 @@ configs/ipython_config.py "${XDG_CONFIG_HOME}/ipython/profile_default/ipython_co
 configs/ipython_imports.py "${XDG_CONFIG_HOME}/ipython/profile_default/ipython_imports.py"
 configs/zshrc "${HOME}/.zshrc"
 configs/zshenv "${HOME}/.zshenv"
-configs/wgetrc "${XDG_CONFIG_HOME}/wgetrc"
