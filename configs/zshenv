@@ -32,7 +32,7 @@ export MPLCONFIGDIR="$XDG_CONFIG_HOME/matplotlib"
 export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc.py"
 export PYTHONBREAKPOINT="ipdb.set_trace"
 
-alias wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"
+alias wget="wget --hsts-file=\"$XDG_CACHE_HOME/wget-hsts\""
 
 export HISTFILE="$XDG_STATE_HOME/zsh/history"
 
