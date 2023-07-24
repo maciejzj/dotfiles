@@ -329,19 +329,19 @@ for _, lsp in ipairs(servers) do
 
       -- Highlight symbol under cursor
       if client.server_capabilities.documentHighlightProvider then
+        vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
+        vim.api.nvim_clear_autocmds { buffer = bufnr, group = "lsp_document_highlight" }
         vim.api.nvim_create_autocmd("CursorHold", {
-          pattern = "*",
-          callback = function()
-            vim.lsp.buf.document_highlight()
-          end,
-          group = group,
+          callback = vim.lsp.buf.document_highlight,
+          buffer = bufnr,
+          group = "lsp_document_highlight",
+          desc = "Document Highlight",
         })
         vim.api.nvim_create_autocmd("CursorMoved", {
-          pattern = "*",
-          callback = function()
-            vim.lsp.buf.clear_references()
-          end,
-          group = group,
+          callback = vim.lsp.buf.clear_references,
+          buffer = bufnr,
+          group = "lsp_document_highlight",
+          desc = "Clear All the References",
         })
       end
     end,
