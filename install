@@ -62,9 +62,10 @@ linux-gnu)
 	if [ -x "$(command -v pacman)" ]; then 
 		echo -e "${BLUE}Installing pacman packages${NOCOLOR}"
 
-		sudo pacman -Suy - < packages/arch/pkg-list.txt
+		sudo pacman --sync --refresh --sysupgrade --needed --noconfirm - < packages/arch/pkg-list.txt
 
 		git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
+		sudo pacman --sync --refresh --sysupgrade --needed --noconfirm --removemake - < packages/arch/pkg-list-aur.txt
 	# Debian based with apt
 	elif [ -x "$(command -v apt)" ]; then
 		echo -e "${BLUE}Installing apt packages${NOCOLOR}"
