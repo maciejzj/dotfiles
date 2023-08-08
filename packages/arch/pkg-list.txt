@@ -14,7 +14,6 @@ man-pages
 mlocate
 moreutils
 neovim
-pandoc-bin
 ripgrep
 rsync
 tmux
