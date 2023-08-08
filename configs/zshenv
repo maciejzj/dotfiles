@@ -79,6 +79,8 @@ alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 # Pygmentize coloring
 alias pyg='pygmentize -f terminal'
+# Call erdtree with tree-like layout
+alias erd='erd --layout inverted'
 # Dir history alias
 alias dh='dirs -v'
 # Make sure python is python3
@@ -89,6 +91,8 @@ alias ipdb='ipdb3'
 alias vim='nvim'
 alias vimdiff='nvim -d'
 alias view='nvim -R'
+# Edit history file
+alias eh="nvim \"${HISTFILE}\""
 
 case ${OSTYPE} in
 darwin*)
