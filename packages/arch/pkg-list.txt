@@ -17,10 +17,10 @@ neovim
 pandoc
 ripgrep
 rsync
-tio
 tmux
 tree
 unzip
+xdg-utils
 yq
 zsh
 zsh-autosuggestions
