@@ -69,7 +69,7 @@ linux-gnu)
 			git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si && cd - && rm -rf yay
 		fi
 		echo -e "${BLUE}Installing aur packages${NOCOLOR}"
-		sudo yay --sync --refresh --sysupgrade --needed --noconfirm --removemake - < packages/arch/pkg-list-aur.txt
+		yay --sync --refresh --sysupgrade --needed --noconfirm --removemake - < packages/arch/pkg-list-aur.txt
 	# Debian based with apt
 	elif [ -x "$(command -v apt)" ]; then
 		echo -e "${BLUE}Installing apt packages${NOCOLOR}"
