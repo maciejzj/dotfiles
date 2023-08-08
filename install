@@ -61,8 +61,10 @@ linux-gnu)
 	# Arch-based with pacman
 	if [ -x "$(command -v pacman)" ]; then 
 		echo -e "${BLUE}Installing pacman packages${NOCOLOR}"
-		echo -e "${RED}Pacman packages not yet implemented${NOCOLOR}"
-		exit 1
+
+		sudo pacman -Suy - < packages/arch/pkg-list.txt
+
+		git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
 	# Debian based with apt
 	elif [ -x "$(command -v apt)" ]; then
 		echo -e "${BLUE}Installing apt packages${NOCOLOR}"
