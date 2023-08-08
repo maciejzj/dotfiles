@@ -70,7 +70,7 @@ linux-gnu)
 		zsh_syntax_highlighting="/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 		zsh_autosuggestions="/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 		zsh_fzf_completion="/usr/share/fzf/completion.zsh"
-	    zsh_fzf_bindings="/usr/share/fzf/key-bindings.zsh"
+		zsh_fzf_bindings="/usr/share/fzf/key-bindings.zsh"
 	fi
 
 	source "$zsh_syntax_highlighting"
