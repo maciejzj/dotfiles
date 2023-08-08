@@ -28,7 +28,6 @@ zsh-syntax-highlighting
 
 bash-language-server
 marksman
-shellcheck
 texlab
 
 base-devel
