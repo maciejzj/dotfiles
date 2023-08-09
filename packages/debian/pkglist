@@ -1,9 +1,6 @@
 aria2
 awscli
 bat
-bear
-docker
-docker-compose
 entr
 fd-find
 ffmpeg
@@ -15,15 +12,26 @@ neovim
 pandoc
 ripgrep
 rsync
-shellcheck
 tio
 tmux
 tree
 watch
+yq
+zsh
 zsh-autosuggestions
 zsh-syntax-highlighting
 
+marksman
+shellcheck
+texlab
+bash-language-server
+
 cmake
+docker
+docker-compose
 git
 git-lfs
 llvm
+
+mdadm
+openssh
