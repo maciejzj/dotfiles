@@ -1,6 +1,4 @@
 tio
 pandoc-bin
-
 pyenv-virtualenv
-
 shellcheck-bin
