@@ -27,6 +27,8 @@ zle -N edit-command-line
 bindkey '^x^e' edit-command-line
 
 # Autocompletion
+# Add homebrew completions install dir to zsh resources (if brew is in PATH)
+command -v brew &>/dev/null && FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 # This is normally lazy loaded on completion, but here we load it early to able
 # to bind shift-tab keymap
 zmodload zsh/complist
@@ -44,15 +46,19 @@ compinit -d $XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION
 eval "$(pyenv init -)"
 eval "$(pyenv init - virtualenv)"
 
-# Reconcile homebrew and pyenv
-alias brew="env PATH=${PATH//$(pyenv root)\/shims:/} brew"
-
 # Plugins
+
+# Prompt
 fpath+="$XDG_DATA_HOME/zsh/pure"
 autoload -U promptinit; promptinit
 prompt pure
+
+# System specific
 case $OSTYPE in
 darwin*)
+	# Reconcile homebrew and pyenv
+	alias brew="env PATH=${PATH//$(pyenv root)\/shims:/} brew"
+
 	source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 	source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 	source /opt/homebrew/opt/fzf/shell/completion.zsh
