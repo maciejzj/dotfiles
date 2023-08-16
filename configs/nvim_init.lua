@@ -51,6 +51,7 @@ else
 end
 -- Auto reload changed files from disk
 vim.opt.autoread = true
+vim.api.nvim_create_autocmd("CursorHold", { command = "checktime" })
 -- Disable mouse
 vim.opt.mouse = nil
 
@@ -311,6 +312,11 @@ for _, lsp in ipairs(servers) do
       vim.keymap.set("n", "<leader>D", tb.diagnostics, defopts("Browse workspace diagnostics"))
       -- Exit insert mode interminal with the Escape key
       vim.keymap.set("t", "<esc>", "<C-\\><C-n>", opts)
+
+      -- Formatting
+      vim.keymap.set('n', '<leader>F', function()
+        vim.lsp.buf.format({ async = true })
+      end, defopts("Format with lsp"))
 
       -- Show/hide Diagnostics
       vim.g.diagnostics_visible = true
