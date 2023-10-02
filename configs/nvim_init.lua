@@ -63,6 +63,7 @@ function defopts(desc)
   return {noremap = true, silent = true, desc = desc}
 end
 
+-- TODO: Packer is deprecated, move to lazy
 -- Plugins
 require("packer").startup{
   function()
@@ -121,82 +122,13 @@ vim.keymap.set("n", "<leader>q", ":copen<CR>", defopts("Open quickfix list"))
 vim.keymap.set("n", "<leader>ts", ":set spell!<CR>", defopts("Toggle spellchecking"))
 vim.keymap.set("n", "<leader>tw", ":set list!<CR>", defopts("Toggle visible whitespace characters"))
 vim.keymap.set("n", "<leader>s", "/\\s\\+$<CR>", defopts("Search trailing whitespaces"))
+
 -- Plugin management keymaps
 
 vim.keymap.set("n", "<leader>ps", ":PackerStatus<CR>", defopts("Plugins status"))
 vim.keymap.set("n", "<leader>pu", ":PackerUpdate<CR>", defopts("Update plugins"))
 vim.keymap.set("n", "<leader>pi", ":PackerInstall<CR>", defopts("Install plugins"))
 vim.keymap.set("n", "<leader>pc", ":PackerClean<CR>", defopts("Cleanup unused plugins"))
-
--- Automatic indentation (if indent is detected will override the defaults)
-require("guess-indent").setup()
-
--- Indent guides
-vim.opt.list = true
-vim.opt.listchars:append "space:⋅"
-vim.opt.listchars:append "eol:↴"
-
-require("indent_blankline").setup {
-  show_current_context = true
-}
-
--- Indent text object
-require("treesitter_indent_object").setup()
-
-indentobj = require("treesitter_indent_object.textobj")
-vim.keymap.set({"x", "o"}, "ai", indentobj.select_indent_outer, defopts("outer indent (context-aware)"))
-vim.keymap.set({"x", "o"}, "aI", function() indentobj.select_indent_outer(true) end, defopts("outer indent line-wise (context-aware)"))
-vim.keymap.set({"x", "o"}, "ii", indentobj.select_indent_inner, defopts("inner indent (context-aware)"))
-vim.keymap.set({"x", "o"}, "iI", function() indentobj.select_indent_inner(true) end, defopts("inner indent line-wise (context-aware)"))
-
--- Code commenting
-require("Comment").setup()
-
--- Surround motions
-require("nvim-surround").setup()
-
--- If using vscode exit early and don't load the rest of the plugins
-if vim.g.vscode then
-  return
-end
-
--- Telescope file finder
-local telescope = require("telescope")
-telescope.setup {
-  defaults = {
-    mappings = {
-      i = {
-        -- Show picker actions help with which-key
-        ["<C-h>"] = "which_key"
-      }
-    },
-    vimgrep_arguments = { "rg", "--vimgrep", "--smart-case", "--type-not", "jupyter", },
-  }
-}
-telescope.load_extension("fzf")
-
-local tb = require("telescope.builtin")
-vim.keymap.set("n", "<leader>ff", tb.find_files, defopts("Find file"))
-vim.keymap.set("n", "<leader>fg", tb.current_buffer_fuzzy_find, defopts("Grep in buffer"))
-vim.keymap.set("n", "<leader>fG", tb.live_grep, defopts("Grep in workspace"))
-vim.keymap.set("n", "<leader>fs", tb.grep_string, defopts("Find string (at cursor)"))
-vim.keymap.set("n", "<leader>fc", tb.commands, defopts("Find command"))
-vim.keymap.set("n", "<leader>fh", tb.help_tags, defopts("Search help"))
-vim.keymap.set("n", "<leader>fr", tb.command_history, defopts("Search command history"))
-vim.keymap.set("n", "<leader>fb", tb.buffers, defopts("Find buffer"))
-vim.keymap.set("n", "<leader>fk", tb.keymaps, defopts("Find keymap"))
-vim.keymap.set("n", "<leader>fm", tb.marks, defopts("Find mark"))
-
-local is_repo = vim.fn.system("git rev-parse --is-inside-work-tree")
-if vim.v.shell_error == 0 then
-  wk.register {
-    ["<leader>g"] = {name = "git"},
-  }
-  vim.keymap.set("n", "<leader>gc", tb.git_commits, defopts("Browse commits"))
-  vim.keymap.set("n", "<leader>gC", tb.git_bcommits, defopts("Browse buffer commits"))
-  vim.keymap.set("n", "<leader>gb", tb.git_branches, defopts("Browse branches"))
-  vim.keymap.set("n", "<leader>gs", tb.git_status, defopts("Browse git status"))
-end
 
 -- Treesitter
 
@@ -260,6 +192,78 @@ treesitter.setup {
     },
   },
 }
+
+-- Automatic indentation (if indent is detected will override the defaults)
+require("guess-indent").setup()
+
+-- Indent guides
+vim.opt.list = true
+vim.opt.listchars:append "space:⋅"
+vim.opt.listchars:append "eol:↴"
+
+-- TODO: scope seem not to work
+require("ibl").setup {
+  indent = { char = "│" },
+  scope = { enabled = true },
+}
+
+-- Indent text object
+require("treesitter_indent_object").setup()
+
+indentobj = require("treesitter_indent_object.textobj")
+vim.keymap.set({"x", "o"}, "ai", indentobj.select_indent_outer, defopts("outer indent (context-aware)"))
+vim.keymap.set({"x", "o"}, "aI", function() indentobj.select_indent_outer(true) end, defopts("outer indent line-wise (context-aware)"))
+vim.keymap.set({"x", "o"}, "ii", indentobj.select_indent_inner, defopts("inner indent (context-aware)"))
+vim.keymap.set({"x", "o"}, "iI", function() indentobj.select_indent_inner(true) end, defopts("inner indent line-wise (context-aware)"))
+
+-- Code commenting
+require("Comment").setup()
+
+-- Surround motions
+require("nvim-surround").setup()
+
+-- If using vscode exit early and don't load the rest of the plugins
+if vim.g.vscode then
+  return
+end
+
+-- Telescope file finder
+local telescope = require("telescope")
+telescope.setup {
+  defaults = {
+    mappings = {
+      i = {
+        -- Show picker actions help with which-key
+        ["<C-h>"] = "which_key"
+      }
+    },
+    vimgrep_arguments = { "rg", "--vimgrep", "--smart-case", "--type-not", "jupyter", },
+  }
+}
+telescope.load_extension("fzf")
+
+local tb = require("telescope.builtin")
+vim.keymap.set("n", "<leader>ff", tb.find_files, defopts("Find file"))
+vim.keymap.set("n", "<leader>fg", tb.current_buffer_fuzzy_find, defopts("Grep in buffer"))
+vim.keymap.set("n", "<leader>fG", tb.live_grep, defopts("Grep in workspace"))
+vim.keymap.set("n", "<leader>fs", tb.grep_string, defopts("Find string (at cursor)"))
+vim.keymap.set("n", "<leader>fc", tb.commands, defopts("Find command"))
+vim.keymap.set("n", "<leader>fh", tb.help_tags, defopts("Search help"))
+vim.keymap.set("n", "<leader>fr", tb.command_history, defopts("Search command history"))
+vim.keymap.set("n", "<leader>fb", tb.buffers, defopts("Find buffer"))
+vim.keymap.set("n", "<leader>fk", tb.keymaps, defopts("Find keymap"))
+vim.keymap.set("n", "<leader>fm", tb.marks, defopts("Find mark"))
+
+local is_repo = vim.fn.system("git rev-parse --is-inside-work-tree")
+if vim.v.shell_error == 0 then
+  wk.register {
+    ["<leader>g"] = {name = "git"},
+  }
+  vim.keymap.set("n", "<leader>gc", tb.git_commits, defopts("Browse commits"))
+  vim.keymap.set("n", "<leader>gC", tb.git_bcommits, defopts("Browse buffer commits"))
+  vim.keymap.set("n", "<leader>gb", tb.git_branches, defopts("Browse branches"))
+  vim.keymap.set("n", "<leader>gs", tb.git_status, defopts("Browse git status"))
+end
 
 -- LSP
 
