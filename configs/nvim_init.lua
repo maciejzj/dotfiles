@@ -201,10 +201,9 @@ vim.opt.list = true
 vim.opt.listchars:append "space:⋅"
 vim.opt.listchars:append "eol:↴"
 
--- TODO: scope seem not to work
 require("ibl").setup {
   indent = { char = "│" },
-  scope = { enabled = true },
+  scope = { enabled = false },
 }
 
 -- Indent text object
@@ -337,23 +336,6 @@ for _, lsp in ipairs(servers) do
       end
       vim.keymap.set("n", "<leader>td", toggle_diagnostics, defopts("Toggle diagnostics"))
 
-      -- Highlight symbol under cursor
-      if client.server_capabilities.documentHighlightProvider then
-        vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
-        vim.api.nvim_clear_autocmds { buffer = bufnr, group = "lsp_document_highlight" }
-        vim.api.nvim_create_autocmd("CursorHold", {
-          callback = vim.lsp.buf.document_highlight,
-          buffer = bufnr,
-          group = "lsp_document_highlight",
-          desc = "Document Highlight",
-        })
-        vim.api.nvim_create_autocmd("CursorMoved", {
-          callback = vim.lsp.buf.clear_references,
-          buffer = bufnr,
-          group = "lsp_document_highlight",
-          desc = "Clear All the References",
-        })
-      end
     end,
 
     capabilities = capabilities
