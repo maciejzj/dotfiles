@@ -1,3 +1,5 @@
+----------✦ 📝 Editor setup 📝 ✦----------
+
 -- Indentation
 -- Set default indentation to tab with 4 spaces length
 vim.opt.tabstop = 4
@@ -5,7 +7,8 @@ vim.opt.shiftwidth = 4
 
 -- Textwidth
 vim.opt.textwidth = 80
-vim.opt.formatoptions:remove{"t"}
+-- Don't use hard autowrap on textwidth
+vim.opt.formatoptions:remove({ "t" })
 
 -- Folding
 -- Use folding based on text indentation
@@ -20,6 +23,11 @@ vim.opt.foldenable = false
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
+-- Whitespace characters representation
+vim.opt.list = true
+vim.opt.listchars:append("space:⋅")
+vim.opt.listchars:append("eol:↴")
+
 -- User interface
 -- Show cursorline
 vim.opt.cursorline = true
@@ -31,15 +39,8 @@ vim.opt.relativenumber = true
 -- Default split direction
 vim.opt.splitbelow = true
 vim.opt.splitright = true
--- Fill empty spaces with dot char
-vim.opt.fillchars = {diff = '⋅'}
--- Netrw
--- Disable top banner
-vim.g.netrw_banner = 0
--- Normal cursor
-vim.g.netrw_cursor = 0
--- Start with hidden dotfiles
-vim.g.netrw_list_hide = [[\(^\|\s\s\)\zs\.\S\+]]
+-- Sbow whitesapce as the dot char
+vim.opt.fillchars = { diff = "⋅" }
 
 -- System behaviour
 vim.opt.updatetime = 100
@@ -52,6 +53,7 @@ end
 -- Auto reload changed files from disk
 vim.opt.autoread = true
 vim.api.nvim_create_autocmd("CursorHold", { command = "checktime" })
+
 -- Disable mouse
 vim.opt.mouse = nil
 
@@ -60,86 +62,83 @@ vim.g.mapleader = " "
 
 -- Helper function to define mapping with default options and a description
 function defopts(desc)
-  return {noremap = true, silent = true, desc = desc}
+  return { noremap = true, silent = true, desc = desc }
 end
+
+----------✦ 📦 Plugins setup 📦 ✦----------
 
 -- TODO: Packer is deprecated, move to lazy
 -- Plugins
-require("packer").startup{
+require("packer").startup({
   function()
-    use "wbthomason/packer.nvim"
+    use("wbthomason/packer.nvim")
 
-    use "folke/which-key.nvim"
-    use "hrsh7th/cmp-buffer"
-    use "hrsh7th/cmp-cmdline"
-    use "hrsh7th/cmp-nvim-lsp"
-    use "hrsh7th/cmp-path"
-    use "hrsh7th/nvim-cmp"
-    use "joshdick/onedark.vim"
-    use "kylechui/nvim-surround"
-    use "lewis6991/gitsigns.nvim"
-    use "lukas-reineke/indent-blankline.nvim"
-    use "neovim/nvim-lspconfig"
-    use "nmac427/guess-indent.nvim"
-    use "nvim-treesitter/nvim-treesitter"
-    use "nvim-treesitter/nvim-treesitter-textobjects"
-    use "ray-x/lsp_signature.nvim"
-    use "numtostr/comment.nvim"
-    use "kiyoon/treesitter-indent-object.nvim"
-    use {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
-    use {"nvim-telescope/telescope.nvim", requires = {"nvim-lua/plenary.nvim"}}
-    use {"sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim"}
+    -- Help
+    use("folke/which-key.nvim")
+    -- Treesitter
+    use("nvim-treesitter/nvim-treesitter")
+    use("nvim-treesitter/nvim-treesitter-textobjects")
+    use("kiyoon/treesitter-indent-object.nvim")
+    -- LSP
+    use("neovim/nvim-lspconfig")
+    use("ray-x/lsp_signature.nvim")
+    -- Core functionalities
+    use("hrsh7th/nvim-cmp")
+    use("hrsh7th/cmp-nvim-lsp")
+    use("hrsh7th/cmp-buffer")
+    use("hrsh7th/cmp-cmdline")
+    use("hrsh7th/cmp-path")
+    use("nmac427/guess-indent.nvim")
+    -- Editor functionalities
+    use("kylechui/nvim-surround")
+    use("rrethy/vim-illuminate")
+    use("numtostr/comment.nvim")
+    -- UI, visuals and tooling
+    use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
+    use({ "nvim-telescope/telescope.nvim", requires = { "nvim-lua/plenary.nvim" } })
+    use({ "nvim-neo-tree/neo-tree.nvim", requires = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" } })
+    use("lukas-reineke/indent-blankline.nvim")
+    -- External tools integration
+    use("lewis6991/gitsigns.nvim")
   end,
 
   config = {
     display = {
       open_fn = function()
-        return require("packer.util").float{border = "rounded"}
-      end
-    }
-  }
-}
+        return require("packer.util").float({ border = "rounded" })
+      end,
+    },
+  },
+})
 
--- Plugins setup
+----------✦ ❓ Help ❓ ✦----------
 
--- Whick key keymappings
 local wk = require("which-key")
 wk.setup()
-wk.register{
-  ["<leader>f"] = {name = "find"},
-  ["<leader>t"] = {name = "toggle"},
-  ["<leader>c"] = {name = "config"},
-  ["<leader>p"] = {name = "plugins"}
-}
 
--- General nvim functionalities keymaps
+----------✦ 🌳 Treesitter 🌳 ✦----------
 
-vim.keymap.set("n", "<leader>E", ":Explore<CR>", defopts("File explorer"))
-vim.keymap.set("n", "<leader>ce", ":edit ~/.config/nvim/init.lua<CR>", defopts("Edit editor config"))
-vim.keymap.set("n", "<leader>cr", ":source ~/.config/nvim/init.lua<CR>:GuessIndent<CR>", defopts("Reload editor config"))
-vim.keymap.set("n", "<leader>n", ":nohlsearch<CR>", defopts("Hide search highlight"))
-vim.keymap.set("n", "<leader>q", ":copen<CR>", defopts("Open quickfix list"))
-vim.keymap.set("n", "<leader>ts", ":set spell!<CR>", defopts("Toggle spellchecking"))
-vim.keymap.set("n", "<leader>tw", ":set list!<CR>", defopts("Toggle visible whitespace characters"))
-vim.keymap.set("n", "<leader>s", "/\\s\\+$<CR>", defopts("Search trailing whitespaces"))
-
--- Plugin management keymaps
-
-vim.keymap.set("n", "<leader>ps", ":PackerStatus<CR>", defopts("Plugins status"))
-vim.keymap.set("n", "<leader>pu", ":PackerUpdate<CR>", defopts("Update plugins"))
-vim.keymap.set("n", "<leader>pi", ":PackerInstall<CR>", defopts("Install plugins"))
-vim.keymap.set("n", "<leader>pc", ":PackerClean<CR>", defopts("Cleanup unused plugins"))
-
--- Treesitter
-
-local treesitter = require("nvim-treesitter.configs")
-treesitter.setup {
+require("nvim-treesitter.configs").setup({
   ensure_installed = "all",
   highlight = {
     enable = true,
-    additional_vim_regex_highlighting = false,
   },
   textobjects = {
+    select = {
+      enable = true,
+      lookahead = true,
+      keymaps = {
+        ["af"] = { query = "@function.outer", desc = "outer function" },
+        ["if"] = { query = "@function.inner", desc = "inner function" },
+        ["aC"] = { query = "@class.outer", desc = "outer class" },
+        ["iC"] = { query = "@class.inner", desc = "inner class" },
+        ["ac"] = { query = "@comment.outer", desc = "outer comment" },
+        ["ic"] = { query = "@comment.inner", desc = "inner comment" },
+        ["ab"] = { query = "@block.outer", desc = "outer comment" },
+        ["ib"] = { query = "@block.inner", desc = "inner comment" },
+        ["ib"] = { query = "@block.inner", desc = "inner comment" },
+      },
+    },
     move = {
       enable = true,
       set_jumps = true,
@@ -160,20 +159,6 @@ treesitter.setup {
         ["[]"] = { query = "@class.outer", desc = "Previous class end" },
       },
     },
-    select = {
-      enable = true,
-      lookahead = true,
-      keymaps = {
-        ["af"] = { query = "@function.outer", desc = "outer function"},
-        ["if"] = { query = "@function.inner", desc = "inner function"},
-        ["aC"] = { query = "@class.outer", desc = "outer class"},
-        ["iC"] = { query = "@class.inner", desc = "inner class"},
-        ["ac"] = { query = "@comment.outer", desc = "outer comment"},
-        ["ic"] = { query = "@comment.inner", desc = "inner comment"},
-        ["ab"] = { query = "@block.outer", desc = "outer comment"},
-        ["ib"] = { query = "@block.inner", desc = "inner comment"},
-      }
-    },
     swap = {
       enable = true,
       swap_next = {
@@ -191,103 +176,42 @@ treesitter.setup {
       node_decremental = "<C-p>",
     },
   },
-}
-
--- Automatic indentation (if indent is detected will override the defaults)
-require("guess-indent").setup()
-
--- Indent guides
-vim.opt.list = true
-vim.opt.listchars:append "space:⋅"
-vim.opt.listchars:append "eol:↴"
-
-require("ibl").setup {
-  indent = { char = "│" },
-  scope = { enabled = false },
-}
+})
 
 -- Indent text object
 require("treesitter_indent_object").setup()
 
 indentobj = require("treesitter_indent_object.textobj")
-vim.keymap.set({"x", "o"}, "ai", indentobj.select_indent_outer, defopts("outer indent (context-aware)"))
-vim.keymap.set({"x", "o"}, "aI", function() indentobj.select_indent_outer(true) end, defopts("outer indent line-wise (context-aware)"))
-vim.keymap.set({"x", "o"}, "ii", indentobj.select_indent_inner, defopts("inner indent (context-aware)"))
-vim.keymap.set({"x", "o"}, "iI", function() indentobj.select_indent_inner(true) end, defopts("inner indent line-wise (context-aware)"))
+vim.keymap.set({ "x", "o" }, "ai", indentobj.select_indent_outer, defopts("outer indent (context-aware)"))
+vim.keymap.set({ "x", "o" }, "aI", function()
+  indentobj.select_indent_outer(true)
+end, defopts("outer indent line-wise (context-aware)"))
+vim.keymap.set({ "x", "o" }, "ii", indentobj.select_indent_inner, defopts("inner indent (context-aware)"))
+vim.keymap.set({ "x", "o" }, "iI", function()
+  indentobj.select_indent_inner(true)
+end, defopts("inner indent line-wise (context-aware)"))
 
--- Code commenting
-require("Comment").setup()
-
--- Surround motions
-require("nvim-surround").setup()
-
--- If using vscode exit early and don't load the rest of the plugins
-if vim.g.vscode then
-  return
-end
-
--- Telescope file finder
-local telescope = require("telescope")
-telescope.setup {
-  defaults = {
-    mappings = {
-      i = {
-        -- Show picker actions help with which-key
-        ["<C-h>"] = "which_key"
-      }
-    },
-    vimgrep_arguments = { "rg", "--vimgrep", "--smart-case", "--type-not", "jupyter", },
-  }
-}
-telescope.load_extension("fzf")
-
-local tb = require("telescope.builtin")
-vim.keymap.set("n", "<leader>ff", tb.find_files, defopts("Find file"))
-vim.keymap.set("n", "<leader>fg", tb.current_buffer_fuzzy_find, defopts("Grep in buffer"))
-vim.keymap.set("n", "<leader>fG", tb.live_grep, defopts("Grep in workspace"))
-vim.keymap.set("n", "<leader>fs", tb.grep_string, defopts("Find string (at cursor)"))
-vim.keymap.set("n", "<leader>fc", tb.commands, defopts("Find command"))
-vim.keymap.set("n", "<leader>fh", tb.help_tags, defopts("Search help"))
-vim.keymap.set("n", "<leader>fr", tb.command_history, defopts("Search command history"))
-vim.keymap.set("n", "<leader>fb", tb.buffers, defopts("Find buffer"))
-vim.keymap.set("n", "<leader>fk", tb.keymaps, defopts("Find keymap"))
-vim.keymap.set("n", "<leader>fm", tb.marks, defopts("Find mark"))
-
-local is_repo = vim.fn.system("git rev-parse --is-inside-work-tree")
-if vim.v.shell_error == 0 then
-  wk.register {
-    ["<leader>g"] = {name = "git"},
-  }
-  vim.keymap.set("n", "<leader>gc", tb.git_commits, defopts("Browse commits"))
-  vim.keymap.set("n", "<leader>gC", tb.git_bcommits, defopts("Browse buffer commits"))
-  vim.keymap.set("n", "<leader>gb", tb.git_branches, defopts("Browse branches"))
-  vim.keymap.set("n", "<leader>gs", tb.git_status, defopts("Browse git status"))
-end
-
--- LSP
+----------✦ 🛠️ LSP 🛠️ ✦----------
 
 local lspconfig = require("lspconfig")
 
 -- LSP & related floating windows styling
-vim.diagnostic.config {
-    float = { border = "rounded" },
-}
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-  vim.lsp.handlers.hover,
-  { style = "minimal", border = "rounded" }
-)
+vim.diagnostic.config({
+  float = { border = "rounded" },
+})
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { style = "minimal", border = "rounded" })
 
 -- Register servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
-local servers = {"clangd", "pylsp", "bashls", "marksman", "texlab"}
+local servers = { "clangd", "pylsp", "bashls", "marksman", "texlab" }
 for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
+  lspconfig[lsp].setup({
     on_attach = function(client, bufnr)
-      wk.register{
-        ["<leader>l"] = {name = "lsp symbols"},
-      }
+      wk.register({
+        ["<leader>l"] = { name = "lsp symbols" },
+      })
 
       -- Lsp bindings
       vim.keymap.set("n", "gd", vim.lsp.buf.definition, defopts("Definition"))
@@ -298,7 +222,7 @@ for _, lsp in ipairs(servers) do
       vim.keymap.set("n", "gi", vim.lsp.buf.implementation, defopts("Implementation"))
       vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, defopts("Show signature"))
       vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, defopts("Rename symbol"))
-      vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, defopts("Code action"))
+      vim.keymap.set({ "n", "v" }, "<leader>a", vim.lsp.buf.code_action, defopts("Code action"))
       vim.keymap.set("n", "gr", vim.lsp.buf.references, defopts("References"))
 
       -- Diagnostics bindings
@@ -317,7 +241,7 @@ for _, lsp in ipairs(servers) do
       vim.keymap.set("t", "<esc>", "<C-\\><C-n>", opts)
 
       -- Formatting
-      vim.keymap.set('n', '<leader>F', function()
+      vim.keymap.set("n", "<leader>F", function()
         vim.lsp.buf.format({ async = true })
       end, defopts("Format with lsp"))
 
@@ -335,92 +259,170 @@ for _, lsp in ipairs(servers) do
         end
       end
       vim.keymap.set("n", "<leader>td", toggle_diagnostics, defopts("Toggle diagnostics"))
-
     end,
 
-    capabilities = capabilities
-  }
+    capabilities = capabilities,
+  })
 end
 
 -- LSP based signatures when passing arguments
-require("lsp_signature").setup {
+require("lsp_signature").setup({
   hint_enable = false,
   toggle_key = "<C-s>",
   toggle_key_flip_floatwin_setting = true,
-}
+})
 
--- Use LSP and buffer for text completion
-local cmp = require "cmp"
-cmp.setup {
-  sources = cmp.config.sources(
-  {
-    {name = "nvim_lsp"},
-    {name = "path"}
-  },
-  {
-    {name = "buffer"}
-  }
-  ),
-  mapping = cmp.mapping.preset.insert(
-  {
+----------✦ ⚙️  Core functionalities ⚙️ ✦----------
+
+-- Code completion
+local cmp = require("cmp")
+-- LSP
+cmp.setup({
+  sources = cmp.config.sources({
+    { name = "nvim_lsp" },
+    { name = "path" },
+  }, {
+    { name = "buffer" },
+  }),
+  mapping = cmp.mapping.preset.insert({
     ["<C-Space>"] = cmp.mapping.complete(),
     ["<Tab>"] = cmp.mapping.select_next_item(),
     ["<S-Tab>"] = cmp.mapping.select_prev_item(),
     ["<C-f>"] = cmp.mapping.scroll_docs(1),
     ["<C-b>"] = cmp.mapping.scroll_docs(-1),
-    ["<CR>"] = cmp.mapping.confirm({select = true}),
-    ["<C-e>"] = cmp.mapping.abort()
-  }
-  )
-}
-
--- Use buffer source for command line completion
-cmp.setup.cmdline(
-{ "/", "?" },
-{
+    ["<CR>"] = cmp.mapping.confirm({ select = true }),
+    ["<C-e>"] = cmp.mapping.abort(),
+  }),
+})
+-- From buffer
+cmp.setup.cmdline({ "/", "?" }, {
   sources = {
-    {name = "buffer"}
+    { name = "buffer" },
   },
-  mapping = cmp.mapping.preset.cmdline()
-}
-)
-
-cmp.setup.cmdline(
-":",
-{
   mapping = cmp.mapping.preset.cmdline(),
-  sources = cmp.config.sources(
-  {
-    {name = "path"}
+})
+-- For command line
+cmp.setup.cmdline(":", {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources({
+    { name = "path" },
+  }, {
+    { name = "cmdline" },
+  }),
+})
+
+-- Automatic indentation (if indent is detected will override the defaults)
+require("guess-indent").setup()
+
+----------✦ 🔠 Editor functionalities 🔠 ✦----------
+
+-- Surround motions
+require("nvim-surround").setup()
+
+-- Symbols highlighting
+require("illuminate").configure({
+  providers = {
+    "lsp",
+    "treesitter",
+    -- 'regex' is ommited here on purpose, I dont' want it
   },
-  {
-    {name = "cmdline"}
-  }
-  )
-}
-)
+  delay = 500, -- A bit longer than the default
+})
+
+-- Code commenting
+require("Comment").setup()
+
+----------✦ ✨ UI, visuals and tooling ✨ ✦----------
+
+-- Telescope file finder
+local telescope = require("telescope")
+telescope.setup({
+  defaults = {
+    mappings = {
+      i = {
+        -- Show picker actions help with which-key
+        ["<C-h>"] = "which_key",
+      },
+    },
+    vimgrep_arguments = { "rg", "--vimgrep", "--smart-case", "--type-not", "jupyter" },
+  },
+})
+telescope.load_extension("fzf")
+
+local tb = require("telescope.builtin")
+vim.keymap.set("n", "<leader>ff", tb.find_files, defopts("Find file"))
+vim.keymap.set("n", "<leader>fg", tb.current_buffer_fuzzy_find, defopts("Grep in buffer"))
+vim.keymap.set("n", "<leader>fG", tb.live_grep, defopts("Grep in workspace"))
+vim.keymap.set("n", "<leader>fs", tb.grep_string, defopts("Find string (at cursor)"))
+vim.keymap.set("n", "<leader>fc", tb.commands, defopts("Find command"))
+vim.keymap.set("n", "<leader>fh", tb.help_tags, defopts("Search help"))
+vim.keymap.set("n", "<leader>fr", tb.command_history, defopts("Search command history"))
+vim.keymap.set("n", "<leader>fb", tb.buffers, defopts("Find buffer"))
+vim.keymap.set("n", "<leader>fk", tb.keymaps, defopts("Find keymap"))
+vim.keymap.set("n", "<leader>fm", tb.marks, defopts("Find mark"))
+
+-- Telescope git status
+local is_repo = vim.fn.system("git rev-parse --is-inside-work-tree")
+if vim.v.shell_error == 0 then
+  wk.register({
+    ["<leader>g"] = { name = "git" },
+  })
+  vim.keymap.set("n", "<leader>gc", tb.git_commits, defopts("Browse commits"))
+  vim.keymap.set("n", "<leader>gC", tb.git_bcommits, defopts("Browse buffer commits"))
+  vim.keymap.set("n", "<leader>gb", tb.git_branches, defopts("Browse branches"))
+  vim.keymap.set("n", "<leader>gs", tb.git_status, defopts("Browse git status"))
+end
+
+-- File explorer/file tree
+require("neo-tree").setup({
+  popup_border_style = "rounded",
+  window = {
+    position = "float",
+  },
+  default_component_configs = {
+    icon = {
+      default = "",
+    },
+  },
+})
+
+-- Indent guides
+require("ibl").setup({
+  indent = { char = "│" },
+  scope = { enabled = false },
+})
+
+----------✦ ⚡️ External tools integration ⚡️ ✦----------
 
 -- Git signs gutter and hunk navigation
-require("gitsigns").setup {
+require("gitsigns").setup({
   on_attach = function(client, bufnr)
     local gs = package.loaded.gitsigns
 
     -- Hunk navigation
     vim.keymap.set("n", "]c", function()
-      if vim.wo.diff then return "]c" end
-      vim.schedule(function() gs.next_hunk() end)
+      if vim.wo.diff then
+        return "]c"
+      end
+      vim.schedule(function()
+        gs.next_hunk()
+      end)
       return "<Ignore>"
-    end, {expr = true, desc = "Next hunk"})
+    end, { expr = true, desc = "Next hunk" })
 
     vim.keymap.set("n", "[c", function()
-      if vim.wo.diff then return "[c" end
-      vim.schedule(function() gs.prev_hunk() end)
+      if vim.wo.diff then
+        return "[c"
+      end
+      vim.schedule(function()
+        gs.prev_hunk()
+      end)
       return "<Ignore>"
-    end, {expr = true, desc = "Previous hunk"})
+    end, { expr = true, desc = "Previous hunk" })
 
-    wk.register{
-      ["<leader>h"] = {name = "git hunk"},
-    }
+    wk.register({
+      ["<leader>h"] = { name = "git hunk" },
+    })
 
     -- Actions
     vim.keymap.set("n", "<leader>hs", gs.stage_hunk, defopts("Stage hunk"))
@@ -432,28 +434,71 @@ require("gitsigns").setup {
     vim.keymap.set("n", "<leader>hb", gs.blame_line, defopts("Blame line"))
     vim.keymap.set("n", "<leader>tb", gs.toggle_current_line_blame, defopts("Toggle current line blame"))
     vim.keymap.set("n", "<leader>gd", gs.diffthis, defopts("Diff buffer"))
-    vim.keymap.set("n", "<leader>gD", function() gs.diffthis("~") end, defopts("Diff buffer (with staged)"))
+    vim.keymap.set("n", "<leader>gD", function()
+      gs.diffthis("~")
+    end, defopts("Diff buffer (with staged)"))
     vim.keymap.set("n", "<leader>tD", gs.toggle_deleted, defopts("Toggle show deleted"))
-  end
-}
+  end,
+})
 
--- Colorscheme
+----------✦ ☎️  Keymaps ☎️  ✦----------
+
+-- Mapping groups
+wk.register({
+  ["<leader>f"] = { name = "find" },
+  ["<leader>t"] = { name = "toggle" },
+  ["<leader>c"] = { name = "config" },
+  ["<leader>p"] = { name = "plugins" },
+})
+
+-- General nvim functionalities keymaps
+
+vim.keymap.set("n", "<leader>E", ":Neotree<CR>", defopts("File explorer"))
+vim.keymap.set("n", "<leader>ce", ":edit ~/.config/nvim/init.lua<CR>", defopts("Edit editor config"))
+vim.keymap.set(
+  "n",
+  "<leader>cr",
+  ":source ~/.config/nvim/init.lua<CR>:GuessIndent<CR>",
+  defopts("Reload editor config")
+)
+vim.keymap.set("n", "<leader>n", ":nohlsearch<CR>", defopts("Hide search highlight"))
+vim.keymap.set("n", "<leader>q", ":copen<CR>", defopts("Open quickfix list"))
+vim.keymap.set("n", "<leader>ts", ":set spell!<CR>", defopts("Toggle spellchecking"))
+vim.keymap.set("n", "<leader>tw", ":set list!<CR>", defopts("Toggle visible whitespace characters"))
+vim.keymap.set("n", "<leader>s", "/\\s\\+$<CR>", defopts("Search trailing whitespaces"))
+
+-- Plugin management keymaps
+
+vim.keymap.set("n", "<leader>ps", ":PackerStatus<CR>", defopts("Plugins status"))
+vim.keymap.set("n", "<leader>pu", ":PackerUpdate<CR>", defopts("Update plugins"))
+vim.keymap.set("n", "<leader>pi", ":PackerInstall<CR>", defopts("Install plugins"))
+vim.keymap.set("n", "<leader>pc", ":PackerClean<CR>", defopts("Cleanup unused plugins"))
+
+----------✦ 🎨 Colorscheme 🎨 ✦----------
+
+-- Main Colorscheme
 vim.cmd.colorscheme("onedark")
 
 -- Don't underline changed lines in diff
 vim.api.nvim_set_hl(0, "DiffChange", { cterm = nil })
 
 -- Highlight LSP symbol under cursor using underline
-vim.api.nvim_set_hl(0, 'LspReferenceRead', { underline = true })
+vim.api.nvim_set_hl(0, "IlluminatedWordText", { ctermbg = 237 })
+vim.api.nvim_set_hl(0, "IlluminatedWordRead", { ctermbg = 237 })
+vim.api.nvim_set_hl(0, "IlluminatedWordWrite", { ctermbg = 237 })
 
--- Fixes and workarounds
+-- Make NeoTree floating window bordor look same as the Telescope's one
+vim.api.nvim_set_hl(0, "NeoTreeFloatBorder", { ctermbg = 0 })
+vim.api.nvim_set_hl(0, "NeoTreeFloatTitle", { ctermbg = 0 })
+
+----------✦ ⚠️  Fixes and workarounds ⚠️  ✦----------
 
 -- Disable error highlighting for markdown
 vim.api.nvim_set_hl(0, "markdownError", { link = nil })
 
 -- Redraw indent guides after folding operations
-for _, keymap in pairs {
-    "zo", "zO", "zc", "zC", "za", "zA", "zv", "zx", "zX", "zm", "zM", "zr", "zR",
-} do
-    vim.api.nvim_set_keymap("n", keymap,  keymap .. "<CMD>IndentBlanklineRefresh<CR>", { noremap=true, silent=true })
+for _, keymap in pairs({
+  "zo", "zO", "zc", "zC", "za", "zA", "zv", "zx", "zX", "zm", "zM", "zr", "zR",
+}) do
+  vim.api.nvim_set_keymap("n", keymap, keymap .. "<CMD>IndentBlanklineRefresh<CR>", { noremap = true, silent = true })
 end
