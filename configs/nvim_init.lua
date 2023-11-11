@@ -94,10 +94,12 @@ require("packer").startup({
     use("rrethy/vim-illuminate")
     use("numtostr/comment.nvim")
     -- UI, visuals and tooling
+    use('stevearc/dressing.nvim')
     use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
     use({ "nvim-telescope/telescope.nvim", requires = { "nvim-lua/plenary.nvim" } })
     use({ "nvim-neo-tree/neo-tree.nvim", requires = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" } })
     use("lukas-reineke/indent-blankline.nvim")
+    use("joshdick/onedark.vim")
     -- External tools integration
     use("lewis6991/gitsigns.nvim")
   end,
@@ -333,6 +335,9 @@ require("illuminate").configure({
 require("Comment").setup()
 
 ----------✦ ✨ UI, visuals and tooling ✨ ✦----------
+
+-- Better UI components
+require("dressing").setup()
 
 -- Telescope file finder
 local telescope = require("telescope")
