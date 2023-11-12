@@ -28,8 +28,6 @@ brew "zsh-autosuggestions"
 brew "zsh-completions"
 brew "zsh-syntax-highlighting"
 
-brew "texlab"
-brew "bash-language-server"
 brew "shellcheck"
 
 brew "cmake"

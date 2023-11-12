@@ -61,7 +61,7 @@ vim.opt.mouse = nil
 vim.g.mapleader = " "
 
 -- Helper function to define mapping with default options and a description
-function defopts(desc)
+local function defopts(desc)
   return { noremap = true, silent = true, desc = desc }
 end
 
@@ -72,6 +72,7 @@ end
 require("packer").startup({
   function()
     use("wbthomason/packer.nvim")
+    use("williamboman/mason.nvim")
 
     -- Help
     use("folke/which-key.nvim")
@@ -81,6 +82,8 @@ require("packer").startup({
     use("kiyoon/treesitter-indent-object.nvim")
     -- LSP
     use("neovim/nvim-lspconfig")
+    use("williamboman/mason-lspconfig.nvim")
+    use("nvimtools/none-ls.nvim")
     use("ray-x/lsp_signature.nvim")
     -- Core functionalities
     use("hrsh7th/nvim-cmp")
@@ -88,7 +91,9 @@ require("packer").startup({
     use("hrsh7th/cmp-buffer")
     use("hrsh7th/cmp-cmdline")
     use("hrsh7th/cmp-path")
+    use("l3mon4d3/luasnip")
     use("nmac427/guess-indent.nvim")
+    use("theprimeagen/refactoring.nvim")
     -- Editor functionalities
     use("kylechui/nvim-surround")
     use("rrethy/vim-illuminate")
@@ -138,7 +143,6 @@ require("nvim-treesitter.configs").setup({
         ["ic"] = { query = "@comment.inner", desc = "inner comment" },
         ["ab"] = { query = "@block.outer", desc = "outer comment" },
         ["ib"] = { query = "@block.inner", desc = "inner comment" },
-        ["ib"] = { query = "@block.inner", desc = "inner comment" },
       },
     },
     move = {
@@ -183,7 +187,7 @@ require("nvim-treesitter.configs").setup({
 -- Indent text object
 require("treesitter_indent_object").setup()
 
-indentobj = require("treesitter_indent_object.textobj")
+local indentobj = require("treesitter_indent_object.textobj")
 vim.keymap.set({ "x", "o" }, "ai", indentobj.select_indent_outer, defopts("outer indent (context-aware)"))
 vim.keymap.set({ "x", "o" }, "aI", function()
   indentobj.select_indent_outer(true)
@@ -195,25 +199,26 @@ end, defopts("inner indent line-wise (context-aware)"))
 
 ----------✦ 🛠️ LSP 🛠️ ✦----------
 
-local lspconfig = require("lspconfig")
+local servers = {
+  "pylsp", "clangd", "cmake", "bashls", "dockerls", "html", "cssls", "jsonls", "yamlls", "marksman", "texlab",
+}
 
--- LSP & related floating windows styling
-vim.diagnostic.config({
-  float = { border = "rounded" },
-})
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { style = "minimal", border = "rounded" })
+require("mason").setup()
+require("mason-lspconfig").setup({ ensure_installed = servers })
+local lspconfig = require("lspconfig")
 
 -- Register servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
-
-local servers = { "clangd", "pylsp", "bashls", "marksman", "texlab" }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup({
     on_attach = function(client, bufnr)
       wk.register({
         ["<leader>l"] = { name = "lsp symbols" },
       })
+
+      -- Disable highlighting, we use Treesitter for that
+      client.server_capabilities.semanticTokensProvider = nil
 
       -- Lsp bindings
       vim.keymap.set("n", "gd", vim.lsp.buf.definition, defopts("Definition"))
@@ -267,6 +272,20 @@ for _, lsp in ipairs(servers) do
   })
 end
 
+-- None-ls extra LSP servers
+local null_ls = require("null-ls")
+null_ls.setup({
+  sources = {
+    null_ls.builtins.diagnostics.mypy.with({
+      -- Use virtualenvs and conda envs
+      extra_args = function()
+        local virtual = os.getenv("VIRTUAL_ENV") or os.getenv("CONDA_PREFIX") or "/usr"
+        return { "--python-executable", virtual .. "/bin/python3" }
+      end,
+    }),
+  },
+})
+
 -- LSP based signatures when passing arguments
 require("lsp_signature").setup({
   hint_enable = false,
@@ -274,15 +293,27 @@ require("lsp_signature").setup({
   toggle_key_flip_floatwin_setting = true,
 })
 
+-- LSP & related floating windows styling
+vim.diagnostic.config({
+  float = { border = "rounded" },
+})
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { style = "minimal", border = "rounded" })
+
 ----------✦ ⚙️  Core functionalities ⚙️ ✦----------
 
 -- Code completion
 local cmp = require("cmp")
 -- LSP
 cmp.setup({
+  snippet = {
+    expand = function(args)
+      require("luasnip").lsp_expand(args.body)
+    end,
+  },
   sources = cmp.config.sources({
     { name = "nvim_lsp" },
     { name = "path" },
+    { name = "luasnip" },
   }, {
     { name = "buffer" },
   }),
@@ -313,8 +344,23 @@ cmp.setup.cmdline(":", {
   }),
 })
 
+-- Snippers
+local ls = require("luasnip")
+vim.keymap.set({ "i" }, "<C-K>", function() ls.expand() end, { silent = true })
+vim.keymap.set({ "i", "s" }, "<C-L>", function() ls.jump(1) end, { silent = true })
+vim.keymap.set({ "i", "s" }, "<C-J>", function() ls.jump(-1) end, { silent = true })
+vim.keymap.set({ "i", "s" }, "<C-E>", function()
+  if ls.choice_active() then
+    ls.change_choice(1)
+  end
+end, { silent = true })
+
 -- Automatic indentation (if indent is detected will override the defaults)
 require("guess-indent").setup()
+
+-- Refactoring tools
+require('refactoring').setup()
+vim.keymap.set({"n", "x"}, "<leader>R", function() require("refactoring").select_refactor() end, defopts("Refactor"))
 
 ----------✦ 🔠 Editor functionalities 🔠 ✦----------
 
@@ -367,11 +413,9 @@ vim.keymap.set("n", "<leader>fk", tb.keymaps, defopts("Find keymap"))
 vim.keymap.set("n", "<leader>fm", tb.marks, defopts("Find mark"))
 
 -- Telescope git status
-local is_repo = vim.fn.system("git rev-parse --is-inside-work-tree")
+vim.fn.system("git rev-parse --is-inside-work-tree")
 if vim.v.shell_error == 0 then
-  wk.register({
-    ["<leader>g"] = { name = "git" },
-  })
+  wk.register({ ["<leader>g"] = { name = "git" } })
   vim.keymap.set("n", "<leader>gc", tb.git_commits, defopts("Browse commits"))
   vim.keymap.set("n", "<leader>gC", tb.git_bcommits, defopts("Browse buffer commits"))
   vim.keymap.set("n", "<leader>gb", tb.git_branches, defopts("Browse branches"))
@@ -478,6 +522,7 @@ vim.keymap.set("n", "<leader>ps", ":PackerStatus<CR>", defopts("Plugins status")
 vim.keymap.set("n", "<leader>pu", ":PackerUpdate<CR>", defopts("Update plugins"))
 vim.keymap.set("n", "<leader>pi", ":PackerInstall<CR>", defopts("Install plugins"))
 vim.keymap.set("n", "<leader>pc", ":PackerClean<CR>", defopts("Cleanup unused plugins"))
+vim.keymap.set("n", "<leader>pm", ":Mason<CR>", defopts("Mason panel"))
 
 ----------✦ 🎨 Colorscheme 🎨 ✦----------
 
