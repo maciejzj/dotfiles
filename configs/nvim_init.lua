@@ -17,6 +17,7 @@ vim.opt.foldmethod = "indent"
 vim.opt.foldnestmax = 3
 -- Open files with all folds open
 vim.opt.foldenable = false
+vim.opt.foldlevelstart = 100
 
 -- Searching
 -- Be case insensitive for small caps, sensitive otherwise
@@ -99,10 +100,10 @@ require("packer").startup({
     use("rrethy/vim-illuminate")
     use("numtostr/comment.nvim")
     -- UI, visuals and tooling
-    use('stevearc/dressing.nvim')
+    use("stevearc/dressing.nvim")
     use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
     use({ "nvim-telescope/telescope.nvim", requires = { "nvim-lua/plenary.nvim" } })
-    use({ "nvim-neo-tree/neo-tree.nvim", requires = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" } })
+    use({ "nvim-neo-tree/neo-tree.nvim", requires = { "nvim-lua/plenary.nvim", "muniftanjim/nui.nvim" } })
     use("lukas-reineke/indent-blankline.nvim")
     use("joshdick/onedark.vim")
     -- External tools integration
@@ -188,11 +189,21 @@ require("nvim-treesitter.configs").setup({
 require("treesitter_indent_object").setup()
 
 local indentobj = require("treesitter_indent_object.textobj")
-vim.keymap.set({ "x", "o" }, "ai", indentobj.select_indent_outer, defopts("outer indent (context-aware)"))
+vim.keymap.set(
+  { "x", "o" },
+  "ai",
+  indentobj.select_indent_outer,
+  defopts("outer indent (context-aware)")
+)
 vim.keymap.set({ "x", "o" }, "aI", function()
   indentobj.select_indent_outer(true)
 end, defopts("outer indent line-wise (context-aware)"))
-vim.keymap.set({ "x", "o" }, "ii", indentobj.select_indent_inner, defopts("inner indent (context-aware)"))
+vim.keymap.set(
+  { "x", "o" },
+  "ii",
+  indentobj.select_indent_inner,
+  defopts("inner indent (context-aware)")
+)
 vim.keymap.set({ "x", "o" }, "iI", function()
   indentobj.select_indent_inner(true)
 end, defopts("inner indent line-wise (context-aware)"))
@@ -200,7 +211,8 @@ end, defopts("inner indent line-wise (context-aware)"))
 ----------✦ 🛠️ LSP 🛠️ ✦----------
 
 local servers = {
-  "pylsp", "clangd", "cmake", "bashls", "dockerls", "html", "cssls", "jsonls", "yamlls", "marksman", "texlab",
+  "pylsp", "clangd", "cmake", "bashls", "dockerls", "html", "cssls", "jsonls", "yamlls", 
+  "marksman", "texlab",
 }
 
 require("mason").setup()
@@ -297,7 +309,8 @@ require("lsp_signature").setup({
 vim.diagnostic.config({
   float = { border = "rounded" },
 })
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { style = "minimal", border = "rounded" })
+vim.lsp.handlers["textDocument/hover"] =
+  vim.lsp.with(vim.lsp.handlers.hover, { style = "minimal", border = "rounded" })
 
 ----------✦ ⚙️  Core functionalities ⚙️ ✦----------
 
@@ -359,8 +372,10 @@ end, { silent = true })
 require("guess-indent").setup()
 
 -- Refactoring tools
-require('refactoring').setup()
-vim.keymap.set({"n", "x"}, "<leader>R", function() require("refactoring").select_refactor() end, defopts("Refactor"))
+require("refactoring").setup()
+vim.keymap.set({ "n", "x" }, "<leader>R", function()
+  require("refactoring").select_refactor()
+end, defopts("Refactor"))
 
 ----------✦ 🔠 Editor functionalities 🔠 ✦----------
 
@@ -481,7 +496,7 @@ require("gitsigns").setup({
     vim.keymap.set("n", "<leader>hR", gs.reset_buffer, defopts("Restore buffer"))
     vim.keymap.set("n", "<leader>hp", gs.preview_hunk, defopts("Preview hunk"))
     vim.keymap.set("n", "<leader>hb", gs.blame_line, defopts("Blame line"))
-    vim.keymap.set("n", "<leader>tb", gs.toggle_current_line_blame, defopts("Toggle current line blame"))
+    vim.keymap.set( "n", "<leader>tb", gs.toggle_current_line_blame, defopts("Toggle line blame"))
     vim.keymap.set("n", "<leader>gd", gs.diffthis, defopts("Diff buffer"))
     vim.keymap.set("n", "<leader>gD", function()
       gs.diffthis("~")
@@ -503,12 +518,12 @@ wk.register({
 -- General nvim functionalities keymaps
 
 vim.keymap.set("n", "<leader>E", ":Neotree<CR>", defopts("File explorer"))
-vim.keymap.set("n", "<leader>ce", ":edit ~/.config/nvim/init.lua<CR>", defopts("Edit editor config"))
+vim.keymap.set("n", "<leader>ce", ":edit ~/.config/nvim/init.lua<CR>", defopts("Edit config"))
 vim.keymap.set(
   "n",
   "<leader>cr",
   ":source ~/.config/nvim/init.lua<CR>:GuessIndent<CR>",
-  defopts("Reload editor config")
+  defopts("Reload config")
 )
 vim.keymap.set("n", "<leader>n", ":nohlsearch<CR>", defopts("Hide search highlight"))
 vim.keymap.set("n", "<leader>q", ":copen<CR>", defopts("Open quickfix list"))
@@ -550,5 +565,7 @@ vim.api.nvim_set_hl(0, "markdownError", { link = nil })
 for _, keymap in pairs({
   "zo", "zO", "zc", "zC", "za", "zA", "zv", "zx", "zX", "zm", "zM", "zr", "zR",
 }) do
-  vim.api.nvim_set_keymap("n", keymap, keymap .. "<CMD>IndentBlanklineRefresh<CR>", { noremap = true, silent = true })
+  vim.api.nvim_set_keymap(
+    "n", keymap, keymap .. "<CMD>IndentBlanklineRefresh<CR>", { noremap = true, silent = true }
+  )
 end
