@@ -80,12 +80,6 @@ linux-gnu)
 		# Falls into "Exceptions" from shellckeck wiki
 		#shellcheck disable=SC2024
 		sudo xargs apt install -y < packages/debian/pkglist
-
-		if ! [ -x "$(command -v pyenv)" ]; then
-			curl 'https://pyenv.run' | bash
-			PYENV_VIRTENV_REPO_URL="https://github.com/pyenv/pyenv-virtualenv.git"
-			git clone --quiet "${PYENV_VIRTENV_REPO_URL}" "$(pyenv root)/plugins/pyenv-virtualenv"
-		fi
 	else
 		echo -e "${RED}Did not detect supported Linux package manager, config install abandoned${NOCOLOR}"
 		exit 1
