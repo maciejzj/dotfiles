@@ -32,6 +32,9 @@ export MYPY_CACHE_DIR="$XDG_CACHE_HOME"/mypy
 
 export MPLCONFIGDIR="$XDG_CONFIG_HOME/matplotlib"
 
+export NODE_REPL_HISTORY="$XDG_DATA_HOME"/node_repl_history
+export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/npmrc
+
 export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc.py"
 export PYTHONBREAKPOINT="ipdb.set_trace"
 
