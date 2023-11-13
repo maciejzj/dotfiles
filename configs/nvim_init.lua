@@ -88,6 +88,7 @@ require("lazy").setup({
   "neovim/nvim-lspconfig",
   "williamboman/mason-lspconfig.nvim",
   "nvimtools/none-ls.nvim",
+  "antosha417/nvim-lsp-file-operations",
   "ray-x/lsp_signature.nvim",
   -- Core functionalities
   "hrsh7th/nvim-cmp",
@@ -205,7 +206,7 @@ end, defopts("inner indent line-wise (context-aware)"))
 ----------✦ 🛠️ LSP 🛠️ ✦----------
 
 local servers = {
-  "pylsp", "clangd", "cmake", "bashls", "dockerls", "html", "cssls", "jsonls", "yamlls", 
+  "pylsp", "clangd", "cmake", "bashls", "dockerls", "html", "cssls", "jsonls", "yamlls",
   "marksman", "texlab",
 }
 
@@ -282,16 +283,20 @@ end
 local null_ls = require("null-ls")
 null_ls.setup({
   sources = {
-    -- Disabled for now: https://github.com/jose-elias-alvarez/null-ls.nvim/issues/1618
-    -- null_ls.builtins.diagnostics.mypy.with({
-    --   -- Use virtualenvs and conda envs
-    --   extra_args = function()
-    --     local virtual = os.getenv("VIRTUAL_ENV") or os.getenv("CONDA_PREFIX") or "/usr"
-    --     return { "--python-executable", virtual .. "/bin/python3" }
-    --   end,
-    -- }),
+    -- Causes some issues because for: https://github.com/jose-elias-alvarez/null-ls.nvim/issues/1618
+    null_ls.builtins.diagnostics.mypy.with({
+      -- Use virtualenvs and conda envs
+      extra_args = function()
+        local virtual = os.getenv("VIRTUAL_ENV") or os.getenv("CONDA_PREFIX") or "/usr"
+        return { "--python-executable", virtual .. "/bin/python3" }
+      end,
+    }),
+    null_ls.builtins.code_actions.refactoring,
   },
 })
+
+-- LSP-related operations on files in NeoTree
+require("lsp-file-operations").setup()
 
 -- LSP based signatures when passing arguments
 require("lsp_signature").setup({
@@ -411,6 +416,9 @@ telescope.setup({
 telescope.load_extension("fzf")
 
 local tb = require("telescope.builtin")
+
+
+
 vim.keymap.set("n", "<leader>ff", tb.find_files, defopts("Find file"))
 vim.keymap.set("n", "<leader>fg", tb.current_buffer_fuzzy_find, defopts("Grep in buffer"))
 vim.keymap.set("n", "<leader>fG", tb.live_grep, defopts("Grep in workspace"))
@@ -561,3 +569,5 @@ for _, keymap in pairs({
     "n", keymap, keymap .. "<CMD>IndentBlanklineRefresh<CR>", { noremap = true, silent = true }
   )
 end
+
+
