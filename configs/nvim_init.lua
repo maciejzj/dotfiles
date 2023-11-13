@@ -68,55 +68,49 @@ end
 
 ----------✦ 📦 Plugins setup 📦 ✦----------
 
--- TODO: Packer is deprecated, move to lazy
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({ "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", "--branch=stable" , lazypath})
+end
+vim.opt.rtp:prepend(lazypath)
+
 -- Plugins
-require("packer").startup({
-  function()
-    use("wbthomason/packer.nvim")
-    use("williamboman/mason.nvim")
+require("lazy").setup({
+  "williamboman/mason.nvim",
 
-    -- Help
-    use("folke/which-key.nvim")
-    -- Treesitter
-    use("nvim-treesitter/nvim-treesitter")
-    use("nvim-treesitter/nvim-treesitter-textobjects")
-    use("kiyoon/treesitter-indent-object.nvim")
-    -- LSP
-    use("neovim/nvim-lspconfig")
-    use("williamboman/mason-lspconfig.nvim")
-    use("nvimtools/none-ls.nvim")
-    use("ray-x/lsp_signature.nvim")
-    -- Core functionalities
-    use("hrsh7th/nvim-cmp")
-    use("hrsh7th/cmp-nvim-lsp")
-    use("hrsh7th/cmp-buffer")
-    use("hrsh7th/cmp-cmdline")
-    use("hrsh7th/cmp-path")
-    use("l3mon4d3/luasnip")
-    use("nmac427/guess-indent.nvim")
-    use("theprimeagen/refactoring.nvim")
-    -- Editor functionalities
-    use("kylechui/nvim-surround")
-    use("rrethy/vim-illuminate")
-    use("numtostr/comment.nvim")
-    -- UI, visuals and tooling
-    use("stevearc/dressing.nvim")
-    use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
-    use({ "nvim-telescope/telescope.nvim", requires = { "nvim-lua/plenary.nvim" } })
-    use({ "nvim-neo-tree/neo-tree.nvim", requires = { "nvim-lua/plenary.nvim", "muniftanjim/nui.nvim" } })
-    use("lukas-reineke/indent-blankline.nvim")
-    use("joshdick/onedark.vim")
-    -- External tools integration
-    use("lewis6991/gitsigns.nvim")
-  end,
-
-  config = {
-    display = {
-      open_fn = function()
-        return require("packer.util").float({ border = "rounded" })
-      end,
-    },
-  },
+  -- Help
+  "folke/which-key.nvim",
+  -- Treesitter
+  "nvim-treesitter/nvim-treesitter",
+  "nvim-treesitter/nvim-treesitter-textobjects",
+  "kiyoon/treesitter-indent-object.nvim",
+  -- LSP
+  "neovim/nvim-lspconfig",
+  "williamboman/mason-lspconfig.nvim",
+  "nvimtools/none-ls.nvim",
+  "ray-x/lsp_signature.nvim",
+  -- Core functionalities
+  "hrsh7th/nvim-cmp",
+  "hrsh7th/cmp-nvim-lsp",
+  "hrsh7th/cmp-buffer",
+  "hrsh7th/cmp-cmdline",
+  "hrsh7th/cmp-path",
+  "l3mon4d3/luasnip",
+  "nmac427/guess-indent.nvim",
+  "theprimeagen/refactoring.nvim",
+  -- Editor functionalities
+  "kylechui/nvim-surround",
+  "rrethy/vim-illuminate",
+  "numtostr/comment.nvim",
+  -- UI, visuals and tooling
+  "stevearc/dressing.nvim",
+  { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+  { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
+  { "nvim-neo-tree/neo-tree.nvim", dependencies = { "nvim-lua/plenary.nvim", "muniftanjim/nui.nvim" } },
+  "lukas-reineke/indent-blankline.nvim",
+  "joshdick/onedark.vim",
+  -- External tools integration
+  "lewis6991/gitsigns.nvim",
 })
 
 ----------✦ ❓ Help ❓ ✦----------
@@ -288,13 +282,14 @@ end
 local null_ls = require("null-ls")
 null_ls.setup({
   sources = {
-    null_ls.builtins.diagnostics.mypy.with({
-      -- Use virtualenvs and conda envs
-      extra_args = function()
-        local virtual = os.getenv("VIRTUAL_ENV") or os.getenv("CONDA_PREFIX") or "/usr"
-        return { "--python-executable", virtual .. "/bin/python3" }
-      end,
-    }),
+    -- Disabled for now: https://github.com/jose-elias-alvarez/null-ls.nvim/issues/1618
+    -- null_ls.builtins.diagnostics.mypy.with({
+    --   -- Use virtualenvs and conda envs
+    --   extra_args = function()
+    --     local virtual = os.getenv("VIRTUAL_ENV") or os.getenv("CONDA_PREFIX") or "/usr"
+    --     return { "--python-executable", virtual .. "/bin/python3" }
+    --   end,
+    -- }),
   },
 })
 
@@ -533,11 +528,8 @@ vim.keymap.set("n", "<leader>s", "/\\s\\+$<CR>", defopts("Search trailing whites
 
 -- Plugin management keymaps
 
-vim.keymap.set("n", "<leader>ps", ":PackerStatus<CR>", defopts("Plugins status"))
-vim.keymap.set("n", "<leader>pu", ":PackerUpdate<CR>", defopts("Update plugins"))
-vim.keymap.set("n", "<leader>pi", ":PackerInstall<CR>", defopts("Install plugins"))
-vim.keymap.set("n", "<leader>pc", ":PackerClean<CR>", defopts("Cleanup unused plugins"))
-vim.keymap.set("n", "<leader>pm", ":Mason<CR>", defopts("Mason panel"))
+vim.keymap.set("n", "<leader>pp", ":Lazy<CR>", defopts("Lazy plugin packages panel"))
+vim.keymap.set("n", "<leader>pm", ":Mason<CR>", defopts("Mason pakcages panel"))
 
 ----------✦ 🎨 Colorscheme 🎨 ✦----------
 

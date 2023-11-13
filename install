@@ -111,25 +111,6 @@ fi
 # XDG-compliant zsh history file has to be created manually
 mkdir -p "${XDG_STATE_HOME}/zsh"
 
-# Install packer nvim plugin manager
-echo -e "${BLUE}==> Installing packer${NOCOLOR}"
-PACKER_INSTALL_DIR="${XDG_DATA_HOME}/nvim/site/pack/packer/start"
-if ! [ -d "${PACKER_INSTALL_DIR}/packer.nvim" ]; then
-	PACKER_GIT_REPO_URL="https://github.com/wbthomason/packer.nvim"
-	mkdir -p "${PACKER_INSTALL_DIR}"
-	if ! git clone --quiet --depth 1 "${PACKER_GIT_REPO_URL}" "${PACKER_INSTALL_DIR}/packer.nvim"; then
-		echo -e "${RED}Failed to install packer, config install abandoned${NOCOLOR}"
-		exit 1
-	fi
-	echo -e "${GREEN}Packer installed successfully${NOCOLOR}"
-else
-	echo -e "${GREEN}Packer already installed, skipping${NOCOLOR}"
-fi
-
-# Install vim packages
-echo -e "${BLUE}==> Installing vim plugins${NOCOLOR}"
-nvim +PackerInstall +qall
-
 # Install tmux plugin manager
 echo -e "${BLUE}==> Installing tmux-themepack${NOCOLOR}"
 TMUX_CONF_DIR="${XDG_CONFIG_HOME}/tmux"
