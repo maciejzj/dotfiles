@@ -70,7 +70,7 @@ end
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({ "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", "--branch=stable" , lazypath})
+  vim.fn.system({ "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", "--branch=stable", lazypath })
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -206,78 +206,79 @@ end, defopts("inner indent line-wise (context-aware)"))
 ----------✦ 🛠️ LSP 🛠️ ✦----------
 
 local servers = {
-  "pylsp", "clangd", "cmake", "bashls", "dockerls", "html", "cssls", "jsonls", "yamlls",
-  "marksman", "texlab",
+  pylsp = {}, clangd = {}, cmake = {}, bashls = {}, dockerls = {}, html = {},
+  cssls = {}, jsonls = {}, yamlls = {}, marksman = {}, texlab = {},
 }
 
+local on_attach = function(client, bufnr)
+  -- Disable highlighting, we use Treesitter for that
+  client.server_capabilities.semanticTokensProvider = nil
+
+  -- Lsp bindings
+  vim.keymap.set("n", "gd", vim.lsp.buf.definition, defopts("Definition"))
+  vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, defopts("Definition"))
+  vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, defopts("Type definition"))
+  vim.keymap.set("n", "gD", vim.lsp.buf.declaration, defopts("Declaration"))
+  vim.keymap.set("n", "K", vim.lsp.buf.hover, defopts("Hover"))
+  vim.keymap.set("n", "gi", vim.lsp.buf.implementation, defopts("Implementation"))
+  vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, defopts("Show signature"))
+  vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, defopts("Rename symbol"))
+  vim.keymap.set({ "n", "v" }, "<leader>a", vim.lsp.buf.code_action, defopts("Code action"))
+  vim.keymap.set("n", "gr", vim.lsp.buf.references, defopts("References"))
+
+  -- Diagnostics bindings
+  vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, defopts("Show diagnostics"))
+  vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, defopts("Next diagnostics"))
+  vim.keymap.set("n", "]d", vim.diagnostic.goto_next, defopts("Previous diagnostics"))
+  vim.keymap.set("n", "<space>d", vim.diagnostic.setloclist, defopts("Diagnostics list"))
+
+  -- Telescope-LSP bindings
+  local tb = require("telescope.builtin")
+  vim.keymap.set("n", "<leader>ls", tb.lsp_document_symbols, defopts("Browse buffer symbols"))
+  vim.keymap.set("n", "<leader>lS", tb.lsp_workspace_symbols, defopts("Browse workspace symbols"))
+  vim.keymap.set("n", "<leader>lr", tb.lsp_references, defopts("Browse symbol references"))
+  vim.keymap.set("n", "<leader>D", tb.diagnostics, defopts("Browse workspace diagnostics"))
+  -- Exit insert mode interminal with the Escape key
+  vim.keymap.set("t", "<esc>", "<C-\\><C-n>", opts)
+
+  -- Formatting
+  vim.keymap.set("n", "<leader>F", function()
+    vim.lsp.buf.format({ async = true })
+  end, defopts("Format with lsp"))
+
+  -- Show/hide Diagnostics
+  vim.g.diagnostics_visible = true
+  function _G.toggle_diagnostics()
+    if vim.g.diagnostics_visible then
+      vim.g.diagnostics_visible = false
+      vim.diagnostic.disable()
+      print("Diagnostics off")
+    else
+      vim.g.diagnostics_visible = true
+      vim.diagnostic.enable()
+      print("Diagnostics on")
+    end
+  end
+
+  vim.keymap.set("n", "<leader>td", toggle_diagnostics, defopts("Toggle diagnostics"))
+end
+
 require("mason").setup()
-require("mason-lspconfig").setup({ ensure_installed = servers })
-local lspconfig = require("lspconfig")
+require("mason-lspconfig").setup({ ensure_installed = vim.tbl_keys(servers) })
 
 -- Register servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup({
-    on_attach = function(client, bufnr)
-      wk.register({
-        ["<leader>l"] = { name = "lsp symbols" },
-      })
-
-      -- Disable highlighting, we use Treesitter for that
-      client.server_capabilities.semanticTokensProvider = nil
-
-      -- Lsp bindings
-      vim.keymap.set("n", "gd", vim.lsp.buf.definition, defopts("Definition"))
-      vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, defopts("Definition"))
-      vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, defopts("Type definition"))
-      vim.keymap.set("n", "gD", vim.lsp.buf.declaration, defopts("Declaration"))
-      vim.keymap.set("n", "K", vim.lsp.buf.hover, defopts("Hover"))
-      vim.keymap.set("n", "gi", vim.lsp.buf.implementation, defopts("Implementation"))
-      vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, defopts("Show signature"))
-      vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, defopts("Rename symbol"))
-      vim.keymap.set({ "n", "v" }, "<leader>a", vim.lsp.buf.code_action, defopts("Code action"))
-      vim.keymap.set("n", "gr", vim.lsp.buf.references, defopts("References"))
-
-      -- Diagnostics bindings
-      vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, defopts("Show diagnostics"))
-      vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, defopts("Next diagnostics"))
-      vim.keymap.set("n", "]d", vim.diagnostic.goto_next, defopts("Previous diagnostics"))
-      vim.keymap.set("n", "<space>d", vim.diagnostic.setloclist, defopts("Diagnostics list"))
-
-      -- Telescope-LSP bindings
-      local tb = require("telescope.builtin")
-      vim.keymap.set("n", "<leader>ls", tb.lsp_document_symbols, defopts("Browse buffer symbols"))
-      vim.keymap.set("n", "<leader>lS", tb.lsp_workspace_symbols, defopts("Browse workspace symbols"))
-      vim.keymap.set("n", "<leader>lr", tb.lsp_references, defopts("Browse symbol references"))
-      vim.keymap.set("n", "<leader>D", tb.diagnostics, defopts("Browse workspace diagnostics"))
-      -- Exit insert mode interminal with the Escape key
-      vim.keymap.set("t", "<esc>", "<C-\\><C-n>", opts)
-
-      -- Formatting
-      vim.keymap.set("n", "<leader>F", function()
-        vim.lsp.buf.format({ async = true })
-      end, defopts("Format with lsp"))
-
-      -- Show/hide Diagnostics
-      vim.g.diagnostics_visible = true
-      function _G.toggle_diagnostics()
-        if vim.g.diagnostics_visible then
-          vim.g.diagnostics_visible = false
-          vim.diagnostic.disable()
-          print("Diagnostics off")
-        else
-          vim.g.diagnostics_visible = true
-          vim.diagnostic.enable()
-          print("Diagnostics on")
-        end
-      end
-      vim.keymap.set("n", "<leader>td", toggle_diagnostics, defopts("Toggle diagnostics"))
-    end,
-
-    capabilities = capabilities,
-  })
-end
+require("mason-lspconfig").setup_handlers({
+  function(server_name)
+    require('lspconfig')[server_name].setup {
+      capabilities = capabilities,
+      on_attach = on_attach,
+      settings = servers[server_name],
+      filetypes = (servers[server_name] or {}).filetypes,
+    }
+  end,
+})
 
 -- None-ls extra LSP servers
 local null_ls = require("null-ls")
@@ -285,7 +286,6 @@ null_ls.setup({
   sources = {
     -- Causes some issues because for: https://github.com/jose-elias-alvarez/null-ls.nvim/issues/1618
     null_ls.builtins.diagnostics.mypy.with({
-      -- Use virtualenvs and conda envs
       extra_args = function()
         local virtual = os.getenv("VIRTUAL_ENV") or os.getenv("CONDA_PREFIX") or "/usr"
         return { "--python-executable", virtual .. "/bin/python3" }
@@ -309,8 +309,9 @@ require("lsp_signature").setup({
 vim.diagnostic.config({
   float = { border = "rounded" },
 })
-vim.lsp.handlers["textDocument/hover"] =
-  vim.lsp.with(vim.lsp.handlers.hover, { style = "minimal", border = "rounded" })
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+  vim.lsp.handlers.hover, { style = "minimal", border = "rounded" }
+)
 
 ----------✦ ⚙️  Core functionalities ⚙️ ✦----------
 
@@ -499,7 +500,7 @@ require("gitsigns").setup({
     vim.keymap.set("n", "<leader>hR", gs.reset_buffer, defopts("Restore buffer"))
     vim.keymap.set("n", "<leader>hp", gs.preview_hunk, defopts("Preview hunk"))
     vim.keymap.set("n", "<leader>hb", gs.blame_line, defopts("Blame line"))
-    vim.keymap.set( "n", "<leader>tb", gs.toggle_current_line_blame, defopts("Toggle line blame"))
+    vim.keymap.set("n", "<leader>tb", gs.toggle_current_line_blame, defopts("Toggle line blame"))
     vim.keymap.set("n", "<leader>gd", gs.diffthis, defopts("Diff buffer"))
     vim.keymap.set("n", "<leader>gD", function()
       gs.diffthis("~")
@@ -571,5 +572,3 @@ for _, keymap in pairs({
     "n", keymap, keymap .. "<CMD>IndentBlanklineRefresh<CR>", { noremap = true, silent = true }
   )
 end
-
-
