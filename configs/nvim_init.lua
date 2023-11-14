@@ -512,10 +512,12 @@ require("gitsigns").setup({
 
 -- Mapping groups
 wk.register({
-  ["<leader>f"] = { name = "find" },
-  ["<leader>t"] = { name = "toggle" },
   ["<leader>c"] = { name = "config" },
+  ["<leader>f"] = { name = "find" },
+  ["<leader>g"] = { name = "git" },
+  ["<leader>l"] = { name = "language symbols" },
   ["<leader>p"] = { name = "plugins" },
+  ["<leader>t"] = { name = "toggle" },
 })
 
 -- General nvim functionalities keymaps
