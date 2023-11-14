@@ -53,7 +53,6 @@ else
 end
 -- Auto reload changed files from disk
 vim.opt.autoread = true
-vim.api.nvim_create_autocmd("CursorHold", { command = "checktime" })
 
 -- Disable mouse
 vim.opt.mouse = nil
