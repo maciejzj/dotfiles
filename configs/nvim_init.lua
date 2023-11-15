@@ -82,7 +82,7 @@ require("lazy").setup({
   -- Treesitter
   "nvim-treesitter/nvim-treesitter",
   "nvim-treesitter/nvim-treesitter-textobjects",
-  "kiyoon/treesitter-indent-object.nvim",
+  "chrisgrieser/nvim-various-textobjs",
   -- LSP
   "neovim/nvim-lspconfig",
   "williamboman/mason-lspconfig.nvim",
@@ -179,28 +179,8 @@ require("nvim-treesitter.configs").setup({
   },
 })
 
--- Indent text object
-require("treesitter_indent_object").setup()
-
-local indentobj = require("treesitter_indent_object.textobj")
-vim.keymap.set(
-  { "x", "o" },
-  "ai",
-  indentobj.select_indent_outer,
-  defopts("outer indent (context-aware)")
-)
-vim.keymap.set({ "x", "o" }, "aI", function()
-  indentobj.select_indent_outer(true)
-end, defopts("outer indent line-wise (context-aware)"))
-vim.keymap.set(
-  { "x", "o" },
-  "ii",
-  indentobj.select_indent_inner,
-  defopts("inner indent (context-aware)")
-)
-vim.keymap.set({ "x", "o" }, "iI", function()
-  indentobj.select_indent_inner(true)
-end, defopts("inner indent line-wise (context-aware)"))
+-- Extra text objects
+require('various-textobjs').setup({ useDefaultKeymaps = true })
 
 ----------✦ 🛠️ LSP 🛠️ ✦----------
 
@@ -519,6 +499,8 @@ wk.register({
   ["<leader>p"] = { name = "plugins" },
   ["<leader>t"] = { name = "toggle" },
 })
+vim.keymap.set('o', '<a-i>', require('illuminate').textobj_select, { desc="highlighted symbol" })
+vim.keymap.set('x', '<a-i>', require('illuminate').textobj_select, { desc="highlighted symbol" })
 
 -- General nvim functionalities keymaps
 
