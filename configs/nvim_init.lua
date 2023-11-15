@@ -499,6 +499,8 @@ wk.register({
   ["<leader>p"] = { name = "plugins" },
   ["<leader>t"] = { name = "toggle" },
 })
+vim.keymap.set('o', '<a-i>', require('illuminate').textobj_select, { desc="highlighted symbol" })
+vim.keymap.set('x', '<a-i>', require('illuminate').textobj_select, { desc="highlighted symbol" })
 
 -- General nvim functionalities keymaps
 
