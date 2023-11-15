@@ -26,6 +26,7 @@ while read -r map; do
 	fi
 
 	mkdir -p "$(dirname "$dest")"
+	echo "Linking ${src} to ${dest}}"
 	ln -f -s "$(realpath "$src")" "$dest"
 done < mappings
 
