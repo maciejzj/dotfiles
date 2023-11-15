@@ -1,4 +1,5 @@
 configs/fd_ignore "${XDG_CONFIG_HOME}/fd/ignore"
+configs/gitignore "${XDG_CONFIG_HOME}/git/gitignore"
 configs/ipython_config.py "${XDG_CONFIG_HOME}/ipython/profile_default/ipython_config.py"
 configs/ipython_imports.py "${XDG_CONFIG_HOME}/ipython/profile_default/ipython_imports.py"
 configs/npmrc "${XDG_CONFIG_HOME}/npm/npmrc"
