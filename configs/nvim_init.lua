@@ -215,7 +215,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set("n", "<leader>lr", tb.lsp_references, defopts("Browse symbol references"))
   vim.keymap.set("n", "<leader>D", tb.diagnostics, defopts("Browse workspace diagnostics"))
   -- Exit insert mode interminal with the Escape key
-  vim.keymap.set("t", "<esc>", "<C-\\><C-n>", opts)
+  vim.keymap.set("t", "<esc>", "<C-\\><C-n>")
 
   -- Formatting
   vim.keymap.set("n", "<leader>F", function()
