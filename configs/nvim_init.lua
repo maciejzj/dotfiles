@@ -111,6 +111,7 @@ require("lazy").setup({
   "joshdick/onedark.vim",
   -- External tools integration
   "lewis6991/gitsigns.nvim",
+  { "folke/neodev.nvim", opts = {} }
 })
 
 ----------✦ ❓ Help ❓ ✦----------
@@ -132,12 +133,8 @@ require("nvim-treesitter.configs").setup({
       keymaps = {
         ["af"] = { query = "@function.outer", desc = "outer function" },
         ["if"] = { query = "@function.inner", desc = "inner function" },
-        ["aC"] = { query = "@class.outer", desc = "outer class" },
-        ["iC"] = { query = "@class.inner", desc = "inner class" },
-        ["ac"] = { query = "@comment.outer", desc = "outer comment" },
-        ["ic"] = { query = "@comment.inner", desc = "inner comment" },
-        ["ab"] = { query = "@block.outer", desc = "outer comment" },
-        ["ib"] = { query = "@block.inner", desc = "inner comment" },
+        ["ac"] = { query = "@class.outer", desc = "outer class" },
+        ["ic"] = { query = "@class.inner", desc = "inner class" },
       },
     },
     move = {
@@ -263,6 +260,8 @@ require("mason-lspconfig").setup_handlers({
 local null_ls = require("null-ls")
 null_ls.setup({
   sources = {
+  null_ls.builtins.formatting.isort,
+  null_ls.builtins.formatting.black,
     -- Causes some issues because for: https://github.com/jose-elias-alvarez/null-ls.nvim/issues/1618
     null_ls.builtins.diagnostics.mypy.with({
       extra_args = function()
@@ -553,3 +552,4 @@ for _, keymap in pairs({
     "n", keymap, keymap .. "<CMD>IndentBlanklineRefresh<CR>", { noremap = true, silent = true }
   )
 end
+
