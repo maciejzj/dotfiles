@@ -51,8 +51,13 @@ if vim.fn.has("macunix") then
 else
   vim.opt.clipboard = "unnamedplus"
 end
+
 -- Auto reload changed files from disk
-vim.opt.autoread = true
+vim.o.autoread = true
+vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGained" }, {
+  command = "if mode() != 'c' | checktime | endif",
+  pattern = { "*" },
+})
 
 -- Disable mouse
 vim.opt.mouse = nil
