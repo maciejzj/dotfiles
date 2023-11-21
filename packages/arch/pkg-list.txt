@@ -38,6 +38,8 @@ docker
 docker-compose
 git
 git-lfs
+github-cli
+glab
 pyenv
 valgrind
 
