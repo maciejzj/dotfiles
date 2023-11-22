@@ -265,8 +265,8 @@ require("mason-lspconfig").setup_handlers({
 local null_ls = require("null-ls")
 null_ls.setup({
   sources = {
-  null_ls.builtins.formatting.isort,
-  null_ls.builtins.formatting.black,
+    null_ls.builtins.formatting.isort,
+    null_ls.builtins.formatting.black,
     -- Causes some issues because for: https://github.com/jose-elias-alvarez/null-ls.nvim/issues/1618
     null_ls.builtins.diagnostics.mypy.with({
       extra_args = function()
