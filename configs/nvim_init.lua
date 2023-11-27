@@ -374,9 +374,9 @@ end, { silent = true })
 require("guess-indent").setup()
 
 -- Refactoring tools
-require("refactoring").setup()
+require("refactoring").setup({})
 vim.keymap.set({ "n", "x" }, "<leader>R", function()
-  require("refactoring").select_refactor()
+  require("refactoring").select_refactor({})
 end, defopts("Refactor"))
 
 ----------✦ 🔠 Editor functionalities 🔠 ✦----------
@@ -546,7 +546,7 @@ vim.keymap.set("n", "<leader>tW",
       print('Whitespace disabled in diffview')
       vim.opt.diffopt:append("iwhiteall")
     end
-  end, 
+  end,
   defopts("Toogle whitespaces in diffview")
 )
 
