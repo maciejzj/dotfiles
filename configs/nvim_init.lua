@@ -28,6 +28,8 @@ vim.opt.smartcase = true
 vim.opt.list = true
 vim.opt.listchars:append("space:⋅")
 vim.opt.listchars:append("eol:↴")
+-- Don't show whitespace changes in diff mode
+vim.opt.diffopt:append("iwhiteall")
 
 -- User interface
 -- Show cursorline
