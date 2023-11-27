@@ -71,6 +71,9 @@ vim.g.mapleader = " "
 local function defopts(desc)
   return { noremap = true, silent = true, desc = desc }
 end
+local function bufopts(desc)
+  return defopts(desc):append({ buffer = true })
+end
 
 ----------✦ 📦 Plugins setup 📦 ✦----------
 
@@ -184,7 +187,7 @@ require("nvim-treesitter.configs").setup({
 })
 
 -- Extra text objects
-require('various-textobjs').setup({ useDefaultKeymaps = true })
+require('various-textobjs').setup({ useDefaultKeymaps = true, disabledKeymaps = {"gw", "gW"}, })
 
 ----------✦ 🛠️ LSP 🛠️ ✦----------
 
@@ -198,36 +201,36 @@ local on_attach = function(client, bufnr)
   client.server_capabilities.semanticTokensProvider = nil
 
   -- Lsp bindings
-  vim.keymap.set("n", "gd", vim.lsp.buf.definition, defopts("Definition"))
-  vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, defopts("Definition"))
-  vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, defopts("Type definition"))
-  vim.keymap.set("n", "gD", vim.lsp.buf.declaration, defopts("Declaration"))
-  vim.keymap.set("n", "K", vim.lsp.buf.hover, defopts("Hover"))
-  vim.keymap.set("n", "gi", vim.lsp.buf.implementation, defopts("Implementation"))
-  vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, defopts("Show signature"))
-  vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, defopts("Rename symbol"))
-  vim.keymap.set({ "n", "v" }, "<leader>a", vim.lsp.buf.code_action, defopts("Code action"))
-  vim.keymap.set("n", "gr", vim.lsp.buf.references, defopts("References"))
+  vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts("Definition"))
+  vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, bufopts("Definition"))
+  vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, bufopts("Type definition"))
+  vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts("Declaration"))
+  vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts("Hover"))
+  vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts("Implementation"))
+  vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, bufopts("Show signature"))
+  vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, bufopts("Rename symbol"))
+  vim.keymap.set({ "n", "v" }, "<leader>a", vim.lsp.buf.code_action, bufopts("Code action"))
+  vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts("References"))
 
   -- Diagnostics bindings
-  vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, defopts("Show diagnostics"))
-  vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, defopts("Next diagnostics"))
-  vim.keymap.set("n", "]d", vim.diagnostic.goto_next, defopts("Previous diagnostics"))
-  vim.keymap.set("n", "<space>d", vim.diagnostic.setloclist, defopts("Diagnostics list"))
+  vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, bufopts("Show diagnostics"))
+  vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, bufopts("Next diagnostics"))
+  vim.keymap.set("n", "]d", vim.diagnostic.goto_next, bufopts("Previous diagnostics"))
+  vim.keymap.set("n", "<space>d", vim.diagnostic.setloclist, bufopts("Diagnostics list"))
 
   -- Telescope-LSP bindings
   local tb = require("telescope.builtin")
-  vim.keymap.set("n", "<leader>ls", tb.lsp_document_symbols, defopts("Browse buffer symbols"))
-  vim.keymap.set("n", "<leader>lS", tb.lsp_workspace_symbols, defopts("Browse workspace symbols"))
-  vim.keymap.set("n", "<leader>lr", tb.lsp_references, defopts("Browse symbol references"))
-  vim.keymap.set("n", "<leader>D", tb.diagnostics, defopts("Browse workspace diagnostics"))
+  vim.keymap.set("n", "<leader>ls", tb.lsp_document_symbols, bufopts("Browse buffer symbols"))
+  vim.keymap.set("n", "<leader>lS", tb.lsp_workspace_symbols, bufopts("Browse workspace symbols"))
+  vim.keymap.set("n", "<leader>lr", tb.lsp_references, bufopts("Browse symbol references"))
+  vim.keymap.set("n", "<leader>D", tb.diagnostics, bufopts("Browse workspace diagnostics"))
   -- Exit insert mode interminal with the Escape key
   vim.keymap.set("t", "<esc>", "<C-\\><C-n>")
 
   -- Formatting
   vim.keymap.set("n", "<leader>F", function()
     vim.lsp.buf.format({ async = true })
-  end, defopts("Format with lsp"))
+  end, bufopts("Format with lsp"))
 
   -- Show/hide Diagnostics
   vim.g.diagnostics_visible = true
@@ -242,8 +245,7 @@ local on_attach = function(client, bufnr)
       print("Diagnostics on")
     end
   end
-
-  vim.keymap.set("n", "<leader>td", toggle_diagnostics, defopts("Toggle diagnostics"))
+  vim.keymap.set("n", "<leader>td", toggle_diagnostics, bufopts("Toggle diagnostics"))
 end
 
 require("mason").setup()
@@ -402,8 +404,6 @@ telescope.setup({
 telescope.load_extension("fzf")
 
 local tb = require("telescope.builtin")
-
-
 
 vim.keymap.set("n", "<leader>ff", tb.find_files, defopts("Find file"))
 vim.keymap.set("n", "<leader>fg", tb.current_buffer_fuzzy_find, defopts("Grep in buffer"))
