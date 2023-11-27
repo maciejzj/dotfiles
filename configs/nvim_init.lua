@@ -256,7 +256,6 @@ require("neodev").setup({
   override = function(root_dir, library)
     print(root_dir)
     if root_dir:find("dotfiles") then
-      print("inside check")
       library.enabled = true
       library.plugins = true
     end
