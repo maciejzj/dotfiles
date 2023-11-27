@@ -246,7 +246,7 @@ local on_attach = function(client, bufnr)
     end
   end
 
-  vim.keymap.set("n", "<leader>td", toggle_diagnostics, bufopts("Toggle diagnostics", bufnr, bufnr))
+  vim.keymap.set("n", "<leader>td", toggle_diagnostics, bufopts("Toggle diagnostics", bufnr))
 end
 
 require("neodev").setup({
@@ -492,19 +492,17 @@ require("gitsigns").setup({
     })
 
     -- Actions
-    vim.keymap.set("n", "<leader>hs", gs.stage_hunk, defopts("Stage hunk"))
-    vim.keymap.set("n", "<leader>hr", gs.reset_hunk, defopts("Restore hunk"))
-    vim.keymap.set("n", "<leader>hS", gs.stage_buffer, defopts("Stage buffer"))
-    vim.keymap.set("n", "<leader>hu", gs.undo_stage_hunk, defopts("Unstage hunk"))
-    vim.keymap.set("n", "<leader>hR", gs.reset_buffer, defopts("Restore buffer"))
-    vim.keymap.set("n", "<leader>hp", gs.preview_hunk, defopts("Preview hunk"))
-    vim.keymap.set("n", "<leader>hb", gs.blame_line, defopts("Blame line"))
-    vim.keymap.set("n", "<leader>tb", gs.toggle_current_line_blame, defopts("Toggle line blame"))
-    vim.keymap.set("n", "<leader>gd", gs.diffthis, defopts("Diff buffer"))
-    vim.keymap.set("n", "<leader>gD", function()
-      gs.diffthis("~")
-    end, defopts("Diff buffer (with staged)"))
-    vim.keymap.set("n", "<leader>tD", gs.toggle_deleted, defopts("Toggle show deleted"))
+    vim.keymap.set("n", "<leader>hs", gs.stage_hunk, bufopts("Stage hunk", bufnr))
+    vim.keymap.set("n", "<leader>hr", gs.reset_hunk, bufopts("Restore hunk", bufnr))
+    vim.keymap.set("n", "<leader>hS", gs.stage_buffer, bufopts("Stage buffer", bufnr))
+    vim.keymap.set("n", "<leader>hu", gs.undo_stage_hunk, bufopts("Unstage hunk", bufnr))
+    vim.keymap.set("n", "<leader>hR", gs.reset_buffer, bufopts("Restore buffer", bufnr))
+    vim.keymap.set("n", "<leader>hp", gs.preview_hunk, bufopts("Preview hunk", bufnr))
+    vim.keymap.set("n", "<leader>hb", gs.blame_line, bufopts("Blame line", bufnr))
+    vim.keymap.set("n", "<leader>tb", gs.toggle_current_line_blame, bufopts("Toggle line blame", bufnr))
+    vim.keymap.set("n", "<leader>gd", gs.diffthis, bufopts("Diff buffer", bufnr))
+    vim.keymap.set("n", "<leader>gD", function() gs.diffthis("~") end, bufopts("Diff buffer (with staged)", bufnr))
+    vim.keymap.set("n", "<leader>tD", gs.toggle_deleted, bufopts("Toggle show deleted", bufnr))
   end,
 })
 
