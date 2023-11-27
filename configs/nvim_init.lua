@@ -28,8 +28,6 @@ vim.opt.smartcase = true
 vim.opt.list = true
 vim.opt.listchars:append("space:⋅")
 vim.opt.listchars:append("eol:↴")
--- Don't show whitespace changes in diff mode
-vim.opt.diffopt:append("iwhiteall")
 
 -- User interface
 -- Show cursorline
@@ -188,7 +186,7 @@ require("nvim-treesitter.configs").setup({
 })
 
 -- Extra text objects
-require('various-textobjs').setup({ useDefaultKeymaps = true, disabledKeymaps = {"gw", "gW"}, })
+require('various-textobjs').setup({ useDefaultKeymaps = true, disabledKeymaps = { "gw", "gW" } })
 
 ----------✦ 🛠️ LSP 🛠️ ✦----------
 
@@ -246,6 +244,7 @@ local on_attach = function(client, bufnr)
       print("Diagnostics on")
     end
   end
+
   vim.keymap.set("n", "<leader>td", toggle_diagnostics, bufopts("Toggle diagnostics", bufnr, bufnr))
 end
 
@@ -506,8 +505,8 @@ wk.register({
   ["<leader>p"] = { name = "plugins" },
   ["<leader>t"] = { name = "toggle" },
 })
-vim.keymap.set('o', '<a-i>', require('illuminate').textobj_select, { desc="highlighted symbol" })
-vim.keymap.set('x', '<a-i>', require('illuminate').textobj_select, { desc="highlighted symbol" })
+vim.keymap.set('o', '<a-i>', require('illuminate').textobj_select, defopts("highlighted symbol"))
+vim.keymap.set('x', '<a-i>', require('illuminate').textobj_select, defopts("highlighted symbol"))
 
 -- General nvim functionalities keymaps
 
@@ -524,8 +523,21 @@ vim.keymap.set("n", "<leader>qq", ":copen<CR>", defopts("Open quickfix list"))
 vim.keymap.set("n", "<leader>qn", ":cnext<CR>", defopts("Open quickfix list"))
 vim.keymap.set("n", "<leader>qp", ":cprev<CR>", defopts("Open quickfix list"))
 vim.keymap.set("n", "<leader>ts", ":set spell!<CR>", defopts("Toggle spellchecking"))
-vim.keymap.set("n", "<leader>tw", ":set list!<CR>", defopts("Toggle visible whitespace characters"))
 vim.keymap.set("n", "<leader>s", "/\\s\\+$<CR>", defopts("Search trailing whitespaces"))
+vim.keymap.set("n", "<leader>tw", ":set list!<CR>", defopts("Toggle visible whitespace characters"))
+vim.keymap.set("n", "<leader>tW",
+  function()
+    if vim.tbl_contains(vim.opt.diffopt:get(), 'iwhiteall') then
+      print('Whitespace enabled in diffview')
+      vim.opt.diffopt:remove("iwhiteall")
+    else
+      print('Whitespace disabled in diffview')
+      vim.opt.diffopt:append("iwhiteall")
+    end
+  end, 
+  defopts("Toogle whitespaces in diffview")
+)
+
 
 -- Plugin management keymaps
 
@@ -562,4 +574,3 @@ for _, keymap in pairs({
     "n", keymap, keymap .. "<CMD>IndentBlanklineRefresh<CR>", { noremap = true, silent = true }
   )
 end
-
