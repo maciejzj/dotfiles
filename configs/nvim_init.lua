@@ -254,10 +254,11 @@ end
 
 require("neodev").setup({
   override = function(root_dir, library)
-    print(root_dir)
-    if root_dir:find("dotfiles") then
+    if root_dir:find("nvim") or root_dir:find("dotfiles") then
       library.enabled = true
       library.plugins = true
+      library.types = true
+      library.runtime = true
     end
   end
 })
@@ -402,10 +403,8 @@ local telescope = require("telescope")
 telescope.setup({
   defaults = {
     mappings = {
-      i = {
-        -- Show picker actions help with which-key
-        ["<C-h>"] = "which_key",
-      },
+      -- Show picker actions help with which-key
+      i = { ["<C-h>"] = "which_key" },
     },
     vimgrep_arguments = { "rg", "--vimgrep", "--smart-case", "--type-not", "jupyter" },
   },
