@@ -120,7 +120,7 @@ require("lazy").setup({
   "joshdick/onedark.vim",
   -- External tools integration
   "lewis6991/gitsigns.nvim",
-  { "folke/neodev.nvim", opts = {} }
+  "folke/neodev.nvim",
 })
 
 ----------✦ ❓ Help ❓ ✦----------
@@ -130,6 +130,7 @@ wk.setup()
 
 ----------✦ 🌳 Treesitter 🌳 ✦----------
 
+---@diagnostic disable-next-line: missing-fields
 require("nvim-treesitter.configs").setup({
   ensure_installed = "all",
   highlight = {
@@ -248,6 +249,16 @@ local on_attach = function(client, bufnr)
   vim.keymap.set("n", "<leader>td", toggle_diagnostics, bufopts("Toggle diagnostics", bufnr, bufnr))
 end
 
+require("neodev").setup({
+  override = function(root_dir, library)
+    print(root_dir)
+    if root_dir:find("dotfiles") then
+      print("inside check")
+      library.enabled = true
+      library.plugins = true
+    end
+  end
+})
 require("mason").setup()
 require("mason-lspconfig").setup({ ensure_installed = vim.tbl_keys(servers) })
 
@@ -305,6 +316,7 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
 -- Code completion
 local cmp = require("cmp")
 -- LSP
+---@diagnostic disable-next-line: missing-fields
 cmp.setup({
   snippet = {
     expand = function(args)
@@ -329,6 +341,7 @@ cmp.setup({
   }),
 })
 -- From buffer
+---@diagnostic disable-next-line: missing-fields
 cmp.setup.cmdline({ "/", "?" }, {
   sources = {
     { name = "buffer" },
@@ -336,6 +349,7 @@ cmp.setup.cmdline({ "/", "?" }, {
   mapping = cmp.mapping.preset.cmdline(),
 })
 -- For command line
+---@diagnostic disable-next-line: missing-fields
 cmp.setup.cmdline(":", {
   mapping = cmp.mapping.preset.cmdline(),
   sources = cmp.config.sources({
