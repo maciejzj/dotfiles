@@ -228,8 +228,6 @@ local on_attach = function(client, bufnr)
   vim.keymap.set("n", "<leader>lS", tb.lsp_workspace_symbols, bufopts("Browse workspace symbols", bufnr))
   vim.keymap.set("n", "<leader>lr", tb.lsp_references, bufopts("Browse symbol references", bufnr))
   vim.keymap.set("n", "<leader>D", tb.diagnostics, bufopts("Browse workspace diagnostics", bufnr))
-  -- Exit insert mode interminal with the Escape key
-  vim.keymap.set("t", "<esc>", "<C-\\><C-n>")
 
   -- Formatting
   vim.keymap.set("n", "<leader>F", function()
@@ -255,6 +253,7 @@ end
 
 require("neodev").setup({
   override = function(root_dir, library)
+    -- Path-based override activation helps neodev work with symlinked dotfiles setup
     if root_dir:find("nvim") or root_dir:find("dotfiles") then
       library.enabled = true
       library.plugins = true
@@ -544,7 +543,7 @@ vim.keymap.set("n", "<leader>tW",
   end,
   defopts("Toogle whitespaces in diffview")
 )
-
+vim.keymap.set("t", "<esc>", "<C-\\><C-n>", defopts("Escape terminal inser mode with ESC"))
 
 -- Plugin management keymaps
 
