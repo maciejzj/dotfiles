@@ -4,11 +4,14 @@
 -- Set default indentation to tab with 4 spaces length
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
+-- Disable too intrusive automatic indentation (e.g. don't align line breaks inside parentheses to
+-- the opening bracket)
+vim.opt.indentkeys:remove("o")
 
 -- Textwidth
 vim.opt.textwidth = 80
 -- Don't use hard autowrap on textwidth
-vim.opt.formatoptions:remove({ "t" })
+vim.opt.formatoptions:remove("t")
 
 -- Folding
 -- Use folding based on text indentation
