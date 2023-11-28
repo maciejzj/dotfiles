@@ -535,12 +535,7 @@ vim.keymap.set({'o', 'x'}, '<a-i>', require('illuminate').textobj_select, defopt
 
 vim.keymap.set("n", "<leader>E", ":Neotree<CR>", defopts("File explorer"))
 vim.keymap.set("n", "<leader>ce", ":edit ~/.config/nvim/init.lua<CR>", defopts("Edit config"))
-vim.keymap.set(
-  "n",
-  "<leader>cr",
-  ":source ~/.config/nvim/init.lua<CR>:GuessIndent<CR>",
-  defopts("Reload config")
-)
+vim.keymap.set( "n", "<leader>cr", ":source ~/.config/nvim/init.lua<CR>:GuessIndent<CR>", defopts("Reload config"))
 vim.keymap.set("n", "<leader>n", ":nohlsearch<CR>", defopts("Hide search highlight"))
 vim.keymap.set("n", "<leader>qq", ":copen<CR>", defopts("Open quickfix list"))
 vim.keymap.set("n", "<leader>qn", ":cnext<CR>", defopts("Open quickfix list"))
