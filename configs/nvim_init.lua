@@ -529,6 +529,7 @@ wk.register({
   ["<leader>c"] = { name = "config" },
   ["<leader>f"] = { name = "find" },
   ["<leader>g"] = { name = "git" },
+  ["<leader>gm"] = { name = "merge conflict" },
   ["<leader>l"] = { name = "language symbols" },
   ["<leader>p"] = { name = "plugins" },
   ["<leader>t"] = { name = "toggle" },
@@ -559,6 +560,8 @@ vim.keymap.set("n", "<leader>tW",
   end,
   defopts("Toogle whitespaces in diffview")
 )
+vim.keymap.set("n", "<leader>gml", ":diffget LOCAL<CR>", defopts("Take local changes"))
+vim.keymap.set("n", "<leader>gmr", ":diffget REMOTE<CR>", defopts("Take remote changes"))
 vim.keymap.set("t", "<esc>", "<C-\\><C-n>", defopts("Escape terminal inser mode with ESC"))
 
 -- Plugin management keymaps
