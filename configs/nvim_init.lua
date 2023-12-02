@@ -438,6 +438,7 @@ vim.keymap.set("n", "<leader>fs", tb.grep_string, defopts("Find string (at curso
 vim.keymap.set("n", "<leader>fc", tb.commands, defopts("Find command"))
 vim.keymap.set("n", "<leader>fh", tb.help_tags, defopts("Search help"))
 vim.keymap.set("n", "<leader>fr", tb.command_history, defopts("Search command history"))
+vim.keymap.set("n", "<leader>fj", tb.jumplist, defopts("Find mark"))
 vim.keymap.set("n", "<leader>fb", tb.buffers, defopts("Find buffer"))
 vim.keymap.set("n", "<leader>fk", tb.keymaps, defopts("Find keymap"))
 vim.keymap.set("n", "<leader>fm", tb.marks, defopts("Find mark"))
