@@ -191,7 +191,7 @@ require("nvim-treesitter.configs").setup({
 })
 
 -- Extra text objects
-require('various-textobjs').setup({ useDefaultKeymaps = true, disabledKeymaps = { "gw", "gW" } })
+require("various-textobjs").setup({ useDefaultKeymaps = true, disabledKeymaps = { "gw", "gW" } })
 
 ----------✦ 🛠️ LSP 🛠️ ✦----------
 
@@ -270,7 +270,7 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 require("mason-lspconfig").setup_handlers({
   function(server_name)
-    require('lspconfig')[server_name].setup {
+    require("lspconfig")[server_name].setup {
       capabilities = capabilities,
       on_attach = on_attach,
       settings = servers[server_name],
@@ -334,7 +334,7 @@ cmp.setup({
     ["<CR>"] = cmp.mapping.confirm({ select = true }),
     ["<C-e>"] = cmp.mapping.abort(),
     -- Tab and S-Tab for navigating completion and snippet placeholders 
-    ['<Tab>'] = cmp.mapping(function(fallback)
+    ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
       elseif luasnip.expand_or_locally_jumpable() then
@@ -342,8 +342,8 @@ cmp.setup({
       else
         fallback()
       end
-    end, { 'i', 's' }),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
+    end, { "i", "s" }),
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
       elseif luasnip.locally_jumpable(-1) then
@@ -351,7 +351,7 @@ cmp.setup({
       else
         fallback()
       end
-    end, { 'i', 's' }),
+    end, { "i", "s" }),
   }),
 })
 -- From buffer
@@ -373,7 +373,7 @@ cmp.setup.cmdline(":", {
   }),
 })
 
--- Snippers
+-- Snippets
 local ls = require("luasnip")
 vim.keymap.set({ "i" }, "<C-K>", function() ls.expand() end, { silent = true })
 vim.keymap.set({ "i", "s" }, "<C-L>", function() ls.jump(1) end, { silent = true })
@@ -403,7 +403,7 @@ require("illuminate").configure({
   providers = {
     "lsp",
     "treesitter",
-    -- 'regex' is ommited here on purpose, I dont' want it
+    -- "regex" is ommited here on purpose, I dont' want it
   },
   delay = 500, -- A bit longer than the default
 })
@@ -519,7 +519,7 @@ require("gitsigns").setup({
     vim.keymap.set("n", "<leader>gD", function() gs.diffthis("~") end, defopts("Diff buffer (with staged)"))
     vim.keymap.set("n", "<leader>tD", gs.toggle_deleted, defopts("Toggle show deleted"))
     -- Text object
-    vim.keymap.set({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>', defopts('Git hunk'))
+    vim.keymap.set({"o", "x"}, "ih", ":<C-U>Gitsigns select_hunk<CR>", defopts("Git hunk"))
   end,
 })
 
@@ -535,7 +535,7 @@ wk.register({
   ["<leader>p"] = { name = "plugins" },
   ["<leader>t"] = { name = "toggle" },
 })
-vim.keymap.set({'o', 'x'}, '<a-i>', require('illuminate').textobj_select, defopts("highlighted symbol"))
+vim.keymap.set({"o", "x"}, "<a-i>", require("illuminate").textobj_select, defopts("highlighted symbol"))
 
 -- General nvim functionalities keymaps
 
@@ -551,11 +551,11 @@ vim.keymap.set("n", "<leader>s", "/\\s\\+$<CR>", defopts("Search trailing whites
 vim.keymap.set("n", "<leader>tw", ":set list!<CR>", defopts("Toggle visible whitespace characters"))
 vim.keymap.set("n", "<leader>tW",
   function()
-    if vim.tbl_contains(vim.opt.diffopt:get(), 'iwhiteall') then
-      print('Whitespace enabled in diffview')
+    if vim.tbl_contains(vim.opt.diffopt:get(), "iwhiteall") then
+      print("Whitespace enabled in diffview")
       vim.opt.diffopt:remove("iwhiteall")
     else
-      print('Whitespace disabled in diffview')
+      print("Whitespace disabled in diffview")
       vim.opt.diffopt:append("iwhiteall")
     end
   end,
@@ -590,7 +590,7 @@ vim.api.nvim_set_hl(0, "NeoTreeFloatTitle", { ctermbg = 0 })
 ----------✦ ⚠️  Fixes and workarounds ⚠️  ✦----------
 
 -- Disable error highlighting for markdown
-vim.api.nvim_set_hl(0, "markdownError", { link = nil })
+vim.api.nvim_set_hl(0, "markdownError", { cterm = nil })
 
 -- Redraw indent guides after folding operations
 for _, keymap in pairs({
