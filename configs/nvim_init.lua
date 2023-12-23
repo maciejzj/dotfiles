@@ -604,7 +604,7 @@ vim.keymap.set("t", "<esc>", "<C-\\><C-n>", defopts("Escape terminal inser mode 
 -- Plugin management keymaps
 
 vim.keymap.set("n", "<leader>pp", ":Lazy<CR>", defopts("Lazy plugin packages panel"))
-vim.keymap.set("n", "<leader>pm", ":Mason<CR>", defopts("Mason pakcages panel"))
+vim.keymap.set("n", "<leader>pm", ":Mason<CR>", defopts("Mason packages panel"))
 
 ----------✦ 🎨 Colorscheme 🎨 ✦----------
 
