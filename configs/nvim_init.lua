@@ -78,7 +78,8 @@ end
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({ "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", "--branch=stable", lazypath })
+  vim.fn.system({ "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", "--branch=stable",
+    lazypath })
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -114,8 +115,8 @@ require("lazy").setup({
   -- UI, visuals and tooling
   "stevearc/dressing.nvim",
   { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-  { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
-  { "nvim-neo-tree/neo-tree.nvim", dependencies = { "nvim-lua/plenary.nvim", "muniftanjim/nui.nvim" } },
+  { "nvim-telescope/telescope.nvim",            dependencies = { "nvim-lua/plenary.nvim" } },
+  { "nvim-neo-tree/neo-tree.nvim",              dependencies = { "nvim-lua/plenary.nvim", "muniftanjim/nui.nvim" } },
   "lukas-reineke/indent-blankline.nvim",
   "joshdick/onedark.vim",
   -- External tools integration
@@ -196,8 +197,17 @@ require("various-textobjs").setup({ useDefaultKeymaps = true, disabledKeymaps = 
 ----------✦ 🛠️ LSP 🛠️ ✦----------
 
 local servers = {
-  pylsp = {}, clangd = {}, cmake = {}, bashls = {}, dockerls = {}, html = {},
-  cssls = {}, jsonls = {}, yamlls = {}, marksman = {}, texlab = {},
+  pylsp = {},
+  clangd = {},
+  cmake = {},
+  bashls = {},
+  dockerls = {},
+  html = {},
+  cssls = {},
+  jsonls = {},
+  yamlls = {},
+  marksman = {},
+  texlab = {},
 }
 
 local on_attach = function(client, bufnr)
@@ -333,7 +343,7 @@ cmp.setup({
     ["<C-b>"] = cmp.mapping.scroll_docs(-1),
     ["<CR>"] = cmp.mapping.confirm({ select = true }),
     ["<C-e>"] = cmp.mapping.abort(),
-    -- Tab and S-Tab for navigating completion and snippet placeholders 
+    -- Tab and S-Tab for navigating completion and snippet placeholders
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
@@ -363,9 +373,39 @@ cmp.setup.cmdline({ "/", "?" }, {
   mapping = cmp.mapping.preset.cmdline(),
 })
 -- For command line
+-- This custom mappig setup causes CTRL-P, CTRL-N to fallback to history
+-- browsing, unless user has explicitly typed something in the cmdline, then
+-- these two activate to browse completion options.
+local cmdline_cmp_state = "has_not_typed"
+vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
+  command = "lua cmdline_cmp_state = 'has_not_typed'",
+})
+vim.api.nvim_create_autocmd({ "CmdlineChanged" }, {
+  callback = function()
+    if cmdline_cmp_state == 'has_not_typed' then
+      cmdline_cmp_state = 'has_typed'
+    elseif cmdline_cmp_state == 'has_browsed_history' then
+      cmdline_cmp_state = 'has_not_typed'
+    end
+  end,
+})
+local function select_or_fallback(select_action)
+  return cmp.mapping(function(fallback)
+    if cmdline_cmp_state == 'has_typed' and cmp.visible() then
+      select_action()
+    else
+      cmdline_cmp_state = 'has_browsed_history'
+      cmp.close()
+      fallback()
+    end
+  end, { 'i', 'c' })
+end
 ---@diagnostic disable-next-line: missing-fields
 cmp.setup.cmdline(":", {
-  mapping = cmp.mapping.preset.cmdline(),
+  mapping = cmp.mapping.preset.cmdline({
+    ["<C-n>"] = select_or_fallback(cmp.select_next_item),
+    ["<C-p>"] = select_or_fallback(cmp.select_prev_item),
+  }),
   sources = cmp.config.sources({
     { name = "path" },
   }, {
@@ -507,8 +547,10 @@ require("gitsigns").setup({
     -- Actions
     vim.keymap.set("n", "<leader>hs", gs.stage_hunk, defopts("Stage hunk"))
     vim.keymap.set("n", "<leader>hr", gs.reset_hunk, defopts("Restore hunk"))
-    vim.keymap.set("v", "<leader>s", function() gs.stage_hunk {vim.fn.line("."), vim.fn.line("v")} end, defopts("Stage selection"))
-    vim.keymap.set("v", "<leader>r", function() gs.reset_hunk {vim.fn.line("."), vim.fn.line("v")} end, defopts("Restore selection"))
+    vim.keymap.set("v", "<leader>s", function() gs.stage_hunk { vim.fn.line("."), vim.fn.line("v") } end,
+      defopts("Stage selection"))
+    vim.keymap.set("v", "<leader>r", function() gs.reset_hunk { vim.fn.line("."), vim.fn.line("v") } end,
+      defopts("Restore selection"))
     vim.keymap.set("n", "<leader>hS", gs.stage_buffer, defopts("Stage buffer"))
     vim.keymap.set("n", "<leader>hu", gs.undo_stage_hunk, defopts("Unstage hunk"))
     vim.keymap.set("n", "<leader>hR", gs.reset_buffer, defopts("Restore buffer"))
@@ -519,7 +561,7 @@ require("gitsigns").setup({
     vim.keymap.set("n", "<leader>gD", function() gs.diffthis("~") end, defopts("Diff buffer (with staged)"))
     vim.keymap.set("n", "<leader>tD", gs.toggle_deleted, defopts("Toggle show deleted"))
     -- Text object
-    vim.keymap.set({"o", "x"}, "ih", ":<C-U>Gitsigns select_hunk<CR>", defopts("Git hunk"))
+    vim.keymap.set({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", defopts("Git hunk"))
   end,
 })
 
@@ -535,13 +577,13 @@ wk.register({
   ["<leader>p"] = { name = "plugins" },
   ["<leader>t"] = { name = "toggle" },
 })
-vim.keymap.set({"o", "x"}, "<a-i>", require("illuminate").textobj_select, defopts("highlighted symbol"))
+vim.keymap.set({ "o", "x" }, "<a-i>", require("illuminate").textobj_select, defopts("highlighted symbol"))
 
 -- General nvim functionalities keymaps
 
 vim.keymap.set("n", "<leader>E", ":Neotree<CR>", defopts("File explorer"))
 vim.keymap.set("n", "<leader>ce", ":edit ~/.config/nvim/init.lua<CR>", defopts("Edit config"))
-vim.keymap.set( "n", "<leader>cr", ":source ~/.config/nvim/init.lua<CR>:GuessIndent<CR>", defopts("Reload config"))
+vim.keymap.set("n", "<leader>cr", ":source ~/.config/nvim/init.lua<CR>:GuessIndent<CR>", defopts("Reload config"))
 vim.keymap.set("n", "<leader>n", ":nohlsearch<CR>", defopts("Hide search highlight"))
 vim.keymap.set("n", "<leader>qq", ":copen<CR>", defopts("Open quickfix list"))
 vim.keymap.set("n", "<leader>qn", ":cnext<CR>", defopts("Open quickfix list"))
