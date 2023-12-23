@@ -76,10 +76,12 @@ end
 
 ----------✦ 📦 Plugins setup 📦 ✦----------
 
+-- Bootstrap Lazy plugin manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({ "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", "--branch=stable",
-    lazypath })
+  vim.fn.system({
+    "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", "--branch=stable", lazypath
+  })
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -114,9 +116,9 @@ require("lazy").setup({
   "numtostr/comment.nvim",
   -- UI, visuals and tooling
   "stevearc/dressing.nvim",
+  { "nvim-neo-tree/neo-tree.nvim", dependencies = { "nvim-lua/plenary.nvim", "muniftanjim/nui.nvim" } },
+  { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
   { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-  { "nvim-telescope/telescope.nvim",            dependencies = { "nvim-lua/plenary.nvim" } },
-  { "nvim-neo-tree/neo-tree.nvim",              dependencies = { "nvim-lua/plenary.nvim", "muniftanjim/nui.nvim" } },
   "lukas-reineke/indent-blankline.nvim",
   "joshdick/onedark.vim",
   -- External tools integration
@@ -197,17 +199,8 @@ require("various-textobjs").setup({ useDefaultKeymaps = true, disabledKeymaps = 
 ----------✦ 🛠️ LSP 🛠️ ✦----------
 
 local servers = {
-  pylsp = {},
-  clangd = {},
-  cmake = {},
-  bashls = {},
-  dockerls = {},
-  html = {},
-  cssls = {},
-  jsonls = {},
-  yamlls = {},
-  marksman = {},
-  texlab = {},
+  pylsp = {}, clangd = {}, cmake = {}, bashls = {}, dockerls = {}, html = {}, cssls = {},
+  jsonls = {}, yamlls = {}, marksman = {}, texlab = {},
 }
 
 local on_attach = function(client, bufnr)
@@ -382,23 +375,23 @@ vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
 })
 vim.api.nvim_create_autocmd({ "CmdlineChanged" }, {
   callback = function()
-    if cmdline_cmp_state == 'has_not_typed' then
-      cmdline_cmp_state = 'has_typed'
-    elseif cmdline_cmp_state == 'has_browsed_history' then
-      cmdline_cmp_state = 'has_not_typed'
+    if cmdline_cmp_state == "has_not_typed" then
+      cmdline_cmp_state = "has_typed"
+    elseif cmdline_cmp_state == "has_browsed_history" then
+      cmdline_cmp_state = "has_not_typed"
     end
   end,
 })
 local function select_or_fallback(select_action)
   return cmp.mapping(function(fallback)
-    if cmdline_cmp_state == 'has_typed' and cmp.visible() then
+    if cmdline_cmp_state == "has_typed" and cmp.visible() then
       select_action()
     else
-      cmdline_cmp_state = 'has_browsed_history'
+      cmdline_cmp_state = "has_browsed_history"
       cmp.close()
       fallback()
     end
-  end, { 'i', 'c' })
+  end, { "i", "c" })
 end
 ---@diagnostic disable-next-line: missing-fields
 cmp.setup.cmdline(":", {
@@ -547,10 +540,6 @@ require("gitsigns").setup({
     -- Actions
     vim.keymap.set("n", "<leader>hs", gs.stage_hunk, defopts("Stage hunk"))
     vim.keymap.set("n", "<leader>hr", gs.reset_hunk, defopts("Restore hunk"))
-    vim.keymap.set("v", "<leader>s", function() gs.stage_hunk { vim.fn.line("."), vim.fn.line("v") } end,
-      defopts("Stage selection"))
-    vim.keymap.set("v", "<leader>r", function() gs.reset_hunk { vim.fn.line("."), vim.fn.line("v") } end,
-      defopts("Restore selection"))
     vim.keymap.set("n", "<leader>hS", gs.stage_buffer, defopts("Stage buffer"))
     vim.keymap.set("n", "<leader>hu", gs.undo_stage_hunk, defopts("Unstage hunk"))
     vim.keymap.set("n", "<leader>hR", gs.reset_buffer, defopts("Restore buffer"))
@@ -560,6 +549,11 @@ require("gitsigns").setup({
     vim.keymap.set("n", "<leader>gd", gs.diffthis, defopts("Diff buffer"))
     vim.keymap.set("n", "<leader>gD", function() gs.diffthis("~") end, defopts("Diff buffer (with staged)"))
     vim.keymap.set("n", "<leader>tD", gs.toggle_deleted, defopts("Toggle show deleted"))
+    -- Actions on visual selections
+    vim.keymap.set("v", "<leader>s", function() gs.stage_hunk { vim.fn.line("."), vim.fn.line("v") } end,
+      defopts("Stage selection"))
+    vim.keymap.set("v", "<leader>r", function() gs.reset_hunk { vim.fn.line("."), vim.fn.line("v") } end,
+      defopts("Restore selection"))
     -- Text object
     vim.keymap.set({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", defopts("Git hunk"))
   end,
