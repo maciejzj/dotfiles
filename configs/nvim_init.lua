@@ -206,13 +206,7 @@ local servers = {
 -- virtualenv), this is a manual fix for this problem
 if not os.getenv('VIRTUAL_ENV') and os.getenv('PYENV_ROOT') then
   servers['pylsp'] = {
-    ['pylsp'] = {
-      ['plugins'] = {
-        ['jedi'] = {
-          ['environment'] = vim.fn.expand('$PYENV_ROOT/shims/python')
-        }
-      }
-    }
+    pylsp = { plugins = { jedi = { environment = vim.fn.expand('$PYENV_ROOT/shims/python') } } }
   }
 end
 
