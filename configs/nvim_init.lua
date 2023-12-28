@@ -517,9 +517,7 @@ require("gitsigns").setup({
       if vim.wo.diff then
         return "]c"
       end
-      vim.schedule(function()
-        gs.next_hunk()
-      end)
+      vim.schedule(gs.next_hunk)
       return "<Ignore>"
     end, { expr = true, desc = "Next hunk" })
 
@@ -527,15 +525,11 @@ require("gitsigns").setup({
       if vim.wo.diff then
         return "[c"
       end
-      vim.schedule(function()
-        gs.prev_hunk()
-      end)
+      vim.schedule(gs.prev_hunk)
       return "<Ignore>"
     end, { expr = true, desc = "Previous hunk" })
 
-    wk.register({
-      ["<leader>h"] = { name = "git hunk" },
-    })
+    wk.register({ ["<leader>h"] = { name = "git hunk" } })
 
     -- Actions
     vim.keymap.set("n", "<leader>hs", gs.stage_hunk, defopts("Stage hunk"))
