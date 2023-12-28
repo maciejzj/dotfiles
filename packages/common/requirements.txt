@@ -13,6 +13,7 @@ jupyterlab
 matplotlib
 mypy
 nbdime
+neovim
 numpy
 pandas
 pipreqs
