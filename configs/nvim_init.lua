@@ -86,9 +86,10 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- Plugins
+---@format disable-next
 require("lazy").setup({
+  -- Language support package management
   "williamboman/mason.nvim",
-
   -- Help
   "folke/which-key.nvim",
   -- Treesitter
@@ -198,6 +199,7 @@ require("various-textobjs").setup({ useDefaultKeymaps = true, disabledKeymaps = 
 
 ----------✦ 🛠️ LSP 🛠️ ✦----------
 
+---@format disable-next
 local servers = {
   pylsp = {}, clangd = {}, lua_ls = {}, cmake = {}, bashls = {}, dockerls = {}, html = {},
   cssls = {}, jsonls = {}, yamlls = {}, marksman = {}, texlab = {},
