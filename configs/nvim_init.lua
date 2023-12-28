@@ -199,9 +199,22 @@ require("various-textobjs").setup({ useDefaultKeymaps = true, disabledKeymaps = 
 ----------✦ 🛠️ LSP 🛠️ ✦----------
 
 local servers = {
-  pylsp = {}, clangd = {}, cmake = {}, bashls = {}, dockerls = {}, html = {}, cssls = {},
-  jsonls = {}, yamlls = {}, marksman = {}, texlab = {},
+  pylsp = {}, clangd = {}, lua_ls = {}, cmake = {}, bashls = {}, dockerls = {}, html = {},
+  cssls = {}, jsonls = {}, yamlls = {}, marksman = {}, texlab = {},
 }
+-- Currently pyslp fails to use pyenv global version (when not using
+-- virtualenv), this is a manual fix for this problem
+if not os.getenv('VIRTUAL_ENV') and os.getenv('PYENV_ROOT') then
+  servers['pylsp'] = {
+    ['pylsp'] = {
+      ['plugins'] = {
+        ['jedi'] = {
+          ['environment'] = vim.fn.expand('$PYENV_ROOT/shims/python')
+        }
+      }
+    }
+  }
+end
 
 local on_attach = function(client, bufnr)
   -- Disable highlighting, we use Treesitter for that
