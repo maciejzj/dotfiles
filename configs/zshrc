@@ -46,6 +46,9 @@ compinit -d $XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION
 eval "$(pyenv init -)"
 eval "$(pyenv init - virtualenv)"
 
+# If virtualenv is defined activate it (this is useful for inheriting virtualenv in tmux)
+[ -n "$VIRTUAL_ENV" ] && source "$VIRTUAL_ENV/bin/activate"
+
 # Plugins
 
 # Prompt
