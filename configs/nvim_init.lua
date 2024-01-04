@@ -603,6 +603,9 @@ vim.keymap.set("n", "<leader>tW",
 vim.keymap.set("n", "<leader>gml", ":diffget LOCAL<CR>", defopts("Take local changes"))
 vim.keymap.set("n", "<leader>gmr", ":diffget REMOTE<CR>", defopts("Take remote changes"))
 vim.keymap.set("t", "<esc>", "<C-\\><C-n>", defopts("Escape terminal inser mode with ESC"))
+-- Readline-like insert mode bindings
+vim.keymap.set("i", "<C-f>", "<RIGHT>", defopts("Move cursor right"))
+vim.keymap.set("i", "<C-b>", "<RIGHT>", defopts("Move cursor left"))
 
 -- Plugin management keymaps
 
