@@ -430,9 +430,9 @@ end, { silent = true })
 require("guess-indent").setup()
 
 -- Refactoring tools
-require("refactoring").setup({})
+require("refactoring").setup({ show_success_message = true })
 vim.keymap.set({ "n", "x" }, "<leader>R", function()
-  require("refactoring").select_refactor({})
+  require("refactoring").select_refactor({ show_success_message = true })
 end, defopts("Refactor"))
 
 ----------✦ 🔠 Editor functionalities 🔠 ✦----------
@@ -558,7 +558,7 @@ require("gitsigns").setup({
     vim.keymap.set("v", "<leader>r", function() gs.reset_hunk { vim.fn.line("."), vim.fn.line("v") } end,
       defopts("Restore selection"))
     -- Text object
-    vim.keymap.set({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", defopts("Git hunk"))
+    vim.keymap.set({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", defopts("git hunk"))
   end,
 })
 
