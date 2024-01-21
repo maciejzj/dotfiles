@@ -65,6 +65,8 @@ vim.opt.mouse = nil
 -- Set leader to space
 vim.g.mapleader = " "
 
+-- Helper functions and utilities
+
 -- Helper function to define mapping with default options and a description
 local function defopts(desc)
   return { noremap = true, silent = true, desc = desc }
@@ -72,6 +74,11 @@ end
 
 local function bufopts(desc, buffer)
   return { noremap = true, silent = true, desc = desc, buffer = buffer }
+end
+
+-- Extend existing highlight
+local function extend_hl(name, new_opts)
+  vim.api.nvim_set_hl(0, name, vim.tbl_extend('force', vim.api.nvim_get_hl(0, { name = name }), new_opts))
 end
 
 ----------✦ 📦 Plugins setup 📦 ✦----------
@@ -628,6 +635,9 @@ vim.api.nvim_set_hl(0, "IlluminatedWordWrite", { ctermbg = 237 })
 -- Make NeoTree floating window bordor look same as the Telescope's one
 vim.api.nvim_set_hl(0, "NeoTreeFloatBorder", { ctermbg = 0 })
 vim.api.nvim_set_hl(0, "NeoTreeFloatTitle", { ctermbg = 0 })
+
+-- Make comments italic
+extend_hl("Comment", { italic = true })
 
 ----------✦ ⚠️  Fixes and workarounds ⚠️  ✦----------
 
