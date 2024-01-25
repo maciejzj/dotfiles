@@ -65,7 +65,7 @@ linux-gnu)
 
 		# Falls into "Exceptions" from shellckeck wiki
 		#shellcheck disable=SC2024
-		sudo pacman --sync --refresh --sysupgrade --needed --noconfirm - < packages/arch/pkg-list.txt
+		sudo pacman --sync --refresh --needed --noconfirm - < packages/arch/pkg-list.txt
 
 		if ! [ -x "$(command -v yay)" ]; then
 			echo -e "${BLUE}Installing yay${NOCOLOR}"
