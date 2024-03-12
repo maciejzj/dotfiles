@@ -12,6 +12,12 @@ NOCOLOR='\033[0m'
 
 echo -e "${BLUE}==> Deploying dotfiles${NOCOLOR}"
 
+# Setup XDG directories
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+
 # Deploy config files as symlinks based on the mappings file
 while read -r map; do
 	# The $(eval echo ...) expression is needed to expand environmental
@@ -105,6 +111,15 @@ fi
 
 # XDG-compliant zsh history file has to be created manually
 mkdir -p "${XDG_STATE_HOME}/zsh"
+
+echo -e "${BLUE}==> Setting up neovim plugins${NOCOLOR}"
+LAZYPATH="${XDG_DATA_HOME}/nvim/lazy/lazy.nvim"
+if ! [ -e "${LAZYPATH}" ]; then
+	git clone --filter=blob:none /home/mziaja/.local/share/nvim/lazy/lazy.nvim  --branch=stable "$LAZYPATH"
+	echo -e "${GREEN}Installed Lazy package manager${NOCOLOR}"
+fi
+echo -e "${BLUE}Installing neovim plugins${NOCOLOR}"
+nvim --headless +Lazy install +q
 
 # Install tmux plugin manager
 echo -e "${BLUE}==> Installing tmux-themepack${NOCOLOR}"

@@ -127,9 +127,4 @@ linux-gnu)
 	alias la='ls -ah --color=auto'
 	alias ll='ls -hl --color=auto'
 	alias lla='ls -ahl --color=auto'
-
-	# Commands for xorg programms
-	# Start mupdf in inverted colors mode
-	mupdf="mupdf -I"
-	;;
 esac

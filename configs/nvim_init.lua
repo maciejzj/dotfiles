@@ -83,13 +83,8 @@ end
 
 ----------✦ 📦 Plugins setup 📦 ✦----------
 
--- Bootstrap Lazy plugin manager
+-- Setup Lazy plugin manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", "--branch=stable", lazypath
-  })
-end
 vim.opt.rtp:prepend(lazypath)
 
 -- Plugins
@@ -125,13 +120,16 @@ require("lazy").setup({
   -- UI, visuals and tooling
   "stevearc/dressing.nvim",
   { "nvim-neo-tree/neo-tree.nvim", dependencies = { "nvim-lua/plenary.nvim", "muniftanjim/nui.nvim" } },
-  { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
+  -- TODO: Rm tag 0.1.5 when 0.1.6 is released (current master has problems with git status diff highlighting)
+  { "nvim-telescope/telescope.nvim", tag="0.1.5", dependencies = { "nvim-lua/plenary.nvim" } },
   { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
   "lukas-reineke/indent-blankline.nvim",
   "joshdick/onedark.vim",
   -- External tools integration
   "lewis6991/gitsigns.nvim",
-  "folke/neodev.nvim",
+  -- TODO: Track this issue to free up the pinned down commit:
+  -- https://github.com/folke/neodev.nvim/issues/180
+  {"folke/neodev.nvim", commit="7d86c1d844b883e7bf0634af48c8ffcb2d4bb088"},
 })
 
 ----------✦ ❓ Help ❓ ✦----------
