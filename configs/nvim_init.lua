@@ -207,16 +207,9 @@ require("various-textobjs").setup({ useDefaultKeymaps = true, disabledKeymaps = 
 
 ---@format disable-next
 local servers = {
-  pylsp = {}, clangd = {}, lua_ls = {}, cmake = {}, bashls = {}, dockerls = {}, html = {},
+  pyright = {}, clangd = {}, lua_ls = {}, cmake = {}, bashls = {}, dockerls = {}, html = {},
   cssls = {}, jsonls = {}, yamlls = {}, marksman = {}, texlab = {},
 }
--- Currently pyslp fails to use pyenv global version (when not using
--- virtualenv), this is a manual fix for this problem
-if not os.getenv('VIRTUAL_ENV') and os.getenv('PYENV_ROOT') then
-  servers['pylsp'] = {
-    pylsp = { plugins = { jedi = { environment = vim.fn.expand('$PYENV_ROOT/shims/python') } } }
-  }
-end
 
 local on_attach = function(client, bufnr)
   -- Disable highlighting, we use Treesitter for that
@@ -640,6 +633,7 @@ extend_hl("Comment", { italic = true })
 
 ----------✦ ⚠️  Fixes and workarounds ⚠️  ✦----------
 
+-- TODO: Remove this once treesitter is supported for popups in nvim10
 -- Disable error highlighting for markdown
 vim.api.nvim_set_hl(0, "markdownError", { cterm = nil })
 
