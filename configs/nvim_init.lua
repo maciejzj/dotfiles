@@ -236,7 +236,7 @@ local on_attach = function(client, bufnr)
   -- Telescope-LSP bindings
   local tb = require("telescope.builtin")
   vim.keymap.set("n", "<leader>ls", tb.lsp_document_symbols, bufopts("Browse buffer symbols", bufnr))
-  vim.keymap.set("n", "<leader>lS", tb.lsp_workspace_symbols, bufopts("Browse workspace symbols", bufnr))
+  vim.keymap.set("n", "<leader>lS", tb.lsp_dynamic_workspace_symbols, bufopts("Browse workspace symbols", bufnr))
   vim.keymap.set("n", "<leader>lr", tb.lsp_references, bufopts("Browse symbol references", bufnr))
   vim.keymap.set("n", "<leader>D", tb.diagnostics, bufopts("Browse workspace diagnostics", bufnr))
 
@@ -260,6 +260,13 @@ local on_attach = function(client, bufnr)
   end
 
   vim.keymap.set("n", "<leader>td", toggle_diagnostics, bufopts("Toggle diagnostics", bufnr))
+
+  -- Refactoring tools
+  local refactoring = require("refactoring")
+  refactoring.setup({ show_success_message = true })
+  vim.keymap.set({ "n", "x" }, "<leader>R", function()
+    refactoring.select_refactor({ show_success_message = true })
+  end, bufopts("Refactor", bufnr))
 end
 
 require("neodev").setup({
@@ -428,12 +435,6 @@ end, { silent = true })
 -- Automatic indentation (if indent is detected will override the defaults)
 require("guess-indent").setup()
 
--- Refactoring tools
-require("refactoring").setup({ show_success_message = true })
-vim.keymap.set({ "n", "x" }, "<leader>R", function()
-  require("refactoring").select_refactor({ show_success_message = true })
-end, defopts("Refactor"))
-
 ----------✦ 🔠 Editor functionalities 🔠 ✦----------
 
 -- Surround motions
@@ -572,6 +573,7 @@ wk.register({
   ["<leader>l"] = { name = "language symbols" },
   ["<leader>p"] = { name = "plugins" },
   ["<leader>t"] = { name = "toggle" },
+  ["<leader>q"] = { name = "quickfix" },
 })
 vim.keymap.set({ "o", "x" }, "<a-i>", require("illuminate").textobj_select, defopts("highlighted symbol"))
 
