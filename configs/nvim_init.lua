@@ -207,7 +207,10 @@ require("various-textobjs").setup({ useDefaultKeymaps = true, disabledKeymaps = 
 
 ---@format disable-next
 local servers = {
-  pyright = {}, clangd = {}, lua_ls = {}, cmake = {}, bashls = {}, dockerls = {}, html = {},
+  pyright = {
+    python = { analysis = { typeCheckingMode = "off" } }
+  },
+  clangd = {}, lua_ls = {}, cmake = {}, bashls = {}, dockerls = {}, html = {},
   cssls = {}, jsonls = {}, yamlls = {}, marksman = {}, texlab = {},
 }
 
