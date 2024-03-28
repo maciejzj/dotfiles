@@ -3,8 +3,8 @@
 # gtc - get tmux clipboard over ssh.
 #
 # Usage: ./script.sh [host]
-# 	If host is not provided will try to obtain it from active ssh
-# 	get_active_ssh_connections or known hosts file.
+# 	If host is not provided, will try to obtain it from active ssh connections or
+# 	known hosts file if not connected to any host.
 #
 # Requires either MacOS or Linux with working xclip and fzf installed.
 
