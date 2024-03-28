@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+#
+# gtc - get tmux clipboard over ssh.
+#
+# Usage: ./script.sh [host]
+# 	If host is not provided will try to obtain it from active ssh
+# 	get_active_ssh_connections or known hosts file.
+#
+# Requires either MacOS or Linux with working xclip and fzf installed.
+
+set -euo pipefail
+
+function get_active_ssh_connections {
+	ps -a -o command | sed -n "/^ssh/p" | cut -d ' ' -f 2
+}
+
+dupa() {
+	cut -d " " -f 1 < "$HOME/.ssh/known_hosts"
+}
+
+function get_tmux_buffer_from_host {
+	ssh "$1" tmux show-buffer | pbcopy
+}
+
+function get_os_copy_cmd {
+	case ${OSTYPE} in
+	# For MacOS
+	darwin*)
+		echo "pbcopy"
+		;;
+	# For Linux distributions
+	linux-gnu)
+		echo "xclip -sel"
+		;;
+	# Other systems not supported
+	*)
+		echo "Did not detect supported system (use either MacOS or Linux with xclip)" >&2
+		exit 1
+		;;
+	esac
+}
+
+# Try get host from the first positional argument
+connections="${1-}"
+
+# If not provided try getting host from active ssh connections
+if [ -z "$connections" ]; then
+	connections="$(get_active_ssh_connections)"
+fi
+
+# If still empty, then try to get from known hosts
+if [ -z "$connections" ]; then
+	connections="$(get_known_hosts)"
+fi
+
+# Select connection (if contains single entry it will be selected implicitly)
+selected_connection=$(uniq <<< "$connections" | fzf --select-1 --layout reverse-list --height 10)
+echo "$selected_connection"
+
+# Copy the remote tmux buffer
+ssh "$selected_connection" tmux show-buffer | eval "$(get_os_copy_cmd)"

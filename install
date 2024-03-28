@@ -122,7 +122,7 @@ mkdir -p "${XDG_STATE_HOME}/zsh"
 echo -e "${BLUE}==> Setting up neovim plugins${NOCOLOR}"
 LAZYPATH="${XDG_DATA_HOME}/nvim/lazy/lazy.nvim"
 if ! [ -e "${LAZYPATH}" ]; then
-	git clone --filter=blob:none /home/mziaja/.local/share/nvim/lazy/lazy.nvim  --branch=stable "$LAZYPATH"
+	git clone --filter=blob:none /home/mziaja/.local/share/nvim/lazy/lazy.nvim --branch=stable "$LAZYPATH"
 	echo -e "${GREEN}Installed Lazy package manager${NOCOLOR}"
 fi
 echo -e "${BLUE}Installing neovim plugins${NOCOLOR}"
