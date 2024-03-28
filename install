@@ -27,14 +27,21 @@ while read -r map; do
 
 	# This will not overwrite files unless they are symlinks
 	if [ -e "${dest}" ] && [ ! -h "${dest}" ]; then
-		echo -e "${YELLOW}Config file: ${dest} will be skipped because it already exists, remove it and rerun this script to install new config${NOCOLOR}"
+		echo -e "${YELLOW}Config file: $dest will be skipped because it already exists, remove it and rerun this script to install new config${NOCOLOR}"
 		continue
 	fi
 
 	mkdir -p "$(dirname "$dest")"
-	echo "Linking ${src} to ${dest}}"
+	echo "Linking $src to $dest"
 	ln -f -s "$(realpath "$src")" "$dest"
 done < mappings
+
+# Map all scripts inside scripts dir to local binaries dir
+SCRIPTS_PATH="$HOME/.local/bin"
+for script in ./scripts/*; do
+	echo "Linking $script to $SCRIPTS_PATH"
+	ln -s "$(realpath "$script")" "$SCRIPTS_PATH"
+done
 
 # System-specific actions
 case ${OSTYPE} in
