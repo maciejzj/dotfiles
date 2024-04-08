@@ -42,6 +42,8 @@ vim.opt.splitbelow = true
 vim.opt.splitright = true
 -- Sbow whitesapce as the dot char
 vim.opt.fillchars = { diff = "⋅" }
+-- More refined fold characters
+vim.opt.fillchars = {foldopen = "▾", foldsep = "│", foldclose = "▸"}
 
 -- System behaviour
 vim.opt.updatetime = 100
@@ -632,6 +634,9 @@ vim.api.nvim_set_hl(0, "IlluminatedWordWrite", { ctermbg = 237 })
 -- Make NeoTree floating window bordor look same as the Telescope's one
 vim.api.nvim_set_hl(0, "NeoTreeFloatBorder", { ctermbg = 0 })
 vim.api.nvim_set_hl(0, "NeoTreeFloatTitle", { ctermbg = 0 })
+
+-- More subtle color for fold chars
+vim.api.nvim_set_hl(0, "FoldColumn", { ctermfg = 7 })
 
 -- Make comments italic
 extend_hl("Comment", { italic = true })
