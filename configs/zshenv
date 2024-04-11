@@ -40,14 +40,20 @@ export PYTHONBREAKPOINT="ipdb.set_trace"
 
 alias wget="wget --hsts-file=\"$XDG_CACHE_HOME/wget-hsts\""
 
-export HISTFILE="$XDG_STATE_HOME/zsh/history"
+# Command history
 
-# Set history length
-export HISTSIZE=SAVEHIST=100000
+export HISTFILE="$XDG_STATE_HOME/zsh/history"
+export HISTSIZE=SAVEHIST=10000000
 # General history settings
 setopt pushdtohome
 setopt sharehistory
 setopt extendedhistory
+setopt incappendhistory
+setopt histignoredups
+setopt histignorealldups
+setopt histsavenodups
+setopt histverify
+setopt histreduceblanks
 # Disable history for space prefixed commands
 setopt histignorespace
 
