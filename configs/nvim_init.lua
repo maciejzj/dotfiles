@@ -118,6 +118,7 @@ require("lazy").setup({
   -- Editor functionalities
   "kylechui/nvim-surround",
   "rrethy/vim-illuminate",
+  -- TODO: Rm this when nvim 10 is released (it will have built in commenting)
   "numtostr/comment.nvim",
   -- UI, visuals and tooling
   "stevearc/dressing.nvim",
@@ -212,7 +213,7 @@ local servers = {
   pyright = {
     python = { analysis = { typeCheckingMode = "off" } }
   },
-  clangd = {}, lua_ls = {}, cmake = {}, bashls = {}, dockerls = {}, html = {},
+  clangd = {}, lua_ls = {}, cmake = {}, bashls = {}, dockerls = {}, tsserver = {}, html = {},
   cssls = {}, jsonls = {}, yamlls = {}, marksman = {}, texlab = {},
 }
 
