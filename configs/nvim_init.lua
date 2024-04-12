@@ -43,7 +43,7 @@ vim.opt.splitright = true
 -- Sbow whitesapce as the dot char
 vim.opt.fillchars = { diff = "⋅" }
 -- More refined fold characters
-vim.opt.fillchars = {foldopen = "▾", foldsep = "│", foldclose = "▸"}
+vim.opt.fillchars = { foldopen = "▾", foldsep = "│", foldclose = "▸" }
 
 -- System behaviour
 vim.opt.updatetime = 100
@@ -336,7 +336,6 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
 local cmp = require("cmp")
 local luasnip = require("luasnip")
 -- LSP
----@diagnostic disable-next-line: missing-fields
 cmp.setup({
   snippet = {
     expand = function(args)
@@ -378,7 +377,6 @@ cmp.setup({
   }),
 })
 -- From buffer
----@diagnostic disable-next-line: missing-fields
 cmp.setup.cmdline({ "/", "?" }, {
   sources = {
     { name = "buffer" },
@@ -386,38 +384,10 @@ cmp.setup.cmdline({ "/", "?" }, {
   mapping = cmp.mapping.preset.cmdline(),
 })
 -- For command line
--- This custom mappig setup causes CTRL-P, CTRL-N to fallback to history
--- browsing, unless user has explicitly typed something in the cmdline, then
--- these two activate to browse completion options.
-local cmdline_cmp_state = "has_not_typed"
-vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
-  command = "lua cmdline_cmp_state = 'has_not_typed'",
-})
-vim.api.nvim_create_autocmd({ "CmdlineChanged" }, {
-  callback = function()
-    if cmdline_cmp_state == "has_not_typed" then
-      cmdline_cmp_state = "has_typed"
-    elseif cmdline_cmp_state == "has_browsed_history" then
-      cmdline_cmp_state = "has_not_typed"
-    end
-  end,
-})
-local function select_or_fallback(select_action)
-  return cmp.mapping(function(fallback)
-    if cmdline_cmp_state == "has_typed" and cmp.visible() then
-      select_action()
-    else
-      cmdline_cmp_state = "has_browsed_history"
-      cmp.close()
-      fallback()
-    end
-  end, { "i", "c" })
-end
----@diagnostic disable-next-line: missing-fields
 cmp.setup.cmdline(":", {
   mapping = cmp.mapping.preset.cmdline({
-    ["<C-n>"] = select_or_fallback(cmp.select_next_item),
-    ["<C-p>"] = select_or_fallback(cmp.select_prev_item),
+    ["<C-n>"] = { c = cmp.mapping.select_next_item() },
+    ["<C-p>"] = { c = cmp.mapping.select_prev_item() },
   }),
   sources = cmp.config.sources({
     { name = "path" },
