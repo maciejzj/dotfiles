@@ -436,11 +436,16 @@ require("dressing").setup()
 
 -- Telescope file finder
 local telescope = require("telescope")
+local action_state = require("telescope.actions.state")
 telescope.setup({
   defaults = {
     mappings = {
       -- Show picker actions help with which-key
-      i = { ["<C-h>"] = "which_key" },
+      i = {
+        ["<C-h>"] = "which_key",
+        ["<C-e>"] = function(bufnr) action_state.get_current_picker(bufnr).previewer:scroll_fn(1) end,
+        ["<C-y>"] = function(bufnr) action_state.get_current_picker(bufnr).previewer:scroll_fn(-1) end,
+      },
     },
     vimgrep_arguments = { "rg", "--vimgrep", "--smart-case", "--type-not", "jupyter" },
   },
