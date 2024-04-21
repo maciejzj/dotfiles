@@ -40,7 +40,7 @@ done < mappings
 SCRIPTS_PATH="$HOME/.local/bin"
 for script in ./scripts/*; do
 	echo "Linking $script to $SCRIPTS_PATH"
-	ln -s "$(realpath "$script")" "$SCRIPTS_PATH"
+	ln -f -s "$(realpath "$script")" "$SCRIPTS_PATH"
 done
 
 # System-specific actions
@@ -122,7 +122,8 @@ mkdir -p "${XDG_STATE_HOME}/zsh"
 echo -e "${BLUE}==> Setting up neovim plugins${NOCOLOR}"
 LAZYPATH="${XDG_DATA_HOME}/nvim/lazy/lazy.nvim"
 if ! [ -e "${LAZYPATH}" ]; then
-	git clone --filter=blob:none /home/mziaja/.local/share/nvim/lazy/lazy.nvim --branch=stable "$LAZYPATH"
+	echo -e "${BLUE}Installing Lazy package manager${NOCOLOR}"
+	git clone --filter=blob:none https://github.com/folke/lazy.nvim.git --branch=stable "$LAZYPATH"
 	echo -e "${GREEN}Installed Lazy package manager${NOCOLOR}"
 fi
 echo -e "${BLUE}Installing neovim plugins${NOCOLOR}"
