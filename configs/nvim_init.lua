@@ -123,9 +123,9 @@ require("lazy").setup({
   -- UI, visuals and tooling
   "stevearc/dressing.nvim",
   { "nvim-neo-tree/neo-tree.nvim", dependencies = { "nvim-lua/plenary.nvim", "muniftanjim/nui.nvim" } },
-  -- TODO: Rm tag 0.1.5 when 0.1.6 is released (current master has problems with git status diff highlighting)
-  { "nvim-telescope/telescope.nvim", tag="0.1.5", dependencies = { "nvim-lua/plenary.nvim" } },
-  { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+  -- TODO: Rm tag 0.1.6 when 0.1.7 is released (current master has problems with git status diff highlighting)
+  { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+  { "nvim-telescope/telescope.nvim", tag="0.1.6", dependencies = { "nvim-lua/plenary.nvim" } },
   "lukas-reineke/indent-blankline.nvim",
   "joshdick/onedark.vim",
   -- External tools integration
@@ -565,8 +565,8 @@ vim.keymap.set("n", "<leader>ce", ":edit ~/.config/nvim/init.lua<CR>", defopts("
 vim.keymap.set("n", "<leader>cr", ":source ~/.config/nvim/init.lua<CR>:GuessIndent<CR>", defopts("Reload config"))
 vim.keymap.set("n", "<leader>n", ":nohlsearch<CR>", defopts("Hide search highlight"))
 vim.keymap.set("n", "<leader>qq", ":copen<CR>", defopts("Open quickfix list"))
-vim.keymap.set("n", "<leader>qn", ":cnext<CR>", defopts("Open quickfix list"))
-vim.keymap.set("n", "<leader>qp", ":cprev<CR>", defopts("Open quickfix list"))
+vim.keymap.set("n", "]q", ":cnext<CR>", defopts("Next quickfix entry"))
+vim.keymap.set("n", "[q", ":cprev<CR>", defopts("Previous quickfix entry"))
 vim.keymap.set("n", "<leader>ts", ":set spell!<CR>", defopts("Toggle spellchecking"))
 vim.keymap.set("n", "<leader>s", "/\\s\\+$<CR>", defopts("Search trailing whitespaces"))
 vim.keymap.set("n", "<leader>tw", ":set list!<CR>", defopts("Toggle visible whitespace characters"))
@@ -582,8 +582,8 @@ vim.keymap.set("n", "<leader>tW",
   end,
   defopts("Toogle whitespaces in diffview")
 )
-vim.keymap.set("n", "<leader>gml", ":diffget LOCAL<CR>", defopts("Take local changes"))
-vim.keymap.set("n", "<leader>gmr", ":diffget REMOTE<CR>", defopts("Take remote changes"))
+vim.keymap.set("n", "<leader>gl", ":diffget LOCAL<CR>", defopts("Take local changes in conflict"))
+vim.keymap.set("n", "<leader>gr", ":diffget REMOTE<CR>", defopts("Take remote changes in conflict"))
 vim.keymap.set("t", "<esc>", "<C-\\><C-n>", defopts("Escape terminal inser mode with ESC"))
 -- Readline-like insert mode bindings
 vim.keymap.set("i", "<C-f>", "<RIGHT>", defopts("Move cursor right"))
