@@ -123,9 +123,8 @@ require("lazy").setup({
   -- UI, visuals and tooling
   "stevearc/dressing.nvim",
   { "nvim-neo-tree/neo-tree.nvim", dependencies = { "nvim-lua/plenary.nvim", "muniftanjim/nui.nvim" } },
-  -- TODO: Rm tag 0.1.6 when 0.1.7 is released (current master has problems with git status diff highlighting)
   { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-  { "nvim-telescope/telescope.nvim", tag="0.1.6", dependencies = { "nvim-lua/plenary.nvim" } },
+  { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
   "lukas-reineke/indent-blankline.nvim",
   "joshdick/onedark.vim",
   -- External tools integration
@@ -146,8 +145,12 @@ wk.setup()
 require("nvim-treesitter.configs").setup({
   ensure_installed = "all",
   auto_install = true,
+  -- Both diff and markdown are very limited with treesitter, change this when
+  -- nvim 10 is released (it will provide better features)
+  ignore_install = {'diff'},
   highlight = {
     enable = true,
+    disable = {"markdown"},
     additional_vim_regex_highlighting = false,
   },
   indent = {
@@ -465,6 +468,7 @@ vim.keymap.set("n", "<leader>fj", tb.jumplist, defopts("Find mark"))
 vim.keymap.set("n", "<leader>fb", tb.buffers, defopts("Find buffer"))
 vim.keymap.set("n", "<leader>fk", tb.keymaps, defopts("Find keymap"))
 vim.keymap.set("n", "<leader>fm", tb.marks, defopts("Find mark"))
+vim.keymap.set("n", "<leader>fp", tb.builtin, defopts("Find telescope pickers"))
 
 -- Telescope git status
 vim.fn.system("git rev-parse --is-inside-work-tree")
