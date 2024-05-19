@@ -31,7 +31,8 @@ vim.opt.listchars:append("eol:↴")
 
 -- User interface
 -- Show cursorline
-vim.opt.cursorline = true
+-- Disabled until https://github.com/neovim/neovim/issues/9800 is resolved
+-- vim.opt.cursorline = true
 -- Show statusline only if splits are open
 vim.opt.laststatus = 1
 -- Show relative line numbers
@@ -40,10 +41,6 @@ vim.opt.relativenumber = true
 -- Default split direction
 vim.opt.splitbelow = true
 vim.opt.splitright = true
--- Sbow whitesapce as the dot char
-vim.opt.fillchars = { diff = "⋅" }
--- More refined fold characters
-vim.opt.fillchars = { foldopen = "▾", foldsep = "│", foldclose = "▸" }
 
 -- System behaviour
 vim.opt.updatetime = 100
@@ -132,6 +129,7 @@ require("lazy").setup({
   -- TODO: Track this issue to free up the pinned down commit:
   -- https://github.com/folke/neodev.nvim/issues/180
   {"folke/neodev.nvim", commit="7d86c1d844b883e7bf0634af48c8ffcb2d4bb088"},
+  "catppuccin/nvim",
 })
 
 ----------✦ ❓ Help ❓ ✦----------
@@ -145,12 +143,8 @@ wk.setup()
 require("nvim-treesitter.configs").setup({
   ensure_installed = "all",
   auto_install = true,
-  -- Both diff and markdown are very limited with treesitter, change this when
-  -- nvim 10 is released (it will provide better features)
-  ignore_install = {'diff'},
   highlight = {
     enable = true,
-    disable = {"markdown"},
     additional_vim_regex_highlighting = false,
   },
   indent = {
@@ -259,7 +253,7 @@ local on_attach = function(client, bufnr)
   function _G.toggle_diagnostics()
     if vim.g.diagnostics_visible then
       vim.g.diagnostics_visible = false
-      vim.diagnostic.disable()
+      vim.diagnostic.enable(false)
       print("Diagnostics off")
     else
       vim.g.diagnostics_visible = true
@@ -341,6 +335,10 @@ local cmp = require("cmp")
 local luasnip = require("luasnip")
 -- LSP
 cmp.setup({
+  window = {
+    completion = cmp.config.window.bordered(),
+    documentation = cmp.config.window.bordered(),
+  },
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
@@ -503,6 +501,9 @@ require("ibl").setup({
 
 -- Git signs gutter and hunk navigation
 require("gitsigns").setup({
+  preview_config = {
+    border = 'rounded',
+  },
   on_attach = function(client, bufnr)
     local gs = package.loaded.gitsigns
 
@@ -601,31 +602,14 @@ vim.keymap.set("n", "<leader>pm", ":Mason<CR>", defopts("Mason packages panel"))
 ----------✦ 🎨 Colorscheme 🎨 ✦----------
 
 -- Main Colorscheme
-vim.cmd.colorscheme("onedark")
+require("catppuccin").setup({
+  transparent_background = true,
+})
+vim.cmd.colorscheme("catppuccin")
 
--- Don't underline changed lines in diff
-vim.api.nvim_set_hl(0, "DiffChange", { cterm = nil })
-
--- Highlight LSP symbol under cursor using underline
-vim.api.nvim_set_hl(0, "IlluminatedWordText", { ctermbg = 237 })
-vim.api.nvim_set_hl(0, "IlluminatedWordRead", { ctermbg = 237 })
-vim.api.nvim_set_hl(0, "IlluminatedWordWrite", { ctermbg = 237 })
-
--- Make NeoTree floating window bordor look same as the Telescope's one
-vim.api.nvim_set_hl(0, "NeoTreeFloatBorder", { ctermbg = 0 })
-vim.api.nvim_set_hl(0, "NeoTreeFloatTitle", { ctermbg = 0 })
-
--- More subtle color for fold chars
-vim.api.nvim_set_hl(0, "FoldColumn", { ctermfg = 7 })
-
--- Make comments italic
-extend_hl("Comment", { italic = true })
+vim.opt.fillchars = { diff = " ", foldopen = "▾", foldsep = "│", foldclose = "▸" }
 
 ----------✦ ⚠️  Fixes and workarounds ⚠️  ✦----------
-
--- TODO: Remove this once treesitter is supported for popups in nvim10
--- Disable error highlighting for markdown
-vim.api.nvim_set_hl(0, "markdownError", { cterm = nil })
 
 -- Redraw indent guides after folding operations
 for _, keymap in pairs({
