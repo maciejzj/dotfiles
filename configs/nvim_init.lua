@@ -605,7 +605,7 @@ require("catppuccin").setup({
 })
 vim.cmd.colorscheme("catppuccin")
 
-vim.opt.fillchars = { diff = " ", foldopen = "▾", foldsep = "│", foldclose = "▸" }
+vim.opt.fillchars = { diff = " ", eob = " ", foldopen = "▾", foldsep = "│", foldclose = "▸" }
 
 ----------✦ ⚠️  Fixes and workarounds ⚠️  ✦----------
 
