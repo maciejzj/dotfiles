@@ -232,8 +232,6 @@ local on_attach = function(client, bufnr)
 
   -- Diagnostics bindings
   vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, bufopts("Show diagnostics", bufnr))
-  vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, bufopts("Next diagnostics", bufnr))
-  vim.keymap.set("n", "]d", vim.diagnostic.goto_next, bufopts("Previous diagnostics", bufnr))
   vim.keymap.set("n", "<space>d", vim.diagnostic.setloclist, bufopts("Diagnostics list", bufnr))
 
   -- Telescope-LSP bindings
