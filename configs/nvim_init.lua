@@ -25,7 +25,6 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
 -- Whitespace characters representation
-vim.opt.list = true
 vim.opt.listchars:append("space:⋅")
 vim.opt.listchars:append("eol:↴")
 
@@ -123,13 +122,12 @@ require("lazy").setup({
   { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
   { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
   "lukas-reineke/indent-blankline.nvim",
-  "joshdick/onedark.vim",
+  { "catppuccin/nvim", priority = 1000 },
   -- External tools integration
   "lewis6991/gitsigns.nvim",
   -- TODO: Track this issue to free up the pinned down commit:
   -- https://github.com/folke/neodev.nvim/issues/180
-  {"folke/neodev.nvim", commit="7d86c1d844b883e7bf0634af48c8ffcb2d4bb088"},
-  "catppuccin/nvim",
+  { "folke/neodev.nvim", commit="7d86c1d844b883e7bf0634af48c8ffcb2d4bb088" },
 })
 
 ----------✦ ❓ Help ❓ ✦----------
@@ -265,7 +263,7 @@ local on_attach = function(client, bufnr)
   -- Refactoring tools
   local refactoring = require("refactoring")
   refactoring.setup({ show_success_message = true })
-  vim.keymap.set({ "n", "x" }, "<leader>R", function()
+  vim.keymap.set({ "n", "x" }, "<leader>lR", function()
     refactoring.select_refactor({ show_success_message = true })
   end, bufopts("Refactor", bufnr))
 end
@@ -417,11 +415,7 @@ require("nvim-surround").setup()
 
 -- Symbols highlighting
 require("illuminate").configure({
-  providers = {
-    "lsp",
-    "treesitter",
-    -- "regex" is ommited here on purpose, I dont' want it
-  },
+  providers = { "lsp", "treesitter", "regex" },
   delay = 500, -- A bit longer than the default
 })
 
