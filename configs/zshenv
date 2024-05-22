@@ -99,6 +99,7 @@ alias dh='dirs -v'
 alias python='python3'
 alias pip='pip3'
 alias ipdb='ipdb3'
+alias ipy='ipython'
 # Use nvim
 alias vim='nvim'
 alias vimdiff='nvim -d'
