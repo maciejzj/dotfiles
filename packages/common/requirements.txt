@@ -1,5 +1,6 @@
 autopep8
 black
+catppuccin[pygments]
 dash
 dvc
 einops
