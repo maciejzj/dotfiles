@@ -13,6 +13,7 @@ vim.opt.formatoptions:remove("t")
 -- Folding
 -- Use folding based on text indentation
 vim.opt.foldmethod = "indent"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr)"
 -- Limit folding level
 vim.opt.foldnestmax = 3
 -- Open files with all folds open
@@ -40,9 +41,12 @@ vim.opt.relativenumber = true
 -- Default split direction
 vim.opt.splitbelow = true
 vim.opt.splitright = true
+-- Keep splits even when the window is resized
+vim.api.nvim_create_autocmd({ "VimResized" }, { command = "wincmd=" })
 
 -- System behaviour
 vim.opt.updatetime = 100
+vim.opt.undofile = true
 -- Use system clipboard
 if vim.fn.has("macunix") then
   vim.opt.clipboard = "unnamed"
@@ -128,6 +132,7 @@ require("lazy").setup({
   -- TODO: Track this issue to free up the pinned down commit:
   -- https://github.com/folke/neodev.nvim/issues/180
   { "folke/neodev.nvim", commit="7d86c1d844b883e7bf0634af48c8ffcb2d4bb088" },
+  { "michaelb/sniprun", branch="master", build="sh install.sh" },
 })
 
 ----------✦ ❓ Help ❓ ✦----------
@@ -596,6 +601,7 @@ vim.keymap.set("n", "<leader>pm", ":Mason<CR>", defopts("Mason packages panel"))
 -- Main Colorscheme
 require("catppuccin").setup({
   transparent_background = true,
+  -- TODO: Tinker with dimming after https://github.com/catppuccin/nvim/issues/673 is resolved
 })
 vim.cmd.colorscheme("catppuccin")
 
@@ -611,3 +617,14 @@ for _, keymap in pairs({
     "n", keymap, keymap .. ":lua require('ibl').refresh()<CR>", { noremap = true, silent = true }
   )
 end
+
+-- Test new plugins
+local sniprun = require('sniprun')
+sniprun.setup({
+  selected_interpreters = { 'Python3_jupyter' },
+  display = { "TempFloatingWindow" },
+  borders = 'rounded',
+})
+vim.keymap.set("n", "<leader>R", "<Plug>SnipRunOperator", defopts("Run selection"))
+vim.keymap.set("n", "<leader>RR", ":SnipRun<CR>", defopts("Run current line"))
+vim.keymap.set("v", "<leader>R", ":SnipRun<CR>", defopts("Run selection"))
