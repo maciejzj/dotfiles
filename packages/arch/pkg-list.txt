@@ -9,6 +9,7 @@ fzf
 hdf5
 imagemagick
 jq
+lazygit
 man
 man-pages
 mlocate
