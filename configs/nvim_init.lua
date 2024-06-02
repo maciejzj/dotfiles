@@ -118,8 +118,6 @@ require("lazy").setup({
   -- Editor functionalities
   "kylechui/nvim-surround",
   "rrethy/vim-illuminate",
-  -- TODO: Rm this when nvim 10 is released (it will have built in commenting)
-  "numtostr/comment.nvim",
   -- UI, visuals and tooling
   "stevearc/dressing.nvim",
   { "nvim-neo-tree/neo-tree.nvim", dependencies = { "nvim-lua/plenary.nvim", "muniftanjim/nui.nvim" } },
@@ -419,13 +417,14 @@ require("guess-indent").setup()
 require("nvim-surround").setup()
 
 -- Symbols highlighting
-require("illuminate").configure({
+local illuminate = require("illuminate")
+illuminate.configure({
   providers = { "lsp", "treesitter", "regex" },
   delay = 500, -- A bit longer than the default
 })
-
--- Code commenting
-require("Comment").setup()
+vim.keymap.set({ "o", "x" }, "S", illuminate.textobj_select, defopts("highlighted symbol"))
+vim.keymap.set({ "n" }, "]r", illuminate.goto_next_reference, defopts("Next reference of the highlighted symbol"))
+vim.keymap.set({ "n" }, "[r", illuminate.goto_prev_reference, defopts("Previous reference of the highlighted symbol"))
 
 ----------✦ ✨ UI, visuals and tooling ✨ ✦----------
 
@@ -558,7 +557,6 @@ wk.register({
   ["<leader>t"] = { name = "toggle" },
   ["<leader>q"] = { name = "quickfix" },
 })
-vim.keymap.set({ "o", "x" }, "<a-i>", require("illuminate").textobj_select, defopts("highlighted symbol"))
 
 -- General nvim functionalities keymaps
 
@@ -622,8 +620,7 @@ end
 local sniprun = require('sniprun')
 sniprun.setup({
   selected_interpreters = { 'Python3_jupyter' },
-  display = { "TempFloatingWindow" },
-  borders = 'rounded',
+  display = { "Classic" },
 })
 vim.keymap.set("n", "<leader>R", "<Plug>SnipRunOperator", defopts("Run selection"))
 vim.keymap.set("n", "<leader>RR", ":SnipRun<CR>", defopts("Run current line"))
