@@ -31,8 +31,8 @@ vim.opt.listchars:append("eol:↴")
 
 -- User interface
 -- Show cursorline
--- Disabled until https://github.com/neovim/neovim/issues/9800 is resolved
--- vim.opt.cursorline = true
+vim.opt.cursorline = true
+vim.opt.culopt = "number"
 -- Show statusline only if splits are open
 vim.opt.laststatus = 1
 -- Show relative line numbers
@@ -53,6 +53,10 @@ if vim.fn.has("macunix") then
 else
   vim.opt.clipboard = "unnamedplus"
 end
+
+-- Builtin terminal
+vim.api.nvim_create_autocmd({ "TermOpen" }, { command = "setlocal nonumber norelativenumber" })
+vim.api.nvim_create_autocmd({ "TermOpen" }, { command = "startinsert" })
 
 -- Auto reload changed files from disk
 vim.o.autoread = true
@@ -564,7 +568,7 @@ vim.keymap.set("n", "<leader>E", ":Neotree<CR>", defopts("File explorer"))
 vim.keymap.set("n", "<leader>ce", ":edit ~/.config/nvim/init.lua<CR>", defopts("Edit config"))
 vim.keymap.set("n", "<leader>cr", ":source ~/.config/nvim/init.lua<CR>:GuessIndent<CR>", defopts("Reload config"))
 vim.keymap.set("n", "<leader>n", ":nohlsearch<CR>", defopts("Hide search highlight"))
-vim.keymap.set("n", "<leader>qq", ":copen<CR>", defopts("Open quickfix list"))
+vim.keymap.set("n", "<leader>q", ":copen<CR>", defopts("Open quickfix list"))
 vim.keymap.set("n", "]q", ":cnext<CR>", defopts("Next quickfix entry"))
 vim.keymap.set("n", "[q", ":cprev<CR>", defopts("Previous quickfix entry"))
 vim.keymap.set("n", "<leader>ts", ":set spell!<CR>", defopts("Toggle spellchecking"))
@@ -619,7 +623,7 @@ end
 -- Test new plugins
 local sniprun = require('sniprun')
 sniprun.setup({
-  selected_interpreters = { 'Python3_jupyter' },
+  repl_enable = { 'Python3_original' },
   display = { "Classic" },
 })
 vim.keymap.set("n", "<leader>R", "<Plug>SnipRunOperator", defopts("Run selection"))
