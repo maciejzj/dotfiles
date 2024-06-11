@@ -213,7 +213,9 @@ require("various-textobjs").setup({ useDefaultKeymaps = true, disabledKeymaps = 
 ---@format disable-next
 local servers = {
   pyright = {
-    python = { analysis = { typeCheckingMode = "off" } }
+    -- Exclude can be removed after fix for https://github.com/microsoft/pyright/issues/8102 is
+    -- included in the next releas of pyright
+    python = { analysis = { typeCheckingMode = "off", exclude = {"venv"} } }
   },
   clangd = {}, lua_ls = {}, cmake = {}, bashls = {}, dockerls = {}, tsserver = {}, html = {},
   cssls = {}, jsonls = {}, yamlls = {}, marksman = {}, texlab = {},
@@ -626,6 +628,6 @@ sniprun.setup({
   repl_enable = { 'Python3_original' },
   display = { "Classic" },
 })
-vim.keymap.set("n", "<leader>R", "<Plug>SnipRunOperator", defopts("Run selection"))
-vim.keymap.set("n", "<leader>RR", ":SnipRun<CR>", defopts("Run current line"))
-vim.keymap.set("v", "<leader>R", ":SnipRun<CR>", defopts("Run selection"))
+vim.keymap.set("n", "<leader>x", "<Plug>SnipRunOperator", defopts("Execute selection"))
+vim.keymap.set("n", "<leader>xx", ":SnipRun<CR>", defopts("Execute current line"))
+vim.keymap.set("v", "<leader>x", ":SnipRun<CR>", defopts("Execute selection"))
