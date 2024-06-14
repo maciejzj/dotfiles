@@ -46,24 +46,18 @@ compinit -d $XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION
 eval "$(pyenv init - --no-rehash)"
 eval "$(pyenv init - --no-rehash virtualenv)"
 
-# Make sure that each new tmux session gets current shell VIRTUAL_ENV passed (without this script
-# the VIRTUAL_ENV set by first current session is global for tmux server and never overwritten by
-# consecutive sessions).
+# By default, only the first tmux session that starts the server inherits all
+# shell variables and sets them globally for the tmux server; the consecutive
+# sessions do not inherit their shell environment when created. The function
+# below passes all environmental variables for each new tmux session explicitly.
 function tmux {
-	# Current shell has virtualenv and tmux subcommand is new* (session/pane) or the subcommand is
-	# empty (in this case default to new-session)
-	if [ -n "$VIRTUAL_ENV" ] && [[ -z "$*" || "$1" == new* ]]; then
-		if [ -z "$*" ]; then
-			local tmux_command=new
-		else
-			local tmux_command="$1"
-			shift
-		fi
-		command tmux "$tmux_command" -e "VIRTUAL_ENV=$VIRTUAL_ENV" "$@"
+	if [[ -z "$@" || "$1" == new || "$1" == new-s* ]]; then
+		eval command tmux new $(env | sed 's/^\(.*\)/-e "\1"/' | paste -d ' ' -s -)	
 	else
 		command tmux "$@"
 	fi
 }
+
 # If virtualenv is defined activate it (this is useful for inheriting virtualenv in tmux)
 [ -n "$VIRTUAL_ENV" ] && source "$VIRTUAL_ENV/bin/activate"
 
