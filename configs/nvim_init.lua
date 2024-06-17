@@ -206,7 +206,7 @@ require("nvim-treesitter.configs").setup({
 })
 
 -- Extra text objects
-require("various-textobjs").setup({ useDefaultKeymaps = true, disabledKeymaps = { "gw", "gW" } })
+require("various-textobjs").setup({ useDefaultKeymaps = true, disabledKeymaps = { "gw", "gW", "r" } })
 
 ----------✦ 🛠️ LSP 🛠️ ✦----------
 
@@ -215,7 +215,7 @@ local servers = {
   pyright = {
     -- Exclude can be removed after fix for https://github.com/microsoft/pyright/issues/8102 is
     -- included in the next releas of pyright
-    python = { analysis = { typeCheckingMode = "off", exclude = {"venv"} } }
+    python = { exclude = {"venv"}, analysis = { typeCheckingMode = "off", exclude = {"venv"} } }
   },
   clangd = {}, lua_ls = {}, cmake = {}, bashls = {}, dockerls = {}, tsserver = {}, html = {},
   cssls = {}, jsonls = {}, yamlls = {}, marksman = {}, texlab = {},
