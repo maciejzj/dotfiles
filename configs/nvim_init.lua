@@ -428,7 +428,7 @@ illuminate.configure({
   providers = { "lsp", "treesitter", "regex" },
   delay = 500, -- A bit longer than the default
 })
-vim.keymap.set({ "o", "x" }, "S", illuminate.textobj_select, defopts("highlighted symbol"))
+vim.keymap.set({ "o", "x" }, "h", illuminate.textobj_select, defopts("highlighted symbol"))
 vim.keymap.set({ "n" }, "]r", illuminate.goto_next_reference, defopts("Next reference of the highlighted symbol"))
 vim.keymap.set({ "n" }, "[r", illuminate.goto_prev_reference, defopts("Previous reference of the highlighted symbol"))
 
