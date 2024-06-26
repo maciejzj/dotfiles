@@ -96,46 +96,50 @@ vim.opt.rtp:prepend(lazypath)
 -- Plugins
 ---@format disable-next
 require("lazy").setup({
-  -- Language support package management
-  "williamboman/mason.nvim",
-  -- Help
-  "folke/which-key.nvim",
-  -- Treesitter
-  "nvim-treesitter/nvim-treesitter",
-  "nvim-treesitter/nvim-treesitter-textobjects",
-  "chrisgrieser/nvim-various-textobjs",
-  -- LSP
-  "neovim/nvim-lspconfig",
-  "williamboman/mason-lspconfig.nvim",
-  "nvimtools/none-ls.nvim",
-  "antosha417/nvim-lsp-file-operations",
-  "ray-x/lsp_signature.nvim",
-  -- Core functionalities
-  "hrsh7th/nvim-cmp",
-  "hrsh7th/cmp-nvim-lsp",
-  "hrsh7th/cmp-buffer",
-  "hrsh7th/cmp-cmdline",
-  "hrsh7th/cmp-path",
-  "l3mon4d3/luasnip",
-  "nmac427/guess-indent.nvim",
-  "theprimeagen/refactoring.nvim",
-  -- Editor functionalities
-  "kylechui/nvim-surround",
-  "rrethy/vim-illuminate",
-  -- UI, visuals and tooling
-  "stevearc/dressing.nvim",
-  { "nvim-neo-tree/neo-tree.nvim", dependencies = { "nvim-lua/plenary.nvim", "muniftanjim/nui.nvim" } },
-  { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-  { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
-  "lukas-reineke/indent-blankline.nvim",
-  { "catppuccin/nvim", priority = 1000 },
-  -- External tools integration
-  "lewis6991/gitsigns.nvim",
-  -- TODO: Track this issue to free up the pinned down commit:
-  -- https://github.com/folke/neodev.nvim/issues/180
-  { "folke/neodev.nvim", commit="7d86c1d844b883e7bf0634af48c8ffcb2d4bb088" },
-  { "michaelb/sniprun", branch="master", build="sh install.sh" },
-})
+    -- Language support package management
+    "williamboman/mason.nvim",
+    -- Help
+    "folke/which-key.nvim",
+    -- Treesitter
+    "nvim-treesitter/nvim-treesitter",
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    "chrisgrieser/nvim-various-textobjs",
+    -- LSP
+    "neovim/nvim-lspconfig",
+    "williamboman/mason-lspconfig.nvim",
+    "nvimtools/none-ls.nvim",
+    "antosha417/nvim-lsp-file-operations",
+    "ray-x/lsp_signature.nvim",
+    -- Core functionalities
+    "hrsh7th/nvim-cmp",
+    "hrsh7th/cmp-nvim-lsp",
+    "hrsh7th/cmp-buffer",
+    "hrsh7th/cmp-cmdline",
+    "hrsh7th/cmp-path",
+    "l3mon4d3/luasnip",
+    "nmac427/guess-indent.nvim",
+    "theprimeagen/refactoring.nvim",
+    -- Editor functionalities
+    "kylechui/nvim-surround",
+    "rrethy/vim-illuminate",
+    -- UI, visuals and tooling
+    "stevearc/dressing.nvim",
+    { "nvim-neo-tree/neo-tree.nvim", dependencies = { "nvim-lua/plenary.nvim", "muniftanjim/nui.nvim" } },
+    { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+    { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
+    "lukas-reineke/indent-blankline.nvim",
+    { "catppuccin/nvim", priority = 1000 },
+    -- External tools integration
+    "lewis6991/gitsigns.nvim",
+    -- TODO: Track this issue to free up the pinned down commit:
+    -- https://github.com/folke/neodev.nvim/issues/180
+    { "folke/neodev.nvim", commit="7d86c1d844b883e7bf0634af48c8ffcb2d4bb088" },
+    { "michaelb/sniprun", branch="master", build="sh install.sh" },
+  },
+  {
+    ui = {border = "single", },
+  }
+)
 
 ----------✦ ❓ Help ❓ ✦----------
 
@@ -288,7 +292,7 @@ require("neodev").setup({
     end
   end
 })
-require("mason").setup()
+require("mason").setup({ ui = { border = "single" } })
 require("mason-lspconfig").setup({ ensure_installed = vim.tbl_keys(servers) })
 
 -- Register servers
@@ -428,7 +432,7 @@ illuminate.configure({
   providers = { "lsp", "treesitter", "regex" },
   delay = 500, -- A bit longer than the default
 })
-vim.keymap.set({ "o", "x" }, "h", illuminate.textobj_select, defopts("highlighted symbol"))
+vim.keymap.set({ "o", "x" }, "H", illuminate.textobj_select, defopts("highlighted symbol"))
 vim.keymap.set({ "n" }, "]r", illuminate.goto_next_reference, defopts("Next reference of the highlighted symbol"))
 vim.keymap.set({ "n" }, "[r", illuminate.goto_prev_reference, defopts("Previous reference of the highlighted symbol"))
 
