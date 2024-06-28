@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#
+# mkvenv - bootstrap a Python vritual environement
+#
+# Usage: mkvenv
+#
+# Creates a Python virtual environment with some default pakages of my choice.
+
+set -euo pipefail
+
+virtualenv venv
+
+source venv/bin/activate
+
+pip install \
+	"catppuccin[pygments]" \
+	"ipython" \
+	"klepto"

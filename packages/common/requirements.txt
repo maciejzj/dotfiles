@@ -18,6 +18,7 @@ nbdime
 neovim
 numpy
 pandas
+pip-tools
 pipreqs
 plotly
 pycodestyle
