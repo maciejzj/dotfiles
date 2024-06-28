@@ -554,6 +554,15 @@ require("gitsigns").setup({
   end,
 })
 
+local sniprun = require('sniprun')
+sniprun.setup({
+  repl_enable = { 'Python3_original' },
+  display = { "Classic" },
+})
+vim.keymap.set("n", "<leader>x", "<Plug>SnipRunOperator", defopts("Execute selection"))
+vim.keymap.set("n", "<leader>xx", ":SnipRun<CR>", defopts("Execute current line"))
+vim.keymap.set("v", "<leader>x", ":SnipRun<CR>", defopts("Execute selection"))
+
 ----------✦ ☎️  Keymaps ☎️  ✦----------
 
 -- Mapping groups
@@ -626,12 +635,5 @@ for _, keymap in pairs({
   )
 end
 
--- Test new plugins
-local sniprun = require('sniprun')
-sniprun.setup({
-  repl_enable = { 'Python3_original' },
-  display = { "Classic" },
-})
-vim.keymap.set("n", "<leader>x", "<Plug>SnipRunOperator", defopts("Execute selection"))
-vim.keymap.set("n", "<leader>xx", ":SnipRun<CR>", defopts("Execute current line"))
-vim.keymap.set("v", "<leader>x", ":SnipRun<CR>", defopts("Execute selection"))
+local mocha = require("catppuccin.palettes.mocha")
+extend_hl("Pmenu", { bg = mocha.mantle })
