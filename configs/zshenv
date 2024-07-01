@@ -106,6 +106,8 @@ alias vimdiff='nvim -d'
 alias view='nvim -R'
 # Edit history file
 alias eh="nvim \"${HISTFILE}\""
+# Easier management of muliptle tmux servers
+alias tmux-servers="ls -w1 /tmp/tmux-*"
 
 case ${OSTYPE} in
 darwin*)
