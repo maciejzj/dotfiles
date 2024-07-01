@@ -536,7 +536,6 @@ require("gitsigns").setup({
     vim.keymap.set("n", "<leader>hs", gs.stage_hunk, defopts("Stage hunk"))
     vim.keymap.set("n", "<leader>hr", gs.reset_hunk, defopts("Restore hunk"))
     vim.keymap.set("n", "<leader>hS", gs.stage_buffer, defopts("Stage buffer"))
-    vim.keymap.set("n", "<leader>hu", gs.undo_stage_hunk, defopts("Unstage hunk"))
     vim.keymap.set("n", "<leader>hR", gs.reset_buffer, defopts("Restore buffer"))
     vim.keymap.set("n", "<leader>hp", gs.preview_hunk, defopts("Preview hunk"))
     vim.keymap.set("n", "<leader>hb", gs.blame_line, defopts("Blame line"))
