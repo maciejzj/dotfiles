@@ -78,6 +78,9 @@ export LESSHISTFILE=/dev/null
 # Exclude underscore commands from correction suggestions
 CORRECT_IGNORE="[_|.]*"
 
+# Default python vritualenv name as personal convention
+PYTHON_VIRTUAL_ENV_DEFAULT_NAME="venv"
+
 # Aliases
 
 # Aliases are here and not in the .zshrc, because only .zshenv

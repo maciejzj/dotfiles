@@ -8,9 +8,11 @@
 
 set -euo pipefail
 
-virtualenv venv
+PYTHON_VIRTUAL_ENV_DEFAULT_NAME="${PYTHON_VIRTUAL_ENV_DEFAULT_NAME:-venv}"
 
-source venv/bin/activate
+virtualenv "$PYTHON_VIRTUAL_ENV_DEFAULT_NAME"
+
+source "$PYTHON_VIRTUAL_ENV_DEFAULT_NAME"/bin/activate
 
 pip install \
 	"catppuccin[pygments]" \
