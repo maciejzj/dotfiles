@@ -135,9 +135,6 @@ require("lazy").setup({
     -- https://github.com/folke/neodev.nvim/issues/180
     { "folke/neodev.nvim", commit="7d86c1d844b883e7bf0634af48c8ffcb2d4bb088" },
     { "michaelb/sniprun", branch="master", build="sh install.sh" },
-  },
-  {
-    ui = {border = "single", },
   }
 )
 
@@ -292,7 +289,7 @@ require("neodev").setup({
     end
   end
 })
-require("mason").setup({ ui = { border = "single" } })
+require("mason").setup()
 require("mason-lspconfig").setup({ ensure_installed = vim.tbl_keys(servers) })
 
 -- Register servers
@@ -345,7 +342,6 @@ local luasnip = require("luasnip")
 -- LSP
 cmp.setup({
   window = {
-    completion = cmp.config.window.bordered(),
     documentation = cmp.config.window.bordered(),
   },
   snippet = {
@@ -419,7 +415,7 @@ vim.keymap.set({ "i", "s" }, "<C-E>", function()
 end, { silent = true })
 
 -- Automatic indentation (if indent is detected will override the defaults)
-require("guess-indent").setup()
+require("guess-indent").setup({})
 
 ----------✦ 🔠 Editor functionalities 🔠 ✦----------
 
@@ -508,7 +504,7 @@ require("ibl").setup({
 -- Git signs gutter and hunk navigation
 require("gitsigns").setup({
   preview_config = {
-    border = 'rounded',
+    border = "rounded",
   },
   on_attach = function(client, bufnr)
     local gs = package.loaded.gitsigns
@@ -617,7 +613,7 @@ vim.keymap.set("n", "<leader>pm", ":Mason<CR>", defopts("Mason packages panel"))
 -- Main Colorscheme
 require("catppuccin").setup({
   transparent_background = true,
-  -- TODO: Tinker with dimming after https://github.com/catppuccin/nvim/issues/673 is resolved
+  dim_inactive = { enabled = true },
 })
 vim.cmd.colorscheme("catppuccin")
 
