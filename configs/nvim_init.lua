@@ -131,9 +131,7 @@ require("lazy").setup({
     { "catppuccin/nvim", priority = 1000 },
     -- External tools integration
     "lewis6991/gitsigns.nvim",
-    -- TODO: Track this issue to free up the pinned down commit:
-    -- https://github.com/folke/neodev.nvim/issues/180
-    { "folke/neodev.nvim", commit="7d86c1d844b883e7bf0634af48c8ffcb2d4bb088" },
+    "folke/lazydev.nvim",
     { "michaelb/sniprun", branch="master", build="sh install.sh" },
   }
 )
@@ -255,20 +253,10 @@ local on_attach = function(client, bufnr)
   end, bufopts("Format with lsp", bufnr))
 
   -- Show/hide Diagnostics
-  vim.g.diagnostics_visible = true
-  function _G.toggle_diagnostics()
-    if vim.g.diagnostics_visible then
-      vim.g.diagnostics_visible = false
-      vim.diagnostic.enable(false)
-      print("Diagnostics off")
-    else
-      vim.g.diagnostics_visible = true
-      vim.diagnostic.enable()
-      print("Diagnostics on")
-    end
-  end
-
-  vim.keymap.set("n", "<leader>td", toggle_diagnostics, bufopts("Toggle diagnostics", bufnr))
+  vim.keymap.set("n", "<leader>td", function()
+      vim.diagnostic.enable(not vim.diagnostic.is_enabled())
+    end, bufopts("Toggle diagnostics", bufnr)
+  )
 
   -- Refactoring tools
   local refactoring = require("refactoring")
@@ -278,17 +266,7 @@ local on_attach = function(client, bufnr)
   end, bufopts("Refactor", bufnr))
 end
 
-require("neodev").setup({
-  override = function(root_dir, library)
-    -- Path-based override activation helps neodev work with symlinked dotfiles setup
-    if root_dir:find("nvim") or root_dir:find("dotfiles") then
-      library.enabled = true
-      library.plugins = true
-      library.types = true
-      library.runtime = true
-    end
-  end
-})
+require("lazydev").setup()
 require("mason").setup()
 require("mason-lspconfig").setup({ ensure_installed = vim.tbl_keys(servers) })
 
