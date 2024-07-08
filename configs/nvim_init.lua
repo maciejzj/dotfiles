@@ -96,45 +96,44 @@ vim.opt.rtp:prepend(lazypath)
 -- Plugins
 ---@format disable-next
 require("lazy").setup({
-    -- Language support package management
-    "williamboman/mason.nvim",
-    -- Help
-    "folke/which-key.nvim",
-    -- Treesitter
-    "nvim-treesitter/nvim-treesitter",
-    "nvim-treesitter/nvim-treesitter-textobjects",
-    "chrisgrieser/nvim-various-textobjs",
-    -- LSP
-    "neovim/nvim-lspconfig",
-    "williamboman/mason-lspconfig.nvim",
-    "nvimtools/none-ls.nvim",
-    "antosha417/nvim-lsp-file-operations",
-    "ray-x/lsp_signature.nvim",
-    -- Core functionalities
-    "hrsh7th/nvim-cmp",
-    "hrsh7th/cmp-nvim-lsp",
-    "hrsh7th/cmp-buffer",
-    "hrsh7th/cmp-cmdline",
-    "hrsh7th/cmp-path",
-    "l3mon4d3/luasnip",
-    "nmac427/guess-indent.nvim",
-    "theprimeagen/refactoring.nvim",
-    -- Editor functionalities
-    "kylechui/nvim-surround",
-    "rrethy/vim-illuminate",
-    -- UI, visuals and tooling
-    "stevearc/dressing.nvim",
-    { "nvim-neo-tree/neo-tree.nvim", dependencies = { "nvim-lua/plenary.nvim", "muniftanjim/nui.nvim" } },
-    { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-    { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
-    "lukas-reineke/indent-blankline.nvim",
-    { "catppuccin/nvim", priority = 1000 },
-    -- External tools integration
-    "lewis6991/gitsigns.nvim",
-    "folke/lazydev.nvim",
-    { "michaelb/sniprun", branch="master", build="sh install.sh" },
-  }
-)
+  -- Language support package management
+  "williamboman/mason.nvim",
+  -- Help
+  "folke/which-key.nvim",
+  -- Treesitter
+  "nvim-treesitter/nvim-treesitter",
+  "nvim-treesitter/nvim-treesitter-textobjects",
+  "chrisgrieser/nvim-various-textobjs",
+  -- LSP
+  "neovim/nvim-lspconfig",
+  "williamboman/mason-lspconfig.nvim",
+  "nvimtools/none-ls.nvim",
+  "antosha417/nvim-lsp-file-operations",
+  "ray-x/lsp_signature.nvim",
+  -- Core functionalities
+  "hrsh7th/nvim-cmp",
+  "hrsh7th/cmp-nvim-lsp",
+  "hrsh7th/cmp-buffer",
+  "hrsh7th/cmp-cmdline",
+  "hrsh7th/cmp-path",
+  "l3mon4d3/luasnip",
+  "nmac427/guess-indent.nvim",
+  "theprimeagen/refactoring.nvim",
+  -- Editor functionalities
+  "kylechui/nvim-surround",
+  "rrethy/vim-illuminate",
+  -- UI, visuals and tooling
+  "stevearc/dressing.nvim",
+  { "nvim-neo-tree/neo-tree.nvim", dependencies = { "nvim-lua/plenary.nvim", "muniftanjim/nui.nvim" } },
+  { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+  { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
+  "lukas-reineke/indent-blankline.nvim",
+  { "catppuccin/nvim", priority = 1000 },
+  -- External tools integration
+  "lewis6991/gitsigns.nvim",
+  "folke/lazydev.nvim",
+  { "michaelb/sniprun", branch="master", build="sh install.sh" },
+})
 
 ----------✦ ❓ Help ❓ ✦----------
 
@@ -254,8 +253,8 @@ local on_attach = function(client, bufnr)
 
   -- Show/hide Diagnostics
   vim.keymap.set("n", "<leader>td", function()
-      vim.diagnostic.enable(not vim.diagnostic.is_enabled())
-    end, bufopts("Toggle diagnostics", bufnr)
+    vim.diagnostic.enable(not vim.diagnostic.is_enabled())
+  end, bufopts("Toggle diagnostics", bufnr)
   )
 
   -- Refactoring tools
@@ -559,6 +558,8 @@ vim.keymap.set("n", "<leader>n", ":nohlsearch<CR>", defopts("Hide search highlig
 vim.keymap.set("n", "<leader>q", ":copen<CR>", defopts("Open quickfix list"))
 vim.keymap.set("n", "]q", ":cnext<CR>", defopts("Next quickfix entry"))
 vim.keymap.set("n", "[q", ":cprev<CR>", defopts("Previous quickfix entry"))
+vim.keymap.set("n", "]l", ":lnext<CR>", defopts("Next locationlist entry"))
+vim.keymap.set("n", "[l", ":lprev<CR>", defopts("Previous locationlist entry"))
 vim.keymap.set("n", "<leader>ts", ":set spell!<CR>", defopts("Toggle spellchecking"))
 vim.keymap.set("n", "<leader>s", "/\\s\\+$<CR>", defopts("Search trailing whitespaces"))
 vim.keymap.set("n", "<leader>tw", ":set list!<CR>", defopts("Toggle visible whitespace characters"))
