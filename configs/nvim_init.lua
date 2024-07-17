@@ -138,7 +138,7 @@ require("lazy").setup({
 ----------✦ ❓ Help ❓ ✦----------
 
 local wk = require("which-key")
-wk.setup()
+wk.setup({ delay = 500, icons = { rules = false } })
 
 ----------✦ 🌳 Treesitter 🌳 ✦----------
 
@@ -234,10 +234,13 @@ local on_attach = function(client, bufnr)
   vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, bufopts("Rename symbol", bufnr))
   vim.keymap.set({ "n", "v" }, "<leader>a", vim.lsp.buf.code_action, bufopts("Code action", bufnr))
   vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts("References", bufnr))
+  vim.keymap.set("n", "<leader>li", vim.lsp.buf.incoming_calls, bufopts("Incoming calls", bufnr))
+  vim.keymap.set("n", "<leader>lo", vim.lsp.buf.outgoing_calls, bufopts("Outgoing calls", bufnr))
+  vim.keymap.set("n", "<leader>lh", vim.lsp.buf.typehierarchy, bufopts("Type hierarchy", bufnr))
 
   -- Diagnostics bindings
-  vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, bufopts("Show diagnostics", bufnr))
-  vim.keymap.set("n", "<space>d", vim.diagnostic.setloclist, bufopts("Diagnostics list", bufnr))
+  vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, bufopts("Show diagnostics", bufnr))
+  vim.keymap.set("n", "<leader>d", vim.diagnostic.setloclist, bufopts("Diagnostics list", bufnr))
 
   -- Telescope-LSP bindings
   local tb = require("telescope.builtin")
@@ -441,7 +444,7 @@ vim.keymap.set("n", "<leader>fs", tb.grep_string, defopts("Find string (at curso
 vim.keymap.set("n", "<leader>fc", tb.commands, defopts("Find command"))
 vim.keymap.set("n", "<leader>fh", tb.help_tags, defopts("Search help"))
 vim.keymap.set("n", "<leader>fr", tb.command_history, defopts("Search command history"))
-vim.keymap.set("n", "<leader>fj", tb.jumplist, defopts("Find mark"))
+vim.keymap.set("n", "<leader>fj", tb.jumplist, defopts("Find jumplist position"))
 vim.keymap.set("n", "<leader>fb", tb.buffers, defopts("Find buffer"))
 vim.keymap.set("n", "<leader>fk", tb.keymaps, defopts("Find keymap"))
 vim.keymap.set("n", "<leader>fm", tb.marks, defopts("Find mark"))
@@ -450,7 +453,7 @@ vim.keymap.set("n", "<leader>fp", tb.builtin, defopts("Find telescope pickers"))
 -- Telescope git status
 vim.fn.system("git rev-parse --is-inside-work-tree")
 if vim.v.shell_error == 0 then
-  wk.register({ ["<leader>g"] = { name = "git" } })
+  wk.add({ "<leader>g", group = "git" })
   vim.keymap.set("n", "<leader>gc", tb.git_commits, defopts("Browse commits"))
   vim.keymap.set("n", "<leader>gC", tb.git_bcommits, defopts("Browse buffer commits"))
   vim.keymap.set("n", "<leader>gb", tb.git_branches, defopts("Browse branches"))
@@ -488,25 +491,21 @@ require("gitsigns").setup({
 
     -- Hunk navigation
     vim.keymap.set("n", "]c", function()
-      if vim.wo.diff then
-        return "]c"
-      end
+      if vim.wo.diff then return "]c" end
       vim.schedule(gs.next_hunk)
       return "<Ignore>"
     end, { expr = true, desc = "Next hunk" })
 
     vim.keymap.set("n", "[c", function()
-      if vim.wo.diff then
-        return "[c"
-      end
+      if vim.wo.diff then return "[c" end
       vim.schedule(gs.prev_hunk)
       return "<Ignore>"
     end, { expr = true, desc = "Previous hunk" })
 
-    wk.register({ ["<leader>h"] = { name = "git hunk" } })
+    wk.add({ "<leader>h", group = "git hunk" })
 
     -- Actions
-    vim.keymap.set("n", "<leader>hs", gs.stage_hunk, defopts("Stage hunk"))
+    vim.keymap.set("n", "<leader>hs", gs.stage_hunk, defopts("Toogle hunk stage"))
     vim.keymap.set("n", "<leader>hr", gs.reset_hunk, defopts("Restore hunk"))
     vim.keymap.set("n", "<leader>hS", gs.stage_buffer, defopts("Stage buffer"))
     vim.keymap.set("n", "<leader>hR", gs.reset_buffer, defopts("Restore buffer"))
@@ -517,10 +516,8 @@ require("gitsigns").setup({
     vim.keymap.set("n", "<leader>gD", function() gs.diffthis("~") end, defopts("Diff buffer (with staged)"))
     vim.keymap.set("n", "<leader>tD", gs.toggle_deleted, defopts("Toggle show deleted"))
     -- Actions on visual selections
-    vim.keymap.set("v", "<leader>s", function() gs.stage_hunk { vim.fn.line("."), vim.fn.line("v") } end,
-      defopts("Stage selection"))
-    vim.keymap.set("v", "<leader>r", function() gs.reset_hunk { vim.fn.line("."), vim.fn.line("v") } end,
-      defopts("Restore selection"))
+    vim.keymap.set("v", "<leader>s", function() gs.stage_hunk { vim.fn.line("."), vim.fn.line("v") } end, defopts("Stage selection"))
+    vim.keymap.set("v", "<leader>r", function() gs.reset_hunk { vim.fn.line("."), vim.fn.line("v") } end, defopts("Restore selection"))
     -- Text object
     vim.keymap.set({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", defopts("git hunk"))
   end,
@@ -538,15 +535,15 @@ vim.keymap.set("v", "<leader>x", ":SnipRun<CR>", defopts("Execute selection"))
 ----------✦ ☎️  Keymaps ☎️  ✦----------
 
 -- Mapping groups
-wk.register({
-  ["<leader>c"] = { name = "config" },
-  ["<leader>f"] = { name = "find" },
-  ["<leader>g"] = { name = "git" },
-  ["<leader>gm"] = { name = "merge conflict" },
-  ["<leader>l"] = { name = "language symbols" },
-  ["<leader>p"] = { name = "plugins" },
-  ["<leader>t"] = { name = "toggle" },
-  ["<leader>q"] = { name = "quickfix" },
+wk.add({
+  { "<leader>c",  group = "config" },
+  { "<leader>f",  group = "find" },
+  { "<leader>g",  group = "git" },
+  { "<leader>gm", group = "merge conflict" },
+  { "<leader>l",  group = "language symbols" },
+  { "<leader>p",  group = "plugins" },
+  { "<leader>q",  group = "quickfix" },
+  { "<leader>t",  group = "toggle" },
 })
 
 -- General nvim functionalities keymaps
