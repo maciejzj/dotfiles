@@ -12,8 +12,8 @@ vim.opt.formatoptions:remove("t")
 
 -- Folding
 -- Use folding based on text indentation
-vim.opt.foldmethod = "indent"
-vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr)"
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 -- Limit folding level
 vim.opt.foldnestmax = 3
 -- Open files with all folds open
