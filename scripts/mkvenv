@@ -17,5 +17,4 @@ source "$PYTHON_VIRTUAL_ENV_DEFAULT_NAME"/bin/activate
 pip install \
 	"catppuccin[pygments]" \
 	"ipdb" \
-	"ipython" \
-	"klepto"
+	"ipython"
