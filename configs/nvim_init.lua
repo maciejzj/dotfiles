@@ -123,6 +123,7 @@ require("lazy").setup({
   "kylechui/nvim-surround",
   "rrethy/vim-illuminate",
   -- UI, visuals and tooling
+  "hiphish/rainbow-delimiters.nvim",
   "stevearc/dressing.nvim",
   { "nvim-neo-tree/neo-tree.nvim", dependencies = { "nvim-lua/plenary.nvim", "muniftanjim/nui.nvim" } },
   { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
@@ -516,8 +517,10 @@ require("gitsigns").setup({
     vim.keymap.set("n", "<leader>gD", function() gs.diffthis("~") end, defopts("Diff buffer (with staged)"))
     vim.keymap.set("n", "<leader>tD", gs.toggle_deleted, defopts("Toggle show deleted"))
     -- Actions on visual selections
-    vim.keymap.set("v", "<leader>s", function() gs.stage_hunk { vim.fn.line("."), vim.fn.line("v") } end, defopts("Stage selection"))
-    vim.keymap.set("v", "<leader>r", function() gs.reset_hunk { vim.fn.line("."), vim.fn.line("v") } end, defopts("Restore selection"))
+    vim.keymap.set("v", "<leader>s", function() gs.stage_hunk { vim.fn.line("."), vim.fn.line("v") } end,
+      defopts("Stage selection"))
+    vim.keymap.set("v", "<leader>r", function() gs.reset_hunk { vim.fn.line("."), vim.fn.line("v") } end,
+      defopts("Restore selection"))
     -- Text object
     vim.keymap.set({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", defopts("git hunk"))
   end,
