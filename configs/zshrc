@@ -99,3 +99,6 @@ esac
 # Disable underline in syntax highlighting
 ZSH_HIGHLIGHT_STYLES[path]=none
 ZSH_HIGHLIGHT_STYLES[path_prefix]=none
+
+# User functions
+function esource() { set -a && source $1 && set +a }
