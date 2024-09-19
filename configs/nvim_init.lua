@@ -216,7 +216,7 @@ local servers = {
     -- included in the next releas of pyright
     python = { exclude = {"venv"}, analysis = { typeCheckingMode = "off", exclude = {"venv"} } }
   },
-  clangd = {}, lua_ls = {}, cmake = {}, bashls = {}, dockerls = {}, tsserver = {}, html = {},
+  clangd = {}, lua_ls = {}, cmake = {}, bashls = {}, dockerls = {}, ts_ls = {}, html = {},
   cssls = {}, jsonls = {}, yamlls = {}, marksman = {}, texlab = {},
 }
 
@@ -528,10 +528,12 @@ require("gitsigns").setup({
 
 local sniprun = require('sniprun')
 sniprun.setup({
-  repl_enable = { 'Python3_original' },
+  selected_interpreters = { 'Python3_fifo' },
+  repl_enable = { 'Python3_fifo' },
   display = { "Classic" },
 })
-vim.keymap.set("n", "<leader>x", "<Plug>SnipRunOperator", defopts("Execute selection"))
+vim.keymap.set("n", "<leader>X", ":%SnipRun<CR>", defopts("Execute buffer"))
+vim.keymap.set("n", "<leader>x", "<Plug>SnipRunOperator", defopts("Execute"))
 vim.keymap.set("n", "<leader>xx", ":SnipRun<CR>", defopts("Execute current line"))
 vim.keymap.set("v", "<leader>x", ":SnipRun<CR>", defopts("Execute selection"))
 
