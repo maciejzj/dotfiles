@@ -111,6 +111,7 @@ alias view='nvim -R'
 alias eh="nvim \"${HISTFILE}\""
 # Easier management of muliptle tmux servers
 alias tmux-servers="ls -w1 /tmp/tmux-*"
+alias tmux-clear="rm -rf $XDG_DATA_HOME/tmux/resurrect/*"
 
 case ${OSTYPE} in
 darwin*)
