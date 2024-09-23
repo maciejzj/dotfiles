@@ -526,6 +526,7 @@ require("gitsigns").setup({
   end,
 })
 
+-- Code snippets execution
 local sniprun = require('sniprun')
 sniprun.setup({
   selected_interpreters = { 'Python3_fifo' },
@@ -536,6 +537,15 @@ vim.keymap.set("n", "<leader>X", ":%SnipRun<CR>", defopts("Execute buffer"))
 vim.keymap.set("n", "<leader>x", "<Plug>SnipRunOperator", defopts("Execute"))
 vim.keymap.set("n", "<leader>xx", ":SnipRun<CR>", defopts("Execute current line"))
 vim.keymap.set("v", "<leader>x", ":SnipRun<CR>", defopts("Execute selection"))
+
+-- Save last nvim server id when nvim loses focus (FocusLost) (useful for determining last used neovim instance)
+vim.api.nvim_create_autocmd('FocusLost', {
+  group = vim.api.nvim_create_augroup('focus_lost', {}),
+  callback = function()
+    local servername = vim.v.servername
+    vim.fn.writefile({ servername }, '/tmp/nvim-focuslost')
+  end,
+})
 
 ----------✦ ☎️  Keymaps ☎️  ✦----------
 
