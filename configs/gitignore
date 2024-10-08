@@ -34,3 +34,8 @@ Temporary Items
 
 # Visual Studio Code
 .vscode/
+
+# Local configuration for specific programming languages
+
+# Python
+venv/
