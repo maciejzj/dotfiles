@@ -32,7 +32,7 @@ vim.opt.listchars:append("eol:↴")
 -- User interface
 -- Show cursorline
 vim.opt.cursorline = true
-vim.opt.culopt = "number"
+vim.opt.culopt = "both"
 -- Show statusline only if splits are open
 vim.opt.laststatus = 1
 -- Show relative line numbers
