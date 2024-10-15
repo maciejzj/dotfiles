@@ -129,6 +129,8 @@ require("lazy").setup(
     -- External tools integration
     "lewis6991/gitsigns.nvim",
     "folke/lazydev.nvim",
+    { "rcarriga/nvim-dap-ui", dependencies = {"mfussenegger/nvim-dap", "nvim-neotest/nvim-nio"} },
+    "jay-babu/mason-nvim-dap.nvim",
   },
   {
     install = { colorscheme = { 'catppuccin' } }
@@ -264,6 +266,7 @@ end
 require("lazydev").setup()
 require("mason").setup()
 require("mason-lspconfig").setup({ ensure_installed = vim.tbl_keys(servers) })
+require("mason-nvim-dap").setup({ ensure_installed = { "python" }, automatic_installation=true, handlers={} })
 
 -- Register servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -564,3 +567,22 @@ end
 
 local mocha = require("catppuccin.palettes.mocha")
 extend_hl("Pmenu", { bg = mocha.mantle })
+
+-- Demo DAP setup
+
+require("dapui").setup()
+
+-- Example DAP config for python (in .vscode/launch.json)
+
+-- {
+--   "configurations": [
+--     {
+--       "name": "Debug data service download command",
+--       "type": "python",
+--       "request": "launch",
+--       "program": "data_service.py",
+--       "args": ["download", "--output-dir=test_out", "--collection-platform-id=404"],
+--       "pythonPath": "venv/bin/python"
+--     }
+--   ]
+-- }
