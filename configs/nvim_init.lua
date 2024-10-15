@@ -60,10 +60,6 @@ vim.api.nvim_create_autocmd({ "TermOpen" }, { command = "startinsert" })
 
 -- Auto reload changed files from disk
 vim.o.autoread = true
-vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGained" }, {
-  command = "if mode() != 'command' | silent! checktime | endif",
-  pattern = { "*" },
-})
 
 -- Disable mouse
 vim.opt.mouse = nil
@@ -110,7 +106,6 @@ require("lazy").setup(
     { "neovim/nvim-lspconfig", tag = "v1.0.0" },
     "williamboman/mason-lspconfig.nvim",
     "nvimtools/none-ls.nvim",
-    "antosha417/nvim-lsp-file-operations",
     "ray-x/lsp_signature.nvim",
     -- Core functionalities
     "hrsh7th/nvim-cmp",
@@ -118,24 +113,22 @@ require("lazy").setup(
     "hrsh7th/cmp-buffer",
     "hrsh7th/cmp-cmdline",
     "hrsh7th/cmp-path",
-    "l3mon4d3/luasnip",
     "nmac427/guess-indent.nvim",
-    "theprimeagen/refactoring.nvim",
     -- Editor functionalities
     "kylechui/nvim-surround",
     "rrethy/vim-illuminate",
     -- UI, visuals and tooling
     "hiphish/rainbow-delimiters.nvim",
     "stevearc/dressing.nvim",
-    { "nvim-neo-tree/neo-tree.nvim", dependencies = { "nvim-lua/plenary.nvim", "muniftanjim/nui.nvim" } },
+    "nvim-lua/plenary.nvim",
+    { "nvim-neo-tree/neo-tree.nvim", dependencies = { "muniftanjim/nui.nvim" } },
+    "nvim-telescope/telescope.nvim",
     { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-    { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
     "lukas-reineke/indent-blankline.nvim",
-    { "catppuccin/nvim", priority = 1000 },
+    "catppuccin/nvim",
     -- External tools integration
     "lewis6991/gitsigns.nvim",
     "folke/lazydev.nvim",
-    { "michaelb/sniprun", branch="master", build="sh install.sh" },
   },
   {
     install = { colorscheme = { 'catppuccin' } }
@@ -266,13 +259,6 @@ local on_attach = function(client, bufnr)
     vim.diagnostic.enable(not vim.diagnostic.is_enabled())
   end, bufopts("Toggle diagnostics", bufnr)
   )
-
-  -- Refactoring tools
-  local refactoring = require("refactoring")
-  refactoring.setup({ show_success_message = true })
-  vim.keymap.set({ "n", "x" }, "<leader>lR", function()
-    refactoring.select_refactor({ show_success_message = true })
-  end, bufopts("Refactor", bufnr))
 end
 
 require("lazydev").setup()
@@ -299,12 +285,8 @@ null_ls.setup({
   sources = {
     null_ls.builtins.formatting.isort,
     null_ls.builtins.formatting.black,
-    null_ls.builtins.code_actions.refactoring,
   },
 })
-
--- LSP-related operations on files in NeoTree
-require("lsp-file-operations").setup()
 
 -- LSP based signatures when passing arguments
 require("lsp_signature").setup({
@@ -325,21 +307,14 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
 
 -- Code completion
 local cmp = require("cmp")
-local luasnip = require("luasnip")
 -- LSP
 cmp.setup({
   window = {
     documentation = cmp.config.window.bordered(),
   },
-  snippet = {
-    expand = function(args)
-      luasnip.lsp_expand(args.body)
-    end,
-  },
   sources = cmp.config.sources({
     { name = "nvim_lsp" },
     { name = "path" },
-    { name = "luasnip" },
   }, {
     { name = "buffer" },
   }),
@@ -349,25 +324,8 @@ cmp.setup({
     ["<C-b>"] = cmp.mapping.scroll_docs(-1),
     ["<CR>"] = cmp.mapping.confirm({ select = true }),
     ["<C-e>"] = cmp.mapping.abort(),
-    -- Tab and S-Tab for navigating completion and snippet placeholders
-    ["<Tab>"] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_locally_jumpable() then
-        luasnip.expand_or_jump()
-      else
-        fallback()
-      end
-    end, { "i", "s" }),
-    ["<S-Tab>"] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.locally_jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, { "i", "s" }),
+    ["<Tab>"] = cmp.mapping.select_next_item(),
+    ["<S-Tab>"] = cmp.mapping.select_prev_item(),
   }),
 })
 -- From buffer
@@ -389,17 +347,6 @@ cmp.setup.cmdline(":", {
     { name = "cmdline", option = { ignore_cmds = { "!", "vimgrep" } } }
   }),
 })
-
--- Snippets
-local ls = require("luasnip")
-vim.keymap.set({ "i" }, "<C-K>", function() ls.expand() end, { silent = true })
-vim.keymap.set({ "i", "s" }, "<C-L>", function() ls.jump(1) end, { silent = true })
-vim.keymap.set({ "i", "s" }, "<C-J>", function() ls.jump(-1) end, { silent = true })
-vim.keymap.set({ "i", "s" }, "<C-E>", function()
-  if ls.choice_active() then
-    ls.change_choice(1)
-  end
-end, { silent = true })
 
 -- Automatic indentation (if indent is detected will override the defaults)
 require("guess-indent").setup({})
@@ -531,18 +478,6 @@ require("gitsigns").setup({
     vim.keymap.set({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", defopts("git hunk"))
   end,
 })
-
--- Code snippets execution
-local sniprun = require('sniprun')
-sniprun.setup({
-  selected_interpreters = { 'Python3_fifo' },
-  repl_enable = { 'Python3_fifo' },
-  display = { "Classic" },
-})
-vim.keymap.set("n", "<leader>X", ":%SnipRun<CR>", defopts("Execute buffer"))
-vim.keymap.set("n", "<leader>x", "<Plug>SnipRunOperator", defopts("Execute"))
-vim.keymap.set("n", "<leader>xx", ":SnipRun<CR>", defopts("Execute current line"))
-vim.keymap.set("v", "<leader>x", ":SnipRun<CR>", defopts("Execute selection"))
 
 -- Save last nvim server id when nvim loses focus (FocusLost) (useful for determining last used neovim instance)
 vim.api.nvim_create_autocmd('FocusLost', {
