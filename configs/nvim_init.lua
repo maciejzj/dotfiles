@@ -18,6 +18,8 @@ vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldnestmax = 1
 -- Open files with all folds open
 vim.opt.foldenable = false
+vim.opt.foldlevelstart = 1
+-- Fold visual style
 vim.opt.foldcolumn = "auto"
 vim.opt.foldtext = ""
 
