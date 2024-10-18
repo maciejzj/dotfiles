@@ -467,14 +467,9 @@ require("gitsigns").setup({
     vim.keymap.set("n", "<leader>hp", gs.preview_hunk, defopts("Preview hunk"))
     vim.keymap.set("n", "<leader>hb", gs.blame_line, defopts("Blame line"))
     vim.keymap.set("n", "<leader>tb", gs.toggle_current_line_blame, defopts("Toggle line blame"))
-    vim.keymap.set("n", "<leader>gd", gs.diffthis, defopts("Diff buffer"))
-    vim.keymap.set("n", "<leader>gD", function() gs.diffthis("~") end, defopts("Diff buffer (with staged)"))
+    -- Currently diff against index works very strange, monitor the plugin
+    vim.keymap.set("n", "<leader>gd", function() gs.diffthis("HEAD") end, defopts("Diff buffer (with staged)"))
     vim.keymap.set("n", "<leader>tD", gs.toggle_deleted, defopts("Toggle show deleted"))
-    -- Actions on visual selections
-    vim.keymap.set("v", "<leader>s", function() gs.stage_hunk { vim.fn.line("."), vim.fn.line("v") } end,
-      defopts("Stage selection"))
-    vim.keymap.set("v", "<leader>r", function() gs.reset_hunk { vim.fn.line("."), vim.fn.line("v") } end,
-      defopts("Restore selection"))
     -- Text object
     vim.keymap.set({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", defopts("git hunk"))
   end,
@@ -567,5 +562,5 @@ end
 
 local mocha = require("catppuccin.palettes.mocha")
 extend_hl("Pmenu", { bg = mocha.mantle })
-extend_hl("Folded", { fg = mocha.surface1 })
+extend_hl("Folded", { fg = mocha.overlay0 })
 extend_hl("WinSeparator", { fg = mocha.base })
