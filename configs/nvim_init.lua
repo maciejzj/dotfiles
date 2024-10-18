@@ -30,9 +30,12 @@ vim.opt.listchars:append("space:⋅")
 vim.opt.listchars:append("eol:↴")
 
 -- User interface
--- Show cursorline
+-- Show cursorline in normal buffers, hide it in diff buffers (it produces
+-- unpleant uderline effect in diffs)
 vim.opt.cursorline = true
-vim.opt.culopt = "both"
+vim.api.nvim_create_autocmd({ "BufEnter", "OptionSet" },
+  { callback = function() vim.wo.culopt = vim.wo.diff and "number" or "both" end }
+)
 -- Show statusline only if splits are open
 vim.opt.laststatus = 1
 -- Show relative line numbers
