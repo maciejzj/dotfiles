@@ -15,10 +15,11 @@ vim.opt.formatoptions:remove("t")
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 -- Limit folding level
-vim.opt.foldnestmax = 3
+vim.opt.foldnestmax = 1
 -- Open files with all folds open
 vim.opt.foldenable = false
-vim.opt.foldlevelstart = 100
+vim.opt.foldcolumn = "auto"
+vim.opt.foldtext = ""
 
 -- Searching
 -- Be case insensitive for small caps, sensitive otherwise
