@@ -568,3 +568,5 @@ end
 
 local mocha = require("catppuccin.palettes.mocha")
 extend_hl("Pmenu", { bg = mocha.mantle })
+extend_hl("Folded", { fg = mocha.surface1 })
+extend_hl("WinSeparator", { fg = mocha.base })
