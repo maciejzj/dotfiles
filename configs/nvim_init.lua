@@ -216,33 +216,28 @@ require("various-textobjs").setup({ useDefaultKeymaps = true, disabledKeymaps = 
 
 ---@format disable-next
 local servers = {
-  pyright = {
-    -- Exclude can be removed after fix for https://github.com/microsoft/pyright/issues/8102 is
-    -- included in the next releas of pyright
-    python = { exclude = {"venv"}, analysis = { typeCheckingMode = "off", exclude = {"venv"} } }
-  },
+  pyright = { python = { analysis = { typeCheckingMode = "off" } } },
   clangd = {}, lua_ls = {}, cmake = {}, bashls = {}, dockerls = {}, ts_ls = {}, html = {},
   cssls = {}, jsonls = {}, yamlls = {}, marksman = {}, texlab = {},
 }
+
+require("lazydev").setup()
+require("mason").setup()
+require("mason-lspconfig").setup({ ensure_installed = vim.tbl_keys(servers) })
 
 local on_attach = function(client, bufnr)
   -- Disable highlighting, we use Treesitter for that
   client.server_capabilities.semanticTokensProvider = nil
 
   -- Lsp bindings
-  vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts("Definition", bufnr))
-  vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, bufopts("Definition", bufnr))
-  vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, bufopts("Type definition", bufnr))
   vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts("Declaration", bufnr))
-  vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts("Hover", bufnr))
-  vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts("Implementation", bufnr))
-  vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, bufopts("Show signature", bufnr))
-  vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, bufopts("Rename symbol", bufnr))
-  vim.keymap.set({ "n", "v" }, "<leader>a", vim.lsp.buf.code_action, bufopts("Code action", bufnr))
+  vim.keymap.set("n", "gI", vim.lsp.buf.implementation, bufopts("Implementation", bufnr))
   vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts("References", bufnr))
   vim.keymap.set("n", "<leader>li", vim.lsp.buf.incoming_calls, bufopts("Incoming calls", bufnr))
   vim.keymap.set("n", "<leader>lo", vim.lsp.buf.outgoing_calls, bufopts("Outgoing calls", bufnr))
   vim.keymap.set("n", "<leader>lh", vim.lsp.buf.typehierarchy, bufopts("Type hierarchy", bufnr))
+  vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, bufopts("Rename symbol", bufnr))
+  vim.keymap.set({ "n", "v" }, "<leader>a", vim.lsp.buf.code_action, bufopts("Code action", bufnr))
 
   -- Diagnostics bindings
   vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, bufopts("Show diagnostics", bufnr))
@@ -267,10 +262,6 @@ local on_attach = function(client, bufnr)
   )
 end
 
-require("lazydev").setup()
-require("mason").setup()
-require("mason-lspconfig").setup({ ensure_installed = vim.tbl_keys(servers) })
-
 -- Register servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
@@ -291,6 +282,7 @@ null_ls.setup({
   sources = {
     null_ls.builtins.formatting.isort,
     null_ls.builtins.formatting.black,
+    null_ls.builtins.diagnostics.mypy,
   },
 })
 
