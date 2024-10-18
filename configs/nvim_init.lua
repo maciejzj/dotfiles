@@ -460,7 +460,7 @@ require("gitsigns").setup({
     wk.add({ "<leader>h", group = "git hunk" })
 
     -- Actions
-    vim.keymap.set("n", "<leader>hs", gs.stage_hunk, defopts("Toogle hunk stage"))
+    vim.keymap.set("n", "<leader>hs", gs.stage_hunk, defopts("Toggle hunk stage"))
     vim.keymap.set("n", "<leader>hr", gs.reset_hunk, defopts("Restore hunk"))
     vim.keymap.set("n", "<leader>hS", gs.stage_buffer, defopts("Stage buffer"))
     vim.keymap.set("n", "<leader>hR", gs.reset_buffer, defopts("Restore buffer"))
@@ -516,6 +516,8 @@ vim.keymap.set("n", "]l", ":lnext<CR>", defopts("Next locationlist entry"))
 vim.keymap.set("n", "[l", ":lprev<CR>", defopts("Previous locationlist entry"))
 vim.keymap.set("n", "<leader>ts", ":set spell!<CR>", defopts("Toggle spellchecking"))
 vim.keymap.set("n", "<leader>s", "/\\s\\+$<CR>", defopts("Search trailing whitespaces"))
+vim.keymap.set("n", "<leader>ts", ":set spell!<CR>", defopts("Toggle spellchecking"))
+vim.keymap.set("n", "<leader>tf", ":set foldenable!<CR>", defopts("Toggle folding"))
 vim.keymap.set("n", "<leader>tw", ":set list!<CR>", defopts("Toggle visible whitespace characters"))
 vim.keymap.set("n", "<leader>tW",
   function()
@@ -527,7 +529,7 @@ vim.keymap.set("n", "<leader>tW",
       vim.opt.diffopt:append("iwhiteall")
     end
   end,
-  defopts("Toogle whitespaces in diffview")
+  defopts("Toggle whitespaces in diffview")
 )
 vim.keymap.set("n", "<leader>gl", ":diffget LOCAL<CR>", defopts("Take local changes in conflict"))
 vim.keymap.set("n", "<leader>gr", ":diffget REMOTE<CR>", defopts("Take remote changes in conflict"))
