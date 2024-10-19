@@ -21,7 +21,7 @@ vim.opt.foldenable = false
 vim.opt.foldlevelstart = 1
 -- Fold visual style
 vim.opt.foldcolumn = "auto"
--- Show fold summary for diff buffer folds, show highlighted code for normal buffers
+-- Show fold summary for diff buffers, show highlighted code for normal buffers
 vim.api.nvim_create_autocmd({ "BufEnter", "OptionSet" },
   { callback = function() vim.wo.foldtext = vim.wo.diff and "foldtext()" or "" end }
 )
