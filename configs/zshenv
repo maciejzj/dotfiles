@@ -23,8 +23,12 @@ export AWS_CONFIG_FILE="$XDG_CONFIG_HOME"/aws/config
 
 export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
 
+export KUBECONFIG="$XDG_CONFIG_HOME/kube"
+export KUBECACHEDIR="$XDG_CACHE_HOME/kube"
+
 export PYENV_ROOT="$XDG_DATA_HOME/pyenv"
 
+export PYTHON_HISTORY="$XDG_STATE_HOME/python/history"
 export IPYTHONDIR="$XDG_CONFIG_HOME/ipython"
 export JUPYTER_CONFIG_DIR="$XDG_CONFIG_HOME/jupyter"
 
@@ -78,6 +82,9 @@ export LESSHISTFILE=/dev/null
 # Exclude underscore commands from correction suggestions
 CORRECT_IGNORE="[_|.]*"
 
+# Default python vritualenv name as personal convention
+PYTHON_VIRTUAL_ENV_DEFAULT_NAME="venv"
+
 # Aliases
 
 # Aliases are here and not in the .zshrc, because only .zshenv
@@ -99,12 +106,16 @@ alias dh='dirs -v'
 alias python='python3'
 alias pip='pip3'
 alias ipdb='ipdb3'
+alias ipy='ipython'
 # Use nvim
 alias vim='nvim'
 alias vimdiff='nvim -d'
 alias view='nvim -R'
 # Edit history file
 alias eh="nvim \"${HISTFILE}\""
+# Easier management of muliptle tmux servers
+alias tmux-servers="ls -w1 /tmp/tmux-*"
+alias tmux-clear="rm -rf $XDG_DATA_HOME/tmux/resurrect/*"
 
 case ${OSTYPE} in
 darwin*)

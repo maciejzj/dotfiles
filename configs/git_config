@@ -2,7 +2,7 @@
 	name = Maciej Ziaja
 	email = maciejzjg@gmail.com
 [core]
-	excludesfile = /Users/maciej/.config/git/gitignore
+	excludesfile = ~/.config/git/gitignore
 [filter "lfs"]
 	required = true
 	clean = git-lfs clean -- %f

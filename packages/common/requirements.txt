@@ -1,5 +1,6 @@
 autopep8
 black
+catppuccin[pygments]
 dash
 dvc
 einops
@@ -10,12 +11,15 @@ ipdb
 ipython
 isort
 jupyterlab
+klepto
 matplotlib
 mypy
 nbdime
 neovim
+neovim-remote
 numpy
 pandas
+pip-tools
 pipreqs
 plotly
 pycodestyle
@@ -31,4 +35,3 @@ scikit-learn
 torch
 torchvision
 tqdm
-virtualenv

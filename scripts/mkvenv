@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#
+# mkvenv - bootstrap a Python vritual environement
+#
+# Usage: mkvenv
+#
+# Creates a Python virtual environment with some default pakages of my choice.
+
+set -euxo pipefail
+
+PYTHON_VIRTUAL_ENV_DEFAULT_NAME="${PYTHON_VIRTUAL_ENV_DEFAULT_NAME:-venv}"
+
+python -m venv "$PYTHON_VIRTUAL_ENV_DEFAULT_NAME"
+
+./"$PYTHON_VIRTUAL_ENV_DEFAULT_NAME"/bin/python -m pip install \
+	"catppuccin[pygments]" \
+	"ipdb" \
+	"ipython"

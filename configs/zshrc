@@ -43,11 +43,13 @@ autoload -Uz compinit
 compinit -d $XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION
 
 # Setup pyenv
-eval "$(pyenv init -)"
-eval "$(pyenv init - virtualenv)"
+eval "$(pyenv init - --no-rehash)"
+eval "$(pyenv init - --no-rehash virtualenv)"
 
-# If virtualenv is defined activate it (this is useful for inheriting virtualenv in tmux)
-[ -n "$VIRTUAL_ENV" ] && source "$VIRTUAL_ENV/bin/activate"
+# Activate venv in new tmux windows and panes
+if [ -n "$TMUX" ] && [ -n "$PYTHON_VIRTUAL_ENV_DEFAULT_NAME" ] && [ -d "$PYTHON_VIRTUAL_ENV_DEFAULT_NAME" ]; then
+	source "$PYTHON_VIRTUAL_ENV_DEFAULT_NAME/bin/activate"
+fi
 
 # Plugins
 
@@ -97,3 +99,6 @@ esac
 # Disable underline in syntax highlighting
 ZSH_HIGHLIGHT_STYLES[path]=none
 ZSH_HIGHLIGHT_STYLES[path_prefix]=none
+
+# User functions
+function esource() { set -a && source $1 && set +a }

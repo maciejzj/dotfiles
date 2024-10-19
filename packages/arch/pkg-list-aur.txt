@@ -1,4 +1,5 @@
-tio
+csvq-bin
 pandoc-bin
 pyenv-virtualenv
 shellcheck-bin
+tio

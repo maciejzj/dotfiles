@@ -37,7 +37,8 @@ while read -r map; do
 done < mappings
 
 # Map all scripts inside scripts dir to local binaries dir
-SCRIPTS_PATH="$HOME/.local/bin"
+SCRIPTS_PATH="$HOME/.local/bin/"
+mkdir -p "$SCRIPTS_PATH"
 for script in ./scripts/*; do
 	echo "Linking $script to $SCRIPTS_PATH"
 	ln -f -s "$(realpath "$script")" "$SCRIPTS_PATH"
