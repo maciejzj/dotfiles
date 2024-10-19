@@ -468,7 +468,7 @@ require("gitsigns").setup({
     vim.keymap.set("n", "<leader>hb", gs.blame_line, defopts("Blame line"))
     vim.keymap.set("n", "<leader>tb", gs.toggle_current_line_blame, defopts("Toggle line blame"))
     -- Currently diff against index works very strange, monitor the plugin
-    vim.keymap.set("n", "<leader>gd", function() gs.diffthis("HEAD") end, defopts("Diff buffer (with staged)"))
+    vim.keymap.set("n", "<leader>gd", function() gs.diffthis("HEAD") end, defopts("Diff buffer"))
     vim.keymap.set("n", "<leader>tD", gs.toggle_deleted, defopts("Toggle show deleted"))
     -- Text object
     vim.keymap.set({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", defopts("git hunk"))
