@@ -52,6 +52,8 @@ vim.opt.splitbelow = true
 vim.opt.splitright = true
 -- Keep splits even when the window is resized
 vim.api.nvim_create_autocmd({ "VimResized" }, { command = "wincmd=" })
+-- Scrolling margin
+vim.opt.scrolloff = 3
 
 -- System behaviour
 vim.opt.updatetime = 100
@@ -63,9 +65,9 @@ else
   vim.opt.clipboard = "unnamedplus"
 end
 
--- Builtin terminal
+-- Don't use line numbers in the builint terminal and enter it in insert mode
 vim.api.nvim_create_autocmd({ "TermOpen" }, { command = "setlocal nonumber norelativenumber" })
-vim.api.nvim_create_autocmd({ "TermOpen" }, { command = "startinsert" })
+vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter" }, { command = "if &buftype == 'terminal' | :startinsert | endif" })
 
 -- Auto reload changed files from disk
 vim.o.autoread = true
@@ -418,14 +420,8 @@ end
 -- File explorer/file tree
 require("neo-tree").setup({
   popup_border_style = "rounded",
-  window = {
-    position = "float",
-  },
-  default_component_configs = {
-    icon = {
-      default = "",
-    },
-  },
+  window = { position = "float" },
+  default_component_configs = { icon = { default = "" } },
 })
 
 -- Indent guides
@@ -438,9 +434,7 @@ require("ibl").setup({
 
 -- Git signs gutter and hunk navigation
 require("gitsigns").setup({
-  preview_config = {
-    border = "rounded",
-  },
+  preview_config = { border = "rounded" },
   on_attach = function(client, bufnr)
     local gs = package.loaded.gitsigns
 
@@ -501,6 +495,7 @@ wk.add({
 -- General nvim functionalities keymaps
 
 vim.keymap.set("n", "<leader>E", ":Neotree<CR>", defopts("File explorer"))
+vim.keymap.set("n", "<leader>T", ":split<CR>:term<CR>", defopts("Terminal in horizontal split"))
 vim.keymap.set("n", "<leader>ce", ":edit ~/.config/nvim/init.lua<CR>", defopts("Edit config"))
 vim.keymap.set("n", "<leader>cr", ":source ~/.config/nvim/init.lua<CR>:GuessIndent<CR>", defopts("Reload config"))
 vim.keymap.set("n", "<leader>n", ":nohlsearch<CR>", defopts("Hide search highlight"))
@@ -528,7 +523,7 @@ vim.keymap.set("n", "<leader>tW",
 )
 vim.keymap.set("n", "<leader>gl", ":diffget LOCAL<CR>", defopts("Take local changes in conflict"))
 vim.keymap.set("n", "<leader>gr", ":diffget REMOTE<CR>", defopts("Take remote changes in conflict"))
-vim.keymap.set("t", "<esc>", "<C-\\><C-n>", defopts("Escape terminal inser mode with ESC"))
+vim.keymap.set("t", "<esc>", "<C-\\><C-n>", defopts("Escape terminal insert mode with ESC"))
 -- Readline-like insert mode bindings
 vim.keymap.set("i", "<C-f>", "<RIGHT>", defopts("Move cursor right"))
 vim.keymap.set("i", "<C-b>", "<LEFT>", defopts("Move cursor left"))
