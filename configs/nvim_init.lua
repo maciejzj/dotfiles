@@ -140,6 +140,8 @@ require("lazy").setup(
     -- External tools integration
     "lewis6991/gitsigns.nvim",
     "folke/lazydev.nvim",
+    --
+    "nvim-lualine/lualine.nvim",
   },
   {
     install = { colorscheme = { 'catppuccin' } }
@@ -533,7 +535,7 @@ vim.keymap.set("i", "<C-b>", "<LEFT>", defopts("Move cursor left"))
 vim.keymap.set("n", "<leader>pp", ":Lazy<CR>", defopts("Lazy plugin packages panel"))
 vim.keymap.set("n", "<leader>pm", ":Mason<CR>", defopts("Mason packages panel"))
 
-----------✦ 🎨 Colorscheme 🎨 ✦----------
+----------✦ 🎨 Colorscheme and UI 🎨 ✦----------
 
 -- Main Colorscheme
 require("catppuccin").setup({
@@ -541,7 +543,22 @@ require("catppuccin").setup({
   dim_inactive = { enabled = true },
 })
 vim.cmd.colorscheme("catppuccin")
+local mocha = require("catppuccin.palettes.mocha")
 
+-- Colorscheme tweaks
+extend_hl("Pmenu", { bg = mocha.mantle })
+extend_hl("Folded", { fg = mocha.overlay0 })
+extend_hl("WinSeparator", { fg = mocha.base })
+
+-- Statusline
+require('lualine').setup({
+  options = {
+    component_separators = { left = '│', right = '│' },
+    section_separators = { left = '', right = '' },
+  }
+})
+
+-- Nicer characters for UI elements
 vim.opt.fillchars = { diff = " ", eob = " ", foldopen = "▾", foldsep = "│", foldclose = "▸" }
 
 ----------✦ ⚠️  Fixes and workarounds ⚠️  ✦----------
@@ -554,8 +571,3 @@ for _, keymap in pairs({
     "n", keymap, keymap .. ":lua require('ibl').refresh()<CR>", { noremap = true, silent = true }
   )
 end
-
-local mocha = require("catppuccin.palettes.mocha")
-extend_hl("Pmenu", { bg = mocha.mantle })
-extend_hl("Folded", { fg = mocha.overlay0 })
-extend_hl("WinSeparator", { fg = mocha.base })
