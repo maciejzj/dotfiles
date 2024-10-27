@@ -113,8 +113,7 @@ require("lazy").setup(
     "nvim-treesitter/nvim-treesitter-textobjects",
     "chrisgrieser/nvim-various-textobjs",
     -- LSP
-    -- Pinned until https://github.com/folke/lazydev.nvim/issues/70 is resolved
-    { "neovim/nvim-lspconfig", tag = "v1.0.0" },
+    "neovim/nvim-lspconfig",
     "williamboman/mason-lspconfig.nvim",
     "nvimtools/none-ls.nvim",
     "ray-x/lsp_signature.nvim",
