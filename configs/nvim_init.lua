@@ -556,7 +556,7 @@ require('lualine').setup({
 })
 
 -- Nicer characters for UI elements
-vim.opt.fillchars = { diff = " ", eob = " ", foldopen = "▾", foldsep = "│", foldclose = "▸" }
+vim.opt.fillchars = { diff = " ", eob = " ", foldopen = "▾", foldsep = "│", foldclose = "▸", vert = " " }
 
 ----------✦ ⚠️  Fixes and workarounds ⚠️  ✦----------
 
