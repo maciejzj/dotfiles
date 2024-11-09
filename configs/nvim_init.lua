@@ -131,6 +131,7 @@ require("lazy").setup(
     "hiphish/rainbow-delimiters.nvim",
     "stevearc/dressing.nvim",
     "nvim-lua/plenary.nvim",
+    "nvim-lualine/lualine.nvim",
     { "nvim-neo-tree/neo-tree.nvim", dependencies = { "muniftanjim/nui.nvim" } },
     "nvim-telescope/telescope.nvim",
     { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
@@ -139,8 +140,6 @@ require("lazy").setup(
     -- External tools integration
     "lewis6991/gitsigns.nvim",
     "folke/lazydev.nvim",
-    --
-    "nvim-lualine/lualine.nvim",
   },
   {
     install = { colorscheme = { 'catppuccin' } }
