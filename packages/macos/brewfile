@@ -1,6 +1,7 @@
 brew "aria2"
 brew "awscli"
 brew "bat"
+brew "btop"
 brew "colima"
 brew "csvq"
 brew "docker-completion"

@@ -120,6 +120,7 @@ fi
 # XDG-compliant zsh history file has to be created manually
 mkdir -p "${XDG_STATE_HOME}/zsh"
 
+# Neovim setup
 echo -e "${BLUE}==> Setting up neovim plugins${NOCOLOR}"
 LAZYPATH="${XDG_DATA_HOME}/nvim/lazy/lazy.nvim"
 if ! [ -e "${LAZYPATH}" ]; then
@@ -145,6 +146,13 @@ if ! [ -d "${TMUX_CONF_DIR}/plugins/tpm" ]; then
 else
 	echo -e "${GREEN}Tmux plugin manager already installed, skipping${NOCOLOR}"
 fi
+
+# Install extra themes
+curl -OJL 'https://github.com/catppuccin/btop/releases/download/1.0.0/themes.tar.gz'
+tar -xzf themes.tar.gz themes/catppuccin_mocha.theme
+mkdir -p "${XDG_CONFIG_HOME}/btop/themes/"
+mv themes/catppuccin_mocha.theme "${XDG_CONFIG_HOME}/btop/themes/"
+rm -r themes themes.tar.gz
 
 echo -e "${BLUE}==> You use pyenv to install Python and obtain packages from packages/common/requirements.txt with pip${NOCOLOR}"
 

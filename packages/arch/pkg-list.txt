@@ -1,6 +1,7 @@
 aria2
 aws-cli
 bat
+btop
 entr
 erdtree
 fd
