@@ -1,0 +1,21 @@
+# Text settings
+font-family = Liga SFMono Nerd Font
+font-feature = -calt
+adjust-cell-width = -5%
+
+# Makes ghostty to fallback to the default block cursor
+shell-integration-features = no-cursor
+
+# UI settings
+theme = catppuccin-mocha
+macos-titlebar-style = tabs
+background-opacity = 0.975
+background-blur-radius = 50
+
+window-padding-x = 3
+window-padding-y = 3
+window-height = 26
+window-width = 86
+
+# Keyboard settings
+macos-option-as-alt = true

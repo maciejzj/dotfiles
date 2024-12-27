@@ -51,5 +51,6 @@ cask "iina"
 cask "mactex-no-gui"
 cask "parallels"
 cask "screens"
+cask "ghostty"
 
 cask "shaunsingh/sfmono-nerd-font-ligaturized/font-sf-mono-nerd-font-ligaturized"
