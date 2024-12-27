@@ -17,5 +17,8 @@ window-padding-y = 3
 window-height = 26
 window-width = 86
 
+# System behaviour
+window-inherit-working-directory = false
+
 # Keyboard settings
 macos-option-as-alt = true
