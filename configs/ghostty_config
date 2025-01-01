@@ -8,14 +8,13 @@ shell-integration-features = no-cursor
 
 # UI settings
 theme = catppuccin-mocha
-macos-titlebar-style = tabs
-background-opacity = 0.975
+background-opacity = 0.96
 background-blur-radius = 50
 
-window-padding-x = 3
+window-padding-x = 5
 window-padding-y = 3
-window-height = 26
 window-width = 86
+window-height = 26
 
 # System behaviour
 window-inherit-working-directory = false
