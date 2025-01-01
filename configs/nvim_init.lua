@@ -426,7 +426,7 @@ require("neo-tree").setup({
 -- Indent guides
 require("ibl").setup({
   indent = { char = "│" },
-  scope = { enabled = false },
+  scope = { enabled = true, show_start = false, show_end = false, highlight = "Whitespace" },
 })
 
 ----------✦ ⚡️ External tools integration ⚡️ ✦----------
