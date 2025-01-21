@@ -215,7 +215,8 @@ require("nvim-treesitter.configs").setup({
 })
 
 -- Extra text objects
-require("various-textobjs").setup({ useDefaultKeymaps = true, disabledKeymaps = { "gw", "gW", "r" } })
+---@diagnostic disable-next-line: missing-fields
+require("various-textobjs").setup({ keymaps = { useDefaults = true, disabledDefaults = { "gw", "gW", "r" } } })
 
 ----------✦ 🛠️ LSP 🛠️ ✦----------
 
@@ -228,7 +229,7 @@ local servers = {
 
 require("lazydev").setup()
 require("mason").setup()
-require("mason-lspconfig").setup({ ensure_installed = vim.tbl_keys(servers) })
+require("mason-lspconfig").setup({ ensure_installed = vim.tbl_keys(servers), automatic_installation = false })
 
 local on_attach = function(client, bufnr)
   -- Disable highlighting, we use Treesitter for that
