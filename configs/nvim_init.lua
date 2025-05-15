@@ -415,6 +415,8 @@ require("gitsigns").setup({
     vim.keymap.set("n", "<leader>tb", gs.toggle_current_line_blame, defopts("Toggle line blame"))
     vim.keymap.set("n", "<leader>gd", function() gs.diffthis("HEAD") end, defopts("Diff buffer"))
     vim.keymap.set("n", "<leader>tD", gs.toggle_deleted, defopts("Toggle show deleted"))
+    vim.keymap.set("n", "<leader>gl", function() gs.setloclist() end, defopts("List this buffer hunks"))
+    vim.keymap.set("n", "<leader>gL", function() gs.setqflist("all") end, defopts("List all hunks"))
     -- Text object
     vim.keymap.set({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", defopts("git hunk"))
   end,
@@ -439,9 +441,10 @@ require("copilot").setup({
     },
   }
 })
--- Accept copilot suggestion with <C-f> if at the end of line, otherwise move cursor
+-- Accept copilot suggestion with <C-f> if visible, otherwise move cursor right
+local copilot_suggestion = require("copilot.suggestion")
 vim.keymap.set('i', '<C-f>', function()
-  if vim.fn.col('.') == vim.fn.col('$') then
+  if copilot_suggestion.is_visible() then
     return require('copilot.suggestion').accept()
   else
     vim.api.nvim_input("<Right>")
@@ -498,8 +501,8 @@ vim.keymap.set("n", "<leader>tW",
   end,
   defopts("Toggle whitespaces in diffview")
 )
-vim.keymap.set("n", "<leader>gl", ":diffget LOCAL<CR>", defopts("Take local changes in conflict"))
-vim.keymap.set("n", "<leader>gr", ":diffget REMOTE<CR>", defopts("Take remote changes in conflict"))
+vim.keymap.set("n", "<leader>gml", ":diffget LOCAL<CR>", defopts("Take local changes in conflict"))
+vim.keymap.set("n", "<leader>gmr", ":diffget REMOTE<CR>", defopts("Take remote changes in conflict"))
 vim.keymap.set("t", "<esc>", "<C-\\><C-n>", defopts("Escape terminal insert mode with ESC"))
 
 -- Readline-like insert mode bindings
@@ -596,4 +599,3 @@ local hover = vim.lsp.buf.hover
 vim.lsp.buf.hover = function()
     return hover({ border = "rounded" })
 end
-
