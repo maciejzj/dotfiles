@@ -65,7 +65,7 @@ else
   vim.opt.clipboard = "unnamedplus"
 end
 
--- Don't use line numbers in the builint terminal and enter it in insert mode
+-- Don't use line numbers in the builtin terminal and enter it in insert mode
 vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter" }, { command = "if &buftype == 'terminal' | :startinsert | endif" })
 
 -- Auto reload changed files from disk
@@ -413,7 +413,6 @@ require("gitsigns").setup({
     vim.keymap.set("n", "<leader>hp", gs.preview_hunk, defopts("Preview hunk"))
     vim.keymap.set("n", "<leader>hb", gs.blame_line, defopts("Blame line"))
     vim.keymap.set("n", "<leader>tb", gs.toggle_current_line_blame, defopts("Toggle line blame"))
-    -- Currently diff against index works very strange, monitor the plugin
     vim.keymap.set("n", "<leader>gd", function() gs.diffthis("HEAD") end, defopts("Diff buffer"))
     vim.keymap.set("n", "<leader>tD", gs.toggle_deleted, defopts("Toggle show deleted"))
     -- Text object
