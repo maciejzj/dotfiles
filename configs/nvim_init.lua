@@ -66,7 +66,6 @@ else
 end
 
 -- Don't use line numbers in the builint terminal and enter it in insert mode
-vim.api.nvim_create_autocmd({ "TermOpen" }, { command = "setlocal nonumber norelativenumber" })
 vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter" }, { command = "if &buftype == 'terminal' | :startinsert | endif" })
 
 -- Auto reload changed files from disk
@@ -85,10 +84,6 @@ local function defopts(desc)
   return { noremap = true, silent = true, desc = desc }
 end
 
-local function bufopts(desc, buffer)
-  return { noremap = true, silent = true, desc = desc, buffer = buffer }
-end
-
 -- Extend existing highlight
 local function extend_hl(name, new_opts)
   vim.api.nvim_set_hl(0, name, vim.tbl_extend('force', vim.api.nvim_get_hl(0, { name = name }), new_opts))
@@ -105,7 +100,7 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup(
   {
     -- Language support package management
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     -- Help
     "folke/which-key.nvim",
     -- Treesitter
@@ -114,7 +109,7 @@ require("lazy").setup(
     "chrisgrieser/nvim-various-textobjs",
     -- LSP
     "neovim/nvim-lspconfig",
-    "williamboman/mason-lspconfig.nvim",
+    "mason-org/mason-lspconfig.nvim",
     "nvimtools/none-ls.nvim",
     "ray-x/lsp_signature.nvim",
     -- Core functionalities
@@ -180,19 +175,19 @@ require("nvim-treesitter.configs").setup({
       enable = true,
       set_jumps = true,
       goto_next_start = {
-        ["]m"] = "@function.outer",
+        ["]m"] = { query = "@function.outer", desc = "Next function start" },
         ["]]"] = { query = "@class.outer", desc = "Next class start" },
       },
       goto_next_end = {
-        ["]M"] = "@function.outer",
+        ["]M"] = { query = "@function.outer", desc = "Next function end" },
         ["]["] = { query = "@class.outer", desc = "Next class end" },
       },
       goto_previous_start = {
-        ["[m"] = "@function.outer",
+        ["[m"] = { query = "@function.outer", desc = "Previous function start" },
         ["[["] = { query = "@class.outer", desc = "Previous class start" },
       },
       goto_previous_end = {
-        ["[M"] = "@function.outer",
+        ["[M"] = { query = "@function.outer", desc = "Previous function end" },
         ["[]"] = { query = "@class.outer", desc = "Previous class end" },
       },
     },
@@ -227,60 +222,19 @@ local servers = {
   clangd = {}, lua_ls = {}, cmake = {}, bashls = {}, dockerls = {}, ts_ls = {}, html = {},
   cssls = {}, jsonls = {}, yamlls = {}, marksman = {}, texlab = {},
 }
+-- Disable LSP semantic tokens highlighting - we use treesitter for that
+vim.lsp.config('*', {
+  capabilities = { semanticTokensProvider = nil },
+})
+-- Apply setting for each LSP server
+for server, opts in pairs(servers) do
+  vim.lsp.config(server, { settings = opts })
+end
 
 require("lazydev").setup()
 require("mason").setup()
-require("mason-lspconfig").setup({ ensure_installed = vim.tbl_keys(servers), automatic_installation = false })
-
-local on_attach = function(client, bufnr)
-  -- Disable highlighting, we use Treesitter for that
-  client.server_capabilities.semanticTokensProvider = nil
-
-  -- Lsp bindings
-  vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts("Declaration", bufnr))
-  vim.keymap.set("n", "gI", vim.lsp.buf.implementation, bufopts("Implementation", bufnr))
-  vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts("References", bufnr))
-  vim.keymap.set("n", "<leader>li", vim.lsp.buf.incoming_calls, bufopts("Incoming calls", bufnr))
-  vim.keymap.set("n", "<leader>lo", vim.lsp.buf.outgoing_calls, bufopts("Outgoing calls", bufnr))
-  vim.keymap.set("n", "<leader>lh", vim.lsp.buf.typehierarchy, bufopts("Type hierarchy", bufnr))
-  vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, bufopts("Rename symbol", bufnr))
-  vim.keymap.set({ "n", "v" }, "<leader>a", vim.lsp.buf.code_action, bufopts("Code action", bufnr))
-
-  -- Diagnostics bindings
-  vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, bufopts("Show diagnostics", bufnr))
-  vim.keymap.set("n", "<leader>d", vim.diagnostic.setloclist, bufopts("Diagnostics list", bufnr))
-
-  -- Telescope-LSP bindings
-  local tb = require("telescope.builtin")
-  vim.keymap.set("n", "<leader>ls", tb.lsp_document_symbols, bufopts("Browse buffer symbols", bufnr))
-  vim.keymap.set("n", "<leader>lS", tb.lsp_dynamic_workspace_symbols, bufopts("Browse workspace symbols", bufnr))
-  vim.keymap.set("n", "<leader>lr", tb.lsp_references, bufopts("Browse symbol references", bufnr))
-  vim.keymap.set("n", "<leader>D", tb.diagnostics, bufopts("Browse workspace diagnostics", bufnr))
-
-  -- Formatting
-  vim.keymap.set("n", "<leader>F", function()
-    vim.lsp.buf.format({ async = true })
-  end, bufopts("Format with lsp", bufnr))
-
-  -- Show/hide Diagnostics
-  vim.keymap.set("n", "<leader>td", function()
-    vim.diagnostic.enable(not vim.diagnostic.is_enabled())
-  end, bufopts("Toggle diagnostics", bufnr)
-  )
-end
-
--- Register servers
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
-require("mason-lspconfig").setup_handlers({
-  function(server_name)
-    require("lspconfig")[server_name].setup {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-      filetypes = (servers[server_name] or {}).filetypes,
-    }
-  end,
+require("mason-lspconfig").setup({
+  automatic_enable = true, ensure_installed = vim.tbl_keys(servers), automatic_installation = false
 })
 
 -- None-ls extra LSP servers
@@ -303,9 +257,6 @@ require("lsp_signature").setup({
 vim.diagnostic.config({
   float = { border = "rounded" },
 })
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-  vim.lsp.handlers.hover, { style = "minimal", border = "rounded" }
-)
 
 ----------✦ ⚙️  Core functionalities ⚙️ ✦----------
 
@@ -491,7 +442,7 @@ require("copilot").setup({
 })
 -- Accept copilot suggestion with <C-f> if at the end of line, otherwise move cursor
 vim.keymap.set('i', '<C-f>', function()
-  if vim.fn.col('.') == vim.fn.col('$') - 1 then
+  if vim.fn.col('.') == vim.fn.col('$') then
     return require('copilot.suggestion').accept()
   else
     vim.api.nvim_input("<Right>")
@@ -501,15 +452,26 @@ end, { expr = true, noremap = true })
 ----------✦ ☎️  Keymaps ☎️  ✦----------
 
 -- Mapping groups
+---@format disable-next
 wk.add({
-  { "<leader>c",  group = "config" },
-  { "<leader>f",  group = "find" },
-  { "<leader>g",  group = "git" },
+  -- Group common functionalities
+  { "<leader>c", group = "config" },
+  { "<leader>f", group = "find" },
+  { "<leader>g", group = "git" },
   { "<leader>gm", group = "merge conflict" },
-  { "<leader>l",  group = "language symbols" },
-  { "<leader>p",  group = "plugins" },
-  { "<leader>q",  group = "quickfix" },
-  { "<leader>t",  group = "toggle" },
+  { "<leader>l", group = "language symbols" },
+  { "<leader>p", group = "plugins" },
+  { "<leader>q", group = "quickfix" },
+  { "<leader>t", group = "toggle" },
+
+  -- Better descriptions for builtin keymaps
+  { "grr", group = "symbol reference" },
+  { "grc", group = "symbol calls" },
+  { "grn", desc = "Rename symbol" },
+  { "grr", desc = "Symbol references list" },
+  { "gri", desc = "Implementation" },
+  { "gra", desc = "Code action" },
+  { "gO", desc = "Document symbols list" },
 })
 
 -- General nvim functionalities keymaps
@@ -520,10 +482,6 @@ vim.keymap.set("n", "<leader>ce", ":edit ~/.config/nvim/init.lua<CR>", defopts("
 vim.keymap.set("n", "<leader>cr", ":source ~/.config/nvim/init.lua<CR>:GuessIndent<CR>", defopts("Reload config"))
 vim.keymap.set("n", "<leader>n", ":nohlsearch<CR>", defopts("Hide search highlight"))
 vim.keymap.set("n", "<leader>q", ":copen<CR>", defopts("Open quickfix list"))
-vim.keymap.set("n", "]q", ":cnext<CR>", defopts("Next quickfix entry"))
-vim.keymap.set("n", "[q", ":cprev<CR>", defopts("Previous quickfix entry"))
-vim.keymap.set("n", "]l", ":lnext<CR>", defopts("Next locationlist entry"))
-vim.keymap.set("n", "[l", ":lprev<CR>", defopts("Previous locationlist entry"))
 vim.keymap.set("n", "<leader>ts", ":set spell!<CR>", defopts("Toggle spellchecking"))
 vim.keymap.set("n", "<leader>s", "/\\s\\+$<CR>", defopts("Search trailing whitespaces"))
 vim.keymap.set("n", "<leader>ts", ":set spell!<CR>", defopts("Toggle spellchecking"))
@@ -544,9 +502,37 @@ vim.keymap.set("n", "<leader>tW",
 vim.keymap.set("n", "<leader>gl", ":diffget LOCAL<CR>", defopts("Take local changes in conflict"))
 vim.keymap.set("n", "<leader>gr", ":diffget REMOTE<CR>", defopts("Take remote changes in conflict"))
 vim.keymap.set("t", "<esc>", "<C-\\><C-n>", defopts("Escape terminal insert mode with ESC"))
+
 -- Readline-like insert mode bindings
-vim.keymap.set("i", "<C-f>", "<RIGHT>", defopts("Move cursor right"))
+
+-- Ctl-f is also shared with Copilot, fallback to this keymap is set up alongisde Copilot
+-- vim.keymap.set("i", "<C-f>", "<RIGHT>", defopts("Move cursor right"))
 vim.keymap.set("i", "<C-b>", "<LEFT>", defopts("Move cursor left"))
+
+-- Lsp bindings
+
+-- LSP symbol reference bindings
+vim.keymap.set("n", "gD", vim.lsp.buf.declaration, defopts("Declaration"))
+vim.keymap.set("n", "grci", vim.lsp.buf.incoming_calls, defopts("Incoming calls"))
+vim.keymap.set("n", "grco", vim.lsp.buf.outgoing_calls, defopts("Outgoing calls"))
+vim.keymap.set("n", "grh", vim.lsp.buf.typehierarchy, defopts("Type hierarchy"))
+
+-- Diagnostics bindings
+vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, defopts("Show diagnostics"))
+vim.keymap.set("n", "<leader>d", vim.diagnostic.setloclist, defopts("Diagnostics list"))
+
+-- Telescope-LSP bindings
+vim.keymap.set("n", "<leader>ls", tb.lsp_document_symbols, defopts("Browse buffer symbols"))
+vim.keymap.set("n", "<leader>lS", tb.lsp_dynamic_workspace_symbols, defopts("Browse workspace symbols"))
+vim.keymap.set("n", "<leader>lr", tb.lsp_references, defopts("Browse symbol references"))
+vim.keymap.set("n", "<leader>D", tb.diagnostics, defopts("Browse workspace diagnostics"))
+
+-- Formatting
+vim.keymap.set("n", "<leader>F", function() vim.lsp.buf.format({ async = true }) end, defopts("Format with lsp"))
+
+-- Show/hide Diagnostics
+vim.keymap.set("n", "<leader>td", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end,
+  defopts("Toggle diagnostics"))
 
 -- Plugin management keymaps
 
@@ -602,3 +588,13 @@ vim.lsp.util.stylize_markdown = function(bufnr, contents, opts)
   vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, contents)
   return contents
 end
+
+-- HACK: In nvim 0.11 border settings are remade and set globally using `vim.opt.winborder`,
+-- however, this is not suported by many plugins so far. Thus we don't use this option for now, and
+-- hack hover to use rounded borders
+local hover = vim.lsp.buf.hover
+---@diagnostic disable-next-line: duplicate-set-field
+vim.lsp.buf.hover = function()
+    return hover({ border = "rounded" })
+end
+
