@@ -140,6 +140,7 @@ require("lazy").setup(
     -- External tools integration
     "lewis6991/gitsigns.nvim",
     "folke/lazydev.nvim",
+    "zbirenbaum/copilot.lua",
   },
   {
     install = { colorscheme = { 'catppuccin' } }
@@ -478,6 +479,25 @@ vim.api.nvim_create_autocmd('FocusLost', {
   end,
 })
 
+-- Copilot
+require("copilot").setup({
+  suggestion = {
+    enabled = true,
+    auto_trigger = true,
+    keymap = {
+      accept_word = "<M-f>",
+    },
+  }
+})
+-- Accept copilot suggestion with <C-f> if at the end of line, otherwise move cursor
+vim.keymap.set('i', '<C-f>', function()
+  if vim.fn.col('.') == vim.fn.col('$') - 1 then
+    return require('copilot.suggestion').accept()
+  else
+    vim.api.nvim_input("<Right>")
+  end
+end, { expr = true, noremap = true })
+
 ----------✦ ☎️  Keymaps ☎️  ✦----------
 
 -- Mapping groups
@@ -547,6 +567,7 @@ local mocha = require("catppuccin.palettes.mocha")
 extend_hl("Pmenu", { bg = mocha.mantle })
 extend_hl("Folded", { fg = mocha.overlay0 })
 extend_hl("WinSeparator", { fg = mocha.base })
+extend_hl("CopilotSuggestion", { fg = mocha.overlay0 })
 
 -- Statusline
 require('lualine').setup({
