@@ -23,8 +23,10 @@ export AWS_CONFIG_FILE="$XDG_CONFIG_HOME"/aws/config
 
 export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
 
-export KUBECONFIG="$XDG_CONFIG_HOME/kube"
-export KUBECACHEDIR="$XDG_CACHE_HOME/kube"
+
+# Using env vars is not supported by colima yet, this has to be commented out
+# export KUBECONFIG="$XDG_CONFIG_HOME/kube"
+# export KUBECACHEDIR="$XDG_CACHE_HOME/kube"
 
 export PYENV_ROOT="$XDG_DATA_HOME/pyenv"
 
@@ -131,6 +133,9 @@ darwin*)
 	alias lla='ls -ahl'
 	# Colors for BSD programs
 	export CLICOLOR=1
+
+	# Docker socket path for colima-backed docker on MacOS
+	export DOCKER_HOST="unix:///Users/$USER/.config/colima/default/docker.sock"
 	;;
 linux-gnu)
 	# Add user's Python modules to PATH
