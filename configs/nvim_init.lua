@@ -442,14 +442,16 @@ require("copilot").setup({
   }
 })
 -- Accept copilot suggestion with <C-f> if visible, otherwise move cursor right
+local copilot_command = require("copilot.command")
 local copilot_suggestion = require("copilot.suggestion")
 vim.keymap.set('i', '<C-f>', function()
   if copilot_suggestion.is_visible() then
-    return require('copilot.suggestion').accept()
+    return copilot_suggestion.accept()
   else
     vim.api.nvim_input("<Right>")
   end
 end, { expr = true, noremap = true })
+vim.keymap.set("n", "<leader>tc", copilot_command.toggle, defopts("Toggle copilot"))
 
 ----------✦ ☎️  Keymaps ☎️  ✦----------
 
@@ -533,8 +535,7 @@ vim.keymap.set("n", "<leader>D", tb.diagnostics, defopts("Browse workspace diagn
 vim.keymap.set("n", "<leader>F", function() vim.lsp.buf.format({ async = true }) end, defopts("Format with lsp"))
 
 -- Show/hide Diagnostics
-vim.keymap.set("n", "<leader>td", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end,
-  defopts("Toggle diagnostics"))
+vim.keymap.set("n", "<leader>td", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end, defopts("Toggle diagnostics"))
 
 -- Plugin management keymaps
 
