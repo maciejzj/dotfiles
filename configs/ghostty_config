@@ -2,9 +2,9 @@
 font-family = Liga SFMono Nerd Font
 font-feature = -calt
 adjust-cell-width = -5%
-cursor-invert-fg-bg = true
 
 # Makes ghostty to fallback to the default block cursor
+cursor-style-blink = false
 shell-integration-features = no-cursor
 
 # UI settings
@@ -13,7 +13,8 @@ window-padding-y = 3
 window-width = 86
 window-height = 26
 
-theme = catppuccin-mocha
+# Theme
+theme = Catppuccin Mocha
 background-opacity = 0.95
 background-blur-radius = 50
 
