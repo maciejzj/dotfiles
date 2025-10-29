@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+#
+# install-remote - deploy the dotfiles to a remote host (mac/arch/devian)
+#
+# usage: deploy-ghostty [-p port] [user@]host
+
+set -eux
+
+if [ "$1" == "-p" ]; then
+	port_arg_ssh="-p $2"
+	port_arg_scp="-P $2"
+	shift 2
+else
+	port_arg_ssh=""
+	port_arg_scp=""
+fi
+
+host="$1"
+
+if echo "$host" | grep -q '@'; then
+	user="$(echo "$host" | cut -d'@' -f1)"
+	host="$(echo "$host" | cut -d'@' -f2)"
+else
+	user="$(whoami)"
+fi
+
+# port_arg shoult not be quoted because it contains "-p <port>"
+# shellcheck disable=SC2086
+scp $port_arg_scp -r install mappings configs packages scripts "${user}@${host}:~/dotfiles"
+# shellcheck disable=SC2086
+ssh $port_arg_ssh "${user}@${host}" -- 'cd ~/dotfiles && ./install'

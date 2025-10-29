@@ -1,5 +1,4 @@
 aria2
-awscli
 bat
 entr
 fd-find
@@ -20,18 +19,9 @@ yq
 zsh
 zsh-autosuggestions
 zsh-syntax-highlighting
-
-marksman
 shellcheck
-texlab
-bash-language-server
 
 cmake
-docker
-docker-compose
 git
 git-lfs
 llvm
-
-mdadm
-openssh

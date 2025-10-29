@@ -130,6 +130,7 @@ if ! [ -e "${LAZYPATH}" ]; then
 fi
 echo -e "${BLUE}Installing neovim plugins${NOCOLOR}"
 nvim --headless +Lazy install +q
+nvim --headless +TSUpdate +q
 
 # Install tmux plugin manager
 echo -e "${BLUE}==> Installing tmux-themepack${NOCOLOR}"
