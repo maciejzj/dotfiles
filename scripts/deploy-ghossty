@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+#
+# deploy-ghostty - deploy the ghostty terminfo entry to the specified host.
+#
+# usage: deploy-ghostty [-p port] [user@]host
+
+set -euo pipefail
+
+if [ "$1" == "-p" ]; then
+	port_arg="-p $2"
+	shift 2
+else
+	port_arg=""
+fi
+
+host="$1"
+
+if echo "$host" | grep -q '@'; then
+	user="$(echo "$host" | cut -d'@' -f1)"
+	host="$(echo "$host" | cut -d'@' -f2)"
+else
+	user="$(whoami)"
+fi
+
+# port_arg shoult not be quoted because it contains "-p <port>"
+# shellcheck disable=SC2086
+infocmp -x xterm-ghostty | ssh $port_arg "${user}@${host}" -- tic -x -

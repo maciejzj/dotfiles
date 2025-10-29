@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+#
+# waitfor - wait for a process to exit
+#
+# usage: waitfor <pid>
+#
+# Use if with other commands like:
+#     waitfor pid && some_command
+#     waitfor pid || some_other_command
+#     waitfor pid bash -c "some_command"
+#     nohup bash -c "waitfor pid && some_command" &
+#     etc.
+
+set -euo pipefail
+
+pid="$1"
+
+if hash caffeinate 2>/dev/null; then
+  caffeinate -w "$pid"
+elif hash systemd-inhibit 2>/dev/null; then
+  systemd-inhibit \
+    --who=waitfor \
+    --why="Awaiting PID $pid" \
+    tail --pid="$pid" -f /dev/null
+else
+  tail --pid="$pid" -f /dev/null
+fi
