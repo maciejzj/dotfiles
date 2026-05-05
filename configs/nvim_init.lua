@@ -56,8 +56,6 @@ vim.opt.scrolloff = 3
 vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function() vim.highlight.on_yank() end,
 })
--- Enable new UI for external commands output
-require("vim._core.ui2").enable()
 
 -- System behaviour
 -- Persistent undo
