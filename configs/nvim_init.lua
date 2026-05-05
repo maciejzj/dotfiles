@@ -86,56 +86,63 @@ end
 
 ----------✦ 📦 Plugins setup 📦 ✦----------
 
--- Setup Lazy plugin manager
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-vim.opt.rtp:prepend(lazypath)
+vim.api.nvim_create_autocmd('PackChanged', {
+  callback = function(event)
+    local name, kind = event.data.spec.name, event.data.kind
 
--- Plugins
----@format disable-next
-require("lazy").setup(
-  {
-    -- Language support package management
-    "mason-org/mason.nvim",
-    -- Help
-    "folke/which-key.nvim",
     -- Treesitter
-    {"nvim-treesitter/nvim-treesitter", branch = "main"},
-    {"nvim-treesitter/nvim-treesitter-textobjects", branch = "main"},
-    "chrisgrieser/nvim-various-textobjs",
-    -- LSP
-    "neovim/nvim-lspconfig",
-    "mason-org/mason-lspconfig.nvim",
-    "nvimtools/none-ls.nvim",
-    "ray-x/lsp_signature.nvim",
-    -- Core functionalities
-    "hrsh7th/nvim-cmp",
-    "hrsh7th/cmp-nvim-lsp",
-    "hrsh7th/cmp-buffer",
-    "hrsh7th/cmp-cmdline",
-    "hrsh7th/cmp-path",
-    "nmac427/guess-indent.nvim",
-    -- Editor functionalities
-    "kylechui/nvim-surround",
-    "rrethy/vim-illuminate",
-    -- UI, visuals and tooling
-    "hiphish/rainbow-delimiters.nvim",
-    "stevearc/dressing.nvim",
-    "nvim-lua/plenary.nvim",
-    "nvim-lualine/lualine.nvim",
-    { "nvim-neo-tree/neo-tree.nvim", dependencies = { "muniftanjim/nui.nvim" } },
-    "nvim-telescope/telescope.nvim",
-    { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-    "lukas-reineke/indent-blankline.nvim",
-    "catppuccin/nvim",
-    -- External tools integration
-    "lewis6991/gitsigns.nvim",
-    "folke/lazydev.nvim",
-    "zbirenbaum/copilot.lua",
-  },
-  {
-    install = { colorscheme = { 'catppuccin' } }
-  }
-)
+    if name == 'nvim-treesitter' and (kind == 'install' or kind == 'update') then
+      vim.cmd('TSUpdate')
+    end
+
+    -- Telescope
+    if name == 'telescope-fzf-native.nvim' and (kind == 'install' or kind == 'update') then
+      vim.system({ 'make' }, { cwd = event.data.path })
+    end
+  end
+})
+
+---@format disable-next
+vim.pack.add({
+  -- Language support package management
+  "https://github.com/mason-org/mason.nvim",
+  -- Help
+  "https://github.com/folke/which-key.nvim",
+  -- Treesitter
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects", version = "main" },
+  "https://github.com/chrisgrieser/nvim-various-textobjs",
+  -- LSP
+  "https://github.com/neovim/nvim-lspconfig",
+  "https://github.com/mason-org/mason-lspconfig.nvim",
+  "https://github.com/nvimtools/none-ls.nvim",
+  "https://github.com/ray-x/lsp_signature.nvim",
+  -- Core functionalities
+  "https://github.com/hrsh7th/nvim-cmp",
+  "https://github.com/hrsh7th/cmp-nvim-lsp",
+  "https://github.com/hrsh7th/cmp-buffer",
+  "https://github.com/hrsh7th/cmp-cmdline",
+  "https://github.com/hrsh7th/cmp-path",
+  "https://github.com/nmac427/guess-indent.nvim",
+  -- Editor functionalities
+  "https://github.com/kylechui/nvim-surround",
+  "https://github.com/rrethy/vim-illuminate",
+  -- UI, visuals and tooling
+  "https://github.com/hiphish/rainbow-delimiters.nvim",
+  "https://github.com/stevearc/dressing.nvim",
+  "https://github.com/nvim-lua/plenary.nvim",
+  "https://github.com/nvim-lualine/lualine.nvim",
+  "https://github.com/MunifTanjim/nui.nvim",
+  "https://github.com/nvim-neo-tree/neo-tree.nvim",
+  "https://github.com/nvim-telescope/telescope.nvim",
+  "https://github.com/nvim-telescope/telescope-fzf-native.nvim",
+  "https://github.com/lukas-reineke/indent-blankline.nvim",
+  "https://github.com/catppuccin/nvim",
+  -- External tools integration
+  "https://github.com/lewis6991/gitsigns.nvim",
+  "https://github.com/folke/lazydev.nvim",
+  "https://github.com/zbirenbaum/copilot.lua",
+})
 
 vim.cmd.packadd("cfilter")
 vim.cmd.packadd("nvim.undotree")
@@ -528,8 +535,7 @@ vim.keymap.set("n", "<leader>F", function() vim.lsp.buf.format({ async = true })
 vim.keymap.set("n", "<leader>td", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end, defopts("Toggle diagnostics"))
 
 -- Plugin management keymaps
-
-vim.keymap.set("n", "<leader>pp", ":Lazy<CR>", defopts("Lazy plugin packages panel"))
+vim.keymap.set("n", "<leader>pp", function() vim.pack.update() end, defopts("Update plugin packages"))
 vim.keymap.set("n", "<leader>pm", ":Mason<CR>", defopts("Mason packages panel"))
 
 ----------✦ 🎨 Colorscheme and UI 🎨 ✦----------
