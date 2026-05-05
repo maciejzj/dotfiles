@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 # Extensions
@@ -13,9 +14,15 @@ c.TerminalInteractiveShell.highlighting_style = "catppuccin-mocha"
 c.TerminalInteractiveShell.shortcuts = [
     {
         "command": "IPython:shortcuts.open_input_in_editor",
-        "new_keys": ["c-x", "c-e"]
+        "new_keys": ["c-x", "c-e"],
     },
 ]
+
+# Paths
+if os.getenv("XDG_CACHE_HOME") is not None:
+    cache_dir = Path(os.getenv("XDG_CACHE_HOME")) / "ipython"
+    cache_dir.mkdir(parents=True, exist_ok=True)
+c.TerminalInteractiveShell.debugger_history_file = f"{cache_dir}/ipython_debugger_history"
 
 # Always import
 import_script_path = Path(__file__).parent / "ipython_imports.py"

@@ -20,6 +20,7 @@ background-blur-radius = 50
 
 # System behaviour
 window-inherit-working-directory = false
+tab-inherit-working-directory = false
 
 # Keyboard settings
 macos-option-as-alt = left
