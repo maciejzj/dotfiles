@@ -185,17 +185,19 @@ vim.keymap.set("n", "<leader>lp", function()
   require("nvim-treesitter-textobjects.swap").swap_previous "@parameter.inner"
 end, { desc = "Swap with previous parameter" })
 
--- Incremental selection
-vim.keymap.set({ 'x', 'o' }, '<C-n>', function()
-    require 'vim.treesitter._select'.select_parent(vim.v.count1)
-end, { desc = "Select parent node with incremental selection" })
-
-vim.keymap.set({ 'x', 'o' }, '<C-p>', function()
-	require 'vim.treesitter._select'.select_child(vim.v.count1)
-end, { desc = "Select child node with incremental selection" })
-
 -- Various textobjects
-require("various-textobjs").setup({ keymaps = { useDefaults = true, disabledDefaults = { "gw", "gW", "r" } } })
+local textobj = require("various-textobjs")
+textobj.setup({useDefaultKeymaps = false })
+vim.keymap.set({ "o", "x" }, "gG", function()
+  textobj.entireBuffer()
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-o>", true, false, true), "n", false)
+end, { desc = "entire buffer" })
+vim.keymap.set({ "o", "x" }, "iS", function() textobj.subword("inner") end, defopts("inner subword"))
+vim.keymap.set({ "o", "x" }, "aS", function() textobj.subword("outer") end, defopts("outer subword"))
+vim.keymap.set({ "o", "x" }, "ii", function() textobj.indentation('inner', 'inner') end, defopts("inner-inner indentation"))
+vim.keymap.set({ "o", "x" }, "ai", function() textobj.indentation('outer', 'inner') end, defopts("outer-inner indentation"))
+vim.keymap.set({ "o", "x" }, "iI", function() textobj.indentation('inner', 'inner') end, defopts("inner-outer indentation"))
+vim.keymap.set({ "o", "x" }, "aI", function() textobj.indentation('outer', 'outer') end, defopts("outer-outer indentation"))
 
 ----------✦ 🛠️ LSP 🛠️ ✦----------
 
