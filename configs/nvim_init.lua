@@ -34,6 +34,7 @@ vim.opt.listchars:append("space:⋅")
 vim.opt.listchars:append("eol:↴")
 
 -- User interface
+vim.o.winborder = 'rounded'
 -- Show cursorline in normal buffers, hide it in diff buffers (it produces
 -- unpleant uderline effect in diffs)
 vim.opt.cursorline = true
@@ -238,11 +239,6 @@ require("lsp_signature").setup({
   toggle_key_flip_floatwin_setting = true,
 })
 
--- LSP & related floating windows styling
-vim.diagnostic.config({
-  float = { border = "rounded" },
-})
-
 ----------✦ ⚙️  Core functionalities ⚙️ ✦----------
 
 -- Code completion
@@ -250,7 +246,7 @@ local cmp = require("cmp")
 -- LSP
 cmp.setup({
   window = {
-    documentation = cmp.config.window.bordered(),
+    completion = cmp.config.window.bordered({ border = "none" }),
   },
   sources = cmp.config.sources({
     { name = "nvim_lsp" },
@@ -380,7 +376,6 @@ end
 
 -- Git signs gutter and hunk navigation
 require("gitsigns").setup({
-  preview_config = { border = "rounded" },
   on_attach = function(client, bufnr)
     local gs = package.loaded.gitsigns
 
@@ -577,10 +572,3 @@ vim.lsp.util.stylize_markdown = function(bufnr, contents, opts)
   vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, contents)
   return contents
 end
-
--- HACK: In nvim 0.11 border settings are remade and set globally using `vim.opt.winborder`,
--- however, this is not suported by many plugins so far. Thus we don't use this option for now, and
--- hack hover to use rounded borders
-local hover = vim.lsp.buf.hover
----@diagnostic disable-next-line: duplicate-set-field
-vim.lsp.buf.hover = function() return hover({ border = "rounded" }) end
