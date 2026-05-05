@@ -14,8 +14,6 @@ vim.opt.formatoptions:remove("t")
 -- Use folding based on text indentation
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
--- Limit folding level
-vim.opt.foldnestmax = 1
 -- Open files with all folds open
 vim.opt.foldenable = false
 vim.opt.foldlevelstart = 1
@@ -54,25 +52,23 @@ vim.opt.splitright = true
 vim.api.nvim_create_autocmd({ "VimResized" }, { command = "wincmd=" })
 -- Scrolling margin
 vim.opt.scrolloff = 3
+-- Highlight on yank
+vim.api.nvim_create_autocmd("TextYankPost", {
+    callback = function() vim.highlight.on_yank() end,
+})
+-- Enable new UI for external commands output
+require("vim._core.ui2").enable()
 
 -- System behaviour
-vim.opt.updatetime = 100
+-- Persistent undo
 vim.opt.undofile = true
+-- Open confirmation dialog on file overwrites etc
+vim.opt.confirm = true
 -- Use system clipboard
-if vim.fn.has("macunix") then
-  vim.opt.clipboard = "unnamed"
-else
-  vim.opt.clipboard = "unnamedplus"
-end
+vim.opt.clipboard:append({'unnamed', 'unnamedplus'})
 
--- Don't use line numbers in the builtin terminal and enter it in insert mode
+-- Enter builtin terminal in insert mode
 vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter" }, { command = "if &buftype == 'terminal' | :startinsert | endif" })
-
--- Auto reload changed files from disk
-vim.o.autoread = true
-
--- Disable mouse
-vim.opt.mouse = nil
 
 -- Set leader to space
 vim.g.mapleader = " "
@@ -104,8 +100,8 @@ require("lazy").setup(
     -- Help
     "folke/which-key.nvim",
     -- Treesitter
-    "nvim-treesitter/nvim-treesitter",
-    "nvim-treesitter/nvim-treesitter-textobjects",
+    {"nvim-treesitter/nvim-treesitter", branch = "main"},
+    {"nvim-treesitter/nvim-treesitter-textobjects", branch = "main"},
     "chrisgrieser/nvim-various-textobjs",
     -- LSP
     "neovim/nvim-lspconfig",
@@ -142,6 +138,10 @@ require("lazy").setup(
   }
 )
 
+vim.cmd.packadd("cfilter")
+vim.cmd.packadd("nvim.undotree")
+vim.cmd.packadd("nvim.difftool")
+
 ----------✦ ❓ Help ❓ ✦----------
 
 local wk = require("which-key")
@@ -149,69 +149,54 @@ wk.setup({ delay = 500, icons = { rules = false } })
 
 ----------✦ 🌳 Treesitter 🌳 ✦----------
 
----@diagnostic disable-next-line: missing-fields
-require("nvim-treesitter.configs").setup({
-  ensure_installed = "all",
-  auto_install = true,
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting = false,
-  },
-  indent = {
-    enable = true
-  },
-  textobjects = {
-    select = {
-      enable = true,
-      lookahead = true,
-      keymaps = {
-        ["af"] = { query = "@function.outer", desc = "outer function" },
-        ["if"] = { query = "@function.inner", desc = "inner function" },
-        ["ac"] = { query = "@class.outer", desc = "outer class" },
-        ["ic"] = { query = "@class.inner", desc = "inner class" },
-      },
-    },
-    move = {
-      enable = true,
-      set_jumps = true,
-      goto_next_start = {
-        ["]m"] = { query = "@function.outer", desc = "Next function start" },
-        ["]]"] = { query = "@class.outer", desc = "Next class start" },
-      },
-      goto_next_end = {
-        ["]M"] = { query = "@function.outer", desc = "Next function end" },
-        ["]["] = { query = "@class.outer", desc = "Next class end" },
-      },
-      goto_previous_start = {
-        ["[m"] = { query = "@function.outer", desc = "Previous function start" },
-        ["[["] = { query = "@class.outer", desc = "Previous class start" },
-      },
-      goto_previous_end = {
-        ["[M"] = { query = "@function.outer", desc = "Previous function end" },
-        ["[]"] = { query = "@class.outer", desc = "Previous class end" },
-      },
-    },
-    swap = {
-      enable = true,
-      swap_next = {
-        ["<leader>ln"] = { query = "@parameter.inner", desc = "Swap with next parameter" },
-      },
-      swap_previous = {
-        ["<leader>lp"] = { query = "@parameter.inner", desc = "Swap with previous parameter" },
-      },
-    },
-  },
-  incremental_selection = {
-    enable = true,
-    keymaps = {
-      node_incremental = "<C-n>",
-      node_decremental = "<C-p>",
-    },
-  },
+-- Only highlight with treesitter
+vim.cmd("syntax off")
+vim.api.nvim_create_autocmd('FileType', {
+    callback = function() pcall(vim.treesitter.start) end,
 })
 
--- Extra text objects
----@diagnostic disable-next-line: missing-fields
+-- Textobjects selection
+require("nvim-treesitter-textobjects").setup()
+vim.keymap.set({ "x", "o" }, "am", function()
+  require "nvim-treesitter-textobjects.select".select_textobject("@function.outer", "textobjects")
+end, defopts("outer method"))
+vim.keymap.set({ "x", "o" }, "im", function()
+  require "nvim-treesitter-textobjects.select".select_textobject("@function.inner", "textobjects")
+end, defopts("inner method"))
+vim.keymap.set({ "x", "o" }, "ac", function()
+  require "nvim-treesitter-textobjects.select".select_textobject("@class.outer", "textobjects")
+end, defopts("outer class"))
+vim.keymap.set({ "x", "o" }, "ic", function()
+  require "nvim-treesitter-textobjects.select".select_textobject("@class.inner", "textobjects")
+end, defopts("inner class"))
+
+-- Repeat movement with ; (forward) and , (backward)
+local ts_repeat_move = require "nvim-treesitter-textobjects.repeatable_move"
+vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move)
+vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite)
+vim.keymap.set({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f_expr, { expr = true })
+vim.keymap.set({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F_expr, { expr = true })
+vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t_expr, { expr = true })
+vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T_expr, { expr = true })
+
+-- Swap parameters order
+vim.keymap.set("n", "<leader>ln", function()
+  require("nvim-treesitter-textobjects.swap").swap_next "@parameter.inner"
+end, defopts("Swap with next parameter"))
+vim.keymap.set("n", "<leader>lp", function()
+  require("nvim-treesitter-textobjects.swap").swap_previous "@parameter.inner"
+end, { desc = "Swap with previous parameter" })
+
+-- Incremental selection
+vim.keymap.set({ 'x', 'o' }, '<C-n>', function()
+    require 'vim.treesitter._select'.select_parent(vim.v.count1)
+end, { desc = "Select parent node with incremental selection" })
+
+vim.keymap.set({ 'x', 'o' }, '<C-p>', function()
+	require 'vim.treesitter._select'.select_child(vim.v.count1)
+end, { desc = "Select child node with incremental selection" })
+
+-- Various textobjects
 require("various-textobjs").setup({ keymaps = { useDefaults = true, disabledDefaults = { "gw", "gW", "r" } } })
 
 ----------✦ 🛠️ LSP 🛠️ ✦----------
@@ -382,6 +367,15 @@ require("ibl").setup({
   scope = { enabled = true, show_start = false, show_end = false, highlight = "Whitespace" },
 })
 
+-- Redraw indent guides after folding operations
+for _, keymap in pairs({
+  "zo", "zO", "zc", "zC", "za", "zA", "zv", "zx", "zX", "zm", "zM", "zr", "zR",
+}) do
+  vim.api.nvim_set_keymap(
+    "n", keymap, keymap .. ":lua require('ibl').refresh()<CR>", { noremap = true, silent = true }
+  )
+end
+
 ----------✦ ⚡️ External tools integration ⚡️ ✦----------
 
 -- Git signs gutter and hunk navigation
@@ -480,6 +474,7 @@ wk.add({
 
 -- General nvim functionalities keymaps
 
+vim.keymap.set("n", "<leader>U", ":Undotree<CR>", defopts("Undo tree"))
 vim.keymap.set("n", "<leader>E", ":Neotree<CR>", defopts("File explorer"))
 vim.keymap.set("n", "<leader>T", ":split<CR>:term<CR>", defopts("Terminal in horizontal split"))
 vim.keymap.set("n", "<leader>ce", ":edit ~/.config/nvim/init.lua<CR>", defopts("Edit config"))
@@ -570,15 +565,6 @@ require('lualine').setup({
 vim.opt.fillchars = { diff = " ", eob = " ", foldopen = "▾", foldsep = "┆", foldclose = "▸", vert = " " }
 
 ----------✦ ⚠️  Fixes and workarounds ⚠️  ✦----------
-
--- Redraw indent guides after folding operations
-for _, keymap in pairs({
-  "zo", "zO", "zc", "zC", "za", "zA", "zv", "zx", "zX", "zm", "zM", "zr", "zR",
-}) do
-  vim.api.nvim_set_keymap(
-    "n", keymap, keymap .. ":lua require('ibl').refresh()<CR>", { noremap = true, silent = true }
-  )
-end
 
 --- HACK: Override `vim.lsp.util.stylize_markdown` to use Treesitter in completion docs window
 ---@diagnostic disable-next-line: duplicate-set-field
