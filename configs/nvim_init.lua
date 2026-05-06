@@ -35,6 +35,7 @@ vim.opt.listchars:append("eol:↴")
 
 -- User interface
 vim.o.winborder = 'rounded'
+require('vim._core.ui2').enable()
 -- Show cursorline in normal buffers, hide it in diff buffers (it produces
 -- unpleant uderline effect in diffs)
 vim.opt.cursorline = true
