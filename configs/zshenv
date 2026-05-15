@@ -122,6 +122,8 @@ alias eh="nvim \"${HISTFILE}\""
 # Easier management of muliptle tmux servers
 alias tmux-servers="ls -w1 /tmp/tmux-*"
 alias tmux-clear="rm -rf $XDG_DATA_HOME/tmux/resurrect/*"
+# Work account for claude code
+alias claude-work="CLAUDE_CONFIG_DIR="${HOME}"/.config/claude-work claude"
 
 case ${OSTYPE} in
 darwin*)
