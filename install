@@ -44,6 +44,7 @@ for script in ./scripts/*; do
 	ln -f -s "$(realpath "$script")" "$SCRIPTS_PATH"
 done
 
+BREW_INSTALL_URL="https://raw.githubusercontent.com/Homebrew/install/master/install.sh"
 # System-specific actions
 case ${OSTYPE} in
 # For MacOS
@@ -53,7 +54,6 @@ darwin*)
 	# Install homebrew
 	echo -e "${BLUE}==> Installing brew${NOCOLOR}"
 	if ! [ -x "$(command -v brew)" ]; then
-		BREW_INSTALL_URL="https://raw.githubusercontent.com/Homebrew/install/master/install.sh"
 		if ! /bin/bash -c "$(curl -fsSL "${BREW_INSTALL_URL}")"; then
 			echo -e "${RED}Failed to install homebrew, config install abandoned${NOCOLOR}"
 			exit 1
@@ -75,8 +75,9 @@ linux-gnu)
 
 	# Arch-based with pacman
 	if [ -x "$(command -v pacman)" ]; then
-		echo -e "${BLUE}Installing pacman packages${NOCOLOR}"
+		echo -e "${GREEN}Pacman detected${NOCOLOR}"
 
+		echo -e "${BLUE}Installing pacman packages${NOCOLOR}"
 		# Falls into "Exceptions" from shellckeck wiki
 		#shellcheck disable=SC2024
 		sudo pacman --sync --refresh --needed --noconfirm - < packages/arch/pkg-list.txt
@@ -88,13 +89,23 @@ linux-gnu)
 
 		echo -e "${BLUE}Installing aur packages with yay${NOCOLOR}"
 		yay --sync --refresh --sysupgrade --needed --noconfirm --removemake - < packages/arch/pkg-list-aur.txt
-	# Debian based with apt
-	elif [ -x "$(command -v apt)" ]; then
-		echo -e "${BLUE}Installing apt packages${NOCOLOR}"
+	# Debian based with brew as apt substitute
+	elif [ -f /etc/lsb-release ]; then
+		echo -e "${GREEN}Debian derivative detected${NOCOLOR}"
 
-		# Falls into "Exceptions" from shellckeck wiki
-		#shellcheck disable=SC2024
-		sudo xargs apt install -y < packages/debian/pkglist
+		echo -e "${BLUE}==> Installing linuxbrew${NOCOLOR}"
+		if ! [ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]; then
+			if ! /bin/bash -c "$(curl -fsSL "${BREW_INSTALL_URL}")"; then
+				echo -e "${RED}Failed to install homebrew, config install abandoned${NOCOLOR}"
+				exit 1
+			fi
+		else
+			echo -e "${GREEN}Homebrew already installed, skipping${NOCOLOR}"
+		fi
+
+		echo -e "${BLUE}==> Installing brew formulas${NOCOLOR}"
+		eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+		brew bundle --quiet --file=packages/debian/linuxbrewfile
 	else
 		echo -e "${RED}Did not detect supported Linux package manager, config install abandoned${NOCOLOR}"
 		exit 1
@@ -119,18 +130,6 @@ fi
 
 # XDG-compliant zsh history file has to be created manually
 mkdir -p "${XDG_STATE_HOME}/zsh"
-
-# Neovim setup
-echo -e "${BLUE}==> Setting up neovim plugins${NOCOLOR}"
-LAZYPATH="${XDG_DATA_HOME}/nvim/lazy/lazy.nvim"
-if ! [ -e "${LAZYPATH}" ]; then
-	echo -e "${BLUE}Installing Lazy package manager${NOCOLOR}"
-	git clone --filter=blob:none https://github.com/folke/lazy.nvim.git --branch=stable "$LAZYPATH"
-	echo -e "${GREEN}Installed Lazy package manager${NOCOLOR}"
-fi
-echo -e "${BLUE}Installing neovim plugins${NOCOLOR}"
-nvim --headless +Lazy install +q
-nvim --headless +TSUpdate +q
 
 # Install tmux plugin manager
 echo -e "${BLUE}==> Installing tmux-themepack${NOCOLOR}"

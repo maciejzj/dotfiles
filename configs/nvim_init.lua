@@ -532,7 +532,7 @@ vim.keymap.set("n", "<leader>F", function() vim.lsp.buf.format({ async = true })
 vim.keymap.set("n", "<leader>td", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end, defopts("Toggle diagnostics"))
 
 -- Plugin management keymaps
-vim.keymap.set("n", "<leader>pp", function() vim.pack.update() end, defopts("Update plugin packages"))
+vim.keymap.set("n", "<leader>pp", vim.pack.update, defopts("Update plugin packages"))
 vim.keymap.set("n", "<leader>pm", ":Mason<CR>", defopts("Mason packages panel"))
 
 ----------✦ 🎨 Colorscheme and UI 🎨 ✦----------
