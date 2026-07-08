@@ -193,6 +193,14 @@ vim.keymap.set("n", "<leader>lp", function()
   require("nvim-treesitter-textobjects.swap").swap_previous "@parameter.inner"
 end, { desc = "Swap with previous parameter" })
 
+-- Incremental selection of treesitter nodes
+vim.keymap.set({ 'x', 'o' }, 'an', function()
+  require 'vim.treesitter._select'.select_parent(vim.v.count1)
+end, { desc = 'Select parent treesitter node or outer incremental lsp selections' })
+vim.keymap.set({ 'x', 'o' }, 'in', function()
+  require 'vim.treesitter._select'.select_child(vim.v.count1)
+end, { desc = 'Select child treesitter node or inner incremental lsp selections' })
+
 -- Various textobjects
 local textobj = require("various-textobjs")
 textobj.setup({useDefaultKeymaps = false })
